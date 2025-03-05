@@ -103,28 +103,30 @@ The application consists of three primary interconnected pages:
 - SQLite (for development)
 
 ### Setup
+
 ```bash
 # Clone the repository
 git clone https://github.com/digital-duck/zinetsapp.git
-cd zinets
+cd zinetsapp
+conda create -n zinets python=3.11
+conda activate zinets
+```
 
-# Set up Python environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+#### API Development
+```bash
+# Run FastAPI server
+cd backend
 pip install -r requirements.txt
+uvicorn api.main:app --reload
+```
 
-# Initialize database
-python scripts/init_db.py
-
-# Run the development server
+#### UI 
+```bash
+cd frontend
+pip install -r requirements.txt
 streamlit run app.py
 ```
 
-### API Development
-```bash
-# Run FastAPI server
-uvicorn api.main:app --reload
-```
 
 ## Contributing
 
@@ -148,7 +150,7 @@ This project is licensed under the [Apache License](LICENSE).
 
 ## Contact
 
-For questions, suggestions, or collaboration opportunities, please open an issue on GitHub or contact the project maintainer at [p2p2learn@outlook.com].
+For questions, suggestions, or collaboration opportunities, please open an issue on GitHub or contact the project maintainer at p2p2learn_at_outlook_dot_com.
 
 ---
 
