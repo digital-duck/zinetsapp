@@ -1,0 +1,236 @@
+
+
+Gemini Model: gemini-2.0-flash
+Datetime: 2025-05-10 07:36:27
+
+Character: 氵
+pinyin: shuǐ
+meaning: water (radical)
+composition: Pictorial representation of water droplets. It's the water radical, appearing on the left side of characters related to water.
+phrases: 游泳 (yóu yǒng) - swimming<br>河流 (hé liú) - river<br>海洋 (hǎi yáng) - ocean<br>洗澡 (xǐ zǎo) - to take a bath<br>泪水 (lèi shuǐ) - tears
+
+Character: 艹
+pinyin: cǎo
+meaning: grass (radical)
+composition: Pictorial representation of grass. It's the grass radical, appearing at the top of characters related to plants.
+phrases: 草地 (cǎo dì) - lawn; grassland<br>花草 (huā cǎo) - flowers and grass<br>草莓 (cǎo méi) - strawberry<br>药草 (yào cǎo) - medicinal herb<br>草原 (cǎo yuán) - prairie; grassland
+
+Character: 品
+pinyin: pǐn
+meaning: product, article, commodity, grade, rank, character, moral quality
+composition: Three 口 (kǒu, mouth) stacked on top of each other. Originally meant "many mouths," implying a crowd or a large number of people, later evolving to mean "product" or "quality" because a good product is praised by many.
+phrases: 产品 (chǎn pǐn) - product<br>品质 (pǐn zhì) - quality<br>商品 (shāng pǐn) - commodity<br>品尝 (pǐn cháng) - to taste<br>人品 (rén pǐn) - moral character
+
+Character: 澡
+pinyin: zǎo
+meaning: bath, bathe
+composition: 氵 (shuǐ, water) on the left, indicating it's related to water, and 喿 (zào) on the right, which is a phonetic component.
+phrases: 洗澡 (xǐ zǎo) - to take a bath<br>澡堂 (zǎo táng) - bathhouse<br>淋浴澡 (lín yù zǎo) - shower<br>泡澡 (pào zǎo) - to soak in a bath<br>洗个澡 (xǐ ge zǎo) - take a bath
+
+Character: 喿
+pinyin: zào
+meaning: noisy, chirping of birds
+composition: Four 口 (kǒu, mouth) arranged in a square. Represents many mouths making noise, like birds chirping.
+phrases: (This character is rarely used alone in modern Chinese. It's mostly used as a component in other characters.)<br>It appears in 噪 (zào) - noisy, clamorous<br>It appears in 操 (cāo) - to grasp, to hold, to do<br>It appears in 燥 (zào) - dry, parched<br>It appears in 躁 (zào) - restless, fidgety<br>It appears in 藻 (zǎo) - algae
+
+Character: 口
+pinyin: kǒu
+meaning: mouth, opening, entrance, measure word (for people, wells, etc.)
+composition: Pictorial representation of a mouth.
+phrases: 人口 (rén kǒu) - population<br>门口 (mén kǒu) - doorway, entrance<br>开口 (kāi kǒu) - to open one's mouth, to start to speak<br>口味 (kǒu wèi) - taste, flavor<br>一口 (yī kǒu) - one mouthful
+
+Character: 藻
+pinyin: zǎo
+meaning: algae, seaweed
+composition: 艹 (cǎo, grass) on top, indicating it's a plant, and 喿 (zào) on the bottom, which is a phonetic component.
+phrases: 海藻 (hǎi zǎo) - seaweed<br>藻类 (zǎo lèi) - algae<br>绿藻 (lǜ zǎo) - green algae<br>红藻 (hóng zǎo) - red algae<br>蓝藻 (lán zǎo) - blue-green algae
+
+Character: 木
+pinyin: mù
+meaning: tree, wood
+composition: Pictorial representation of a tree with branches and roots.
+phrases: 树木 (shù mù) - trees<br>木头 (mù tou) - wood, lumber<br>木材 (mù cái) - timber, lumber<br>木星 (mù xīng) - Jupiter<br>木耳 (mù ěr) - wood ear fungus
+
+
+Gemini Model: gemini-2.0-flash
+Datetime: 2025-05-10 07:44:04
+
+Character: 白
+pinyin: bái
+meaning: white, pure, clear, plain, blank, bright, in vain
+composition: Pictographic character depicting a grain of rice, representing whiteness.
+phrases: 白色 (bái sè) - white color<br>明白 (míng bái) - to understand, clear<br>白天 (bái tiān) - daytime<br>白费 (bái fèi) - to waste, in vain<br>白菜 (bái cài) - Chinese cabbage
+
+Character: 日
+pinyin: rì
+meaning: sun, day, date
+composition: Pictographic character depicting the sun.
+phrases: 日期 (rì qī) - date<br>生日 (shēng rì) - birthday<br>每天 (měi tiān) - every day<br>日子 (rì zi) - day, life<br>日本 (Rì běn) - Japan
+
+Character: 锦
+pinyin: jǐn
+meaning: brocade, embroidered, bright, beautiful
+composition: 金 (jīn - gold) + 帛 (bó - silk fabric), indicating valuable silk fabric.
+phrases: 锦绣 (jǐn xiù) - brocade, beautiful<br>锦旗 (jǐn qí) - silk banner (presented as a reward)<br>锦上添花 (jǐn shàng tiān huā) - to add flowers to brocade (to make something already good even better)<br>锦衣玉食 (jǐn yī yù shí) - fine clothes and sumptuous food<br>前程似锦 (qián chéng sì jǐn) - have a bright future
+
+Character: 百
+pinyin: bǎi
+meaning: hundred, numerous, all kinds of
+composition: 一 (yī - one) above 白 (bái - white), originally representing a large number.
+phrases: 百分之 (bǎi fēn zhī) - percent<br>百姓 (bǎi xìng) - common people<br>一百 (yī bǎi) - one hundred<br>百货 (bǎi huò) - general merchandise<br>百忙之中 (bǎi máng zhī zhōng) - in the midst of pressing affairs
+
+Character: 意
+pinyin: yì
+meaning: meaning, idea, thought, intention, wish, sense
+composition: 音 (yīn - sound) + 心 (xīn - heart), representing the sound or feeling in one's heart.
+phrases: 意思 (yì si) - meaning, idea<br>愿意 (yuàn yì) - to be willing<br>注意 (zhù yì) - to pay attention<br>意见 (yì jiàn) - opinion<br>意义 (yì yì) - significance
+
+Character: 曐
+pinyin: xīng
+meaning: (Variant of 星) star, celestial body, a little bit, sparkling, starlight
+composition: 日 (rì - sun) + 生 (shēng - to give birth, to produce), representing something that shines like the sun. This is a variant of 星.
+phrases: This character is rarely used in modern Chinese. Phrases typically use 星 (xīng) instead. Examples using 星: 星星 (xīng xīng) - star<br>星期 (xīng qī) - week<br>星空 (xīng kōng) - starry sky<br>明星 (míng xīng) - star (celebrity)<br>星座 (xīng zuò) - constellation
+
+Character: 智
+pinyin: zhì
+meaning: wisdom, knowledge, intelligence
+composition: 知 (zhī - to know) + 日 (rì - sun), representing clear understanding like the sun.
+phrases: 智慧 (zhì huì) - wisdom<br>智力 (zhì lì) - intelligence<br>智商 (zhì shāng) - IQ<br>智者 (zhì zhě) - wise person<br>机智 (jī zhì) - witty, quick-witted
+
+Character: 棉
+pinyin: mián
+meaning: cotton
+composition: 木 (mù - wood) + 帛 (bó - silk fabric), representing a plant that produces a soft, silky fiber.
+phrases: 棉花 (mián hua) - cotton<br>棉袄 (mián ǎo) - cotton-padded jacket<br>棉布 (mián bù) - cotton cloth<br>棉衣 (mián yī) - cotton clothes<br>纯棉 (chún mián) - pure cotton
+
+Character: 伯
+pinyin: bó
+meaning: eldest brother, father's elder brother, uncle, count (noble title)
+composition: 亻 (rén - person radical) + 白 (bái - white), representing a senior or elder person.
+phrases: 伯父 (bó fù) - father's elder brother, uncle<br>伯母 (bó mǔ) - wife of father's elder brother, aunt<br>伯仲 (bó zhòng) - elder and younger brother, roughly equal<br>老伯 (lǎo bó) - old man (respectful term)<br>This character is not commonly used in many modern phrases outside of family relations.
+
+Character: 宿
+pinyin: sù, xiǔ, xiù
+meaning: stay overnight, lodge, old, former, constellation
+composition: 宀 (mián - roof radical) + 百 (bǎi - hundred), representing a place to stay.
+phrases: 宿舍 (sù shè) - dormitory<br>住宿 (zhù sù) - accommodation<br>星宿 (xīng xiù) - constellation<br>宿愿 (sù yuàn) - long-cherished wish<br>宿醉 (sù zuì) - hangover
+
+Character: 晶
+pinyin: jīng
+meaning: crystal, clear, bright, sparkling
+composition: Three 日 (rì - sun) stacked together, representing extreme brightness.
+phrases: 晶体 (jīng tǐ) - crystal<br>水晶 (shuǐ jīng) - crystal, rock crystal<br>亮晶晶 (liàng jīng jīng) - sparkling, glittering<br>晶莹 (jīng yíng) - sparkling and translucent<br>晶片 (jīng piàn) - chip (electronics)
+
+Character: 陌
+pinyin: mò
+meaning: path, street, strange, unfamiliar
+composition: 阝(fù - mound, city radical) + 百 (bǎi - hundred), representing a path or street.
+phrases: 陌生 (mò shēng) - strange, unfamiliar<br>阡陌 (qiān mò) - footpaths between fields<br>陌路 (mò lù) - strangers<br>This character is not commonly used in many modern phrases outside of 陌生.
+This character is not commonly used in many modern phrases outside of 陌生.
+This character is not commonly used in many modern phrases outside of 陌生.
+This character is not commonly used in many modern phrases outside of 陌生.
+This character is not commonly used in many modern phrases outside of 陌生.
+
+Character: 暗
+pinyin: àn
+meaning: dark, gloomy, secret, hidden
+composition: 日 (rì - sun) + 音 (yīn - sound), representing the sun hidden, hence darkness.
+phrases: 黑暗 (hēi àn) - darkness<br>暗示 (àn shì) - to hint, suggestion<br>暗中 (àn zhōng) - secretly, in secret<br>暗恋 (àn liàn) - secret love<br>阴暗 (yīn àn) - gloomy, shady
+
+Character: 帛
+pinyin: bó
+meaning: silk fabric, cloth
+composition: 白 (bái - white) + 巾 (jīn - towel), representing white silk cloth.
+phrases: 帛书 (bó shū) - silk book (ancient writing on silk)<br>This character is not commonly used in many modern phrases. It is mostly found in historical contexts.
+This character is not commonly used in many modern phrases. It is mostly found in historical contexts.
+This character is not commonly used in many modern phrases. It is mostly found in historical contexts.
+This character is not commonly used in many modern phrases. It is mostly found in historical contexts.
+This character is not commonly used in many modern phrases. It is mostly found in historical contexts.
+
+Character: 音
+pinyin: yīn
+meaning: sound, noise, tone, news, syllable
+composition: 立 (lì - to stand) + 日 (rì - sun), representing the vibration of air caused by the sun's energy, hence sound.
+phrases: 音乐 (yīn yuè) - music<br>声音 (shēng yīn) - voice, sound<br>音响 (yīn xiǎng) - sound system<br>音节 (yīn jié) - syllable<br>音标 (yīn biāo) - phonetic symbol
+
+
+Gemini Model: gemini-2.0-flash
+Datetime: 2025-05-10 08:11:03
+
+Character: 愛
+pinyin: ài
+meaning: love, affection, to love, to be fond of
+composition: 爫 (zhuǎ) - claw, 冖 (mì) - cover, 友 (yǒu) - friend. The original form depicted a person offering their heart to another.
+phrases: 爱情 (àiqíng) - love, affection<br>爱好 (àihào) - hobby, interest<br>爱人 (àiren) - spouse, lover<br>热爱 (rè'ài) - to love ardently, to adore<br>爱护 (àihù) - to cherish, to take good care of
+
+Character: 志
+pinyin: zhì
+meaning: will, ambition, aspiration, sign, mark
+composition: 士 (shì) - scholar, gentleman, and 心 (xīn) - heart. The heart of a scholar, representing ambition.
+phrases: 志愿 (zhìyuàn) - aspiration, ambition, volunteer<br>同志 (tóngzhì) - comrade, gay (slang)<br>意志 (yìzhì) - will, willpower<br>志气 (zhìqì) - ambition, aspiration<br>标志 (biāozhì) - sign, mark, symbol
+
+Character: 意
+pinyin: yì
+meaning: idea, meaning, thought, intention, wish
+composition: 音 (yīn) - sound, and 心 (xīn) - heart. The sound of the heart, representing thoughts and intentions.
+phrases: 意思 (yìsi) - meaning, idea, interest<br>意义 (yìyì) - meaning, significance<br>愿意 (yuànyì) - to be willing, to wish<br>注意 (zhùyì) - to pay attention, to take note<br>意见 (yìjiàn) - opinion, suggestion
+
+Character: 思
+pinyin: sī
+meaning: to think, to consider, thought, idea
+composition: 田 (tián) - field, and 心 (xīn) - heart. Thinking about the field in one's heart.
+phrases: 思想 (sīxiǎng) - thought, ideology<br>思考 (sīkǎo) - to think deeply, to ponder<br>思念 (sīniàn) - to miss, to long for<br>意思 (yìsi) - meaning, idea, interest<br>深思 (shēnsī) - to think deeply, to contemplate
+
+Character: 心
+pinyin: xīn
+meaning: heart, mind, feeling, intention
+composition: Pictographic representation of the human heart.
+phrases: 心情 (xīnqíng) - mood, feeling<br>中心 (zhōngxīn) - center, heart<br>小心 (xiǎoxīn) - to be careful, to be cautious<br>关心 (guānxīn) - to care for, to be concerned about<br>心理 (xīnlǐ) - psychology, mentality
+
+Character: 恋
+pinyin: liàn
+meaning: to love, to feel attached to, to long for
+composition: 亦 (yì) - also, and 䜌 (luán) - to be attached, to yearn.
+phrases: 恋爱 (liàn'ài) - to be in love, love affair<br>留恋 (liúliàn) - to be reluctant to leave, to feel attached to<br>依恋 (yīliàn) - to feel attached to, to be dependent on<br>眷恋 (juànliàn) - to be sentimentally attached to<br>爱恋 (àiliàn) - to love passionately
+
+Character: 想
+pinyin: xiǎng
+meaning: to think, to want, to miss
+composition: 相 (xiāng) - each other, mutual, and 心 (xīn) - heart. Thinking of each other in one's heart.
+phrases: 想法 (xiǎngfǎ) - idea, opinion<br>想象 (xiǎngxiàng) - to imagine, imagination<br>想念 (xiǎngniàn) - to miss, to think of<br>理想 (lǐxiǎng) - ideal, aspiration<br>不想 (bùxiǎng) - don't want to
+
+Character: 惟
+pinyin: wéi
+meaning: only, alone, but, however, to think
+composition: 亻 (rén) - person, and 隹 (zhuī) - short-tailed bird. Originally meant "to think," but now often used as an auxiliary word.
+phrases: 惟一 (wéiyī) - only, unique<br>惟妙惟肖 (wéimiàowéixiào) - to be remarkably true to life, lifelike<br>思惟 (sīwéi) - to think, to ponder (formal)<br>惟恐 (wéikǒng) - for fear that, lest<br>惟独 (wéidú) - only, alone
+
+Character: 愿
+pinyin: yuàn
+meaning: to wish, to hope, desire, wish
+composition: 原 (yuán) - source, origin, and 心 (xīn) - heart. The original desire of the heart.
+phrases: 愿意 (yuànyì) - to be willing, to wish<br>愿望 (yuànwàng) - wish, desire<br>心愿 (xīnyuàn) - wish, aspiration<br>但愿 (dànyuàn) - if only, I wish<br>祝愿 (zhùyuàn) - to wish, to offer good wishes
+
+Character: 忘
+pinyin: wàng
+meaning: to forget, to neglect
+composition: 亡 (wáng) - to lose, to die, and 心 (xīn) - heart. Losing something from the heart, forgetting.
+phrases: 忘记 (wàngjì) - to forget<br>忘掉 (wàngdiào) - to forget, to leave behind<br>难忘 (nánwàng) - unforgettable<br>忘我 (wàngwǒ) - selfless, self-forgetful<br>忘本 (wàngběn) - to forget one's roots, to be ungrateful
+
+Character: 情
+pinyin: qíng
+meaning: feeling, emotion, affection, situation
+composition: 忄(xīn) - heart, and 青 (qīng) - blue, green. The color of emotions.
+phrases: 感情 (gǎnqíng) - feeling, emotion, affection<br>爱情 (àiqíng) - love, affection<br>心情 (xīnqíng) - mood, feeling<br>情况 (qíngkuàng) - situation, circumstance<br>友情 (yǒuqíng) - friendship
+
+Character: 悔
+pinyin: huǐ
+meaning: to regret, to repent
+composition: 忄(xīn) - heart, and 每 (měi) - every. Every thought in the heart leads to regret.
+phrases: 后悔 (hòuhuǐ) - to regret<br>后悔莫及 (hòuhuǐmòjí) - too late to regret<br>悔改 (huǐgǎi) - to repent, to reform<br>悔恨 (huǐhèn) - to regret bitterly<br>反悔 (fǎnhuǐ) - to go back on one's word, to retract
+
+Character: 怯
+pinyin: qiè
+meaning: timid, cowardly, shy
+composition: 忄(xīn) - heart, and 去 (qù) - to go, to leave. The heart wants to leave, indicating timidity.
+phrases: 胆怯 (dǎnqiè) - timid, cowardly<br>怯场 (qièchǎng) - stage fright<br>退怯 (tuìqiè) - to shrink back, to flinch<br>畏怯 (wèiqiè) - timid, apprehensive<br>羞怯 (xiūqiè) - shy, bashful

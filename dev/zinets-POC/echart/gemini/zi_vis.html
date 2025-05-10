@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chinese Character Network</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+        #chart-container {
+            width: 60%;
+            height: 100%;
+        }
+        #info-panel {
+            width: 40%;
+            padding: 20px;
+            background-color: #f5f5f5;
+            overflow-y: auto;
+            border-left: 1px solid #ddd;
+        }
+        .node-tooltip {
+            position: absolute;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            pointer-events: none;
+            font-size: 14px;
+            display: none;
+        }
+        .character {
+            font-size: 72px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .pinyin {
+            font-size: 18px;
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section h3 {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            color: #333;
+        }
+        .composition {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .phrases {
+            line-height: 1.6;
+        }
+        .meaning {
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div id="chart-container"></div>
+    <div id="info-panel">
+        <div class="character" id="selected-char">藻</div>
+        <div class="pinyin" id="selected-pinyin">zǎo</div>
+        
+        <div class="section">
+            <h3>Meaning</h3>
+            <div class="meaning" id="selected-meaning">
+                algae, seaweed
+            </div>
+        </div>
+        
+        <div class="section">
+            <h3>Composition</h3>
+            <div class="composition" id="selected-composition">
+                Consists of the grass radical (艹) on top and 喿 below, indicating a type of plant that makes noise (rustling in the water)
+            </div>
+        </div>
+        
+        <div class="section">
+            <h3>Related Phrases</h3>
+            <div class="phrases" id="selected-phrases">
+                海藻 (hǎi zǎo) - seaweed<br>绿藻 (lǜ zǎo) - green algae<br>藻类 (zǎo lèi) - algae<br>藻井 (zǎo jǐng) - caisson (ceiling decoration)<br>水藻 (shuǐ zǎo) - aquatic algae
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Character data repository
+        const characterData = {
+    "口": {
+        "pinyin": "kǒu",
+        "meaning": "mouth, entrance, opening",
+        "composition": "Represents an open mouth",
+        "phrases": "人口 (rén kǒu) - population<br>门口 (mén kǒu) - doorway<br>口味 (kǒu wèi) - taste<br>开口 (kāi kǒu) - to open one's mouth, to start to talk<br>口水 (kǒu shuǐ) - saliva"
+    },
+    "氵": {
+        "pinyin": "shuǐ",
+        "meaning": "water (radical)",
+        "composition": "Simplified form of 水 (water) used as a radical on the left side of characters",
+        "phrases": "This is a radical, not used as a standalone word in common phrases. It is a component of many characters related to water."
+    },
+    "艹": {
+        "pinyin": "cǎo",
+        "meaning": "grass, plant (radical)",
+        "composition": "Represents grass or plants, often found at the top of characters",
+        "phrases": "This is a radical, not used as a standalone word in common phrases. It is a component of many characters related to plants."
+    },
+    "澡": {
+        "pinyin": "zǎo",
+        "meaning": "bath, to bathe",
+        "composition": "Consists of the water radical (氵) on the left and 喿 on the right, indicating the sound",
+        "phrases": "洗澡 (xǐ zǎo) - to take a bath/shower<br>澡堂 (zǎo táng) - bathhouse<br>澡盆 (zǎo pén) - bathtub<br>早澡 (zǎo zǎo) - morning bath<br>泡澡 (pào zǎo) - to soak in a bath"
+    },
+    "喿": {
+        "pinyin": "zào",
+        "meaning": "noise, clamor",
+        "composition": "Composed of four 口 (mouths), representing many voices making noise",
+        "phrases": "This character is not commonly used in modern phrases outside of its use as a component in other characters like 澡 and 噪."
+    },
+    "藻": {
+        "pinyin": "zǎo",
+        "meaning": "algae, seaweed",
+        "composition": "Consists of the grass radical (艹) on top and 喿 below, indicating a type of plant that makes noise (rustling in the water)",
+        "phrases": "海藻 (hǎi zǎo) - seaweed<br>绿藻 (lǜ zǎo) - green algae<br>藻类 (zǎo lèi) - algae<br>藻井 (zǎo jǐng) - caisson (ceiling decoration)<br>水藻 (shuǐ zǎo) - aquatic algae"
+    },
+    "品": {
+        "pinyin": "pǐn",
+        "meaning": "product, goods, article, grade, rank",
+        "composition": "Composed of three 口 (mouths), representing many items or a high standard",
+        "phrases": "产品 (chǎn pǐn) - product<br>商品 (shāng pǐn) - commodity<br>品质 (pǐn zhì) - quality<br>品尝 (pǐn cháng) - to taste<br>人品 (rén pǐn) - moral character"
+    },
+    "木": {
+        "pinyin": "mù",
+        "meaning": "tree, wood",
+        "composition": "Represents the shape of a tree with branches and roots",
+        "phrases": "木头 (mù tou) - wood, timber<br>木材 (mù cái) - lumber<br>木星 (mù xīng) - Jupiter<br>木耳 (mù ěr) - wood ear fungus<br>树木 (shù mù) - trees"
+    }
+};
+
+        // Initialize ECharts
+        const chartContainer = document.getElementById('chart-container');
+        const chart = echarts.init(chartContainer);
+
+        // Define the tree structure based on your data
+        const treeData = {
+    "name": "藻",
+    "children": [
+        {
+            "name": "艹",
+            "symbolSize": 25,
+            "children": []
+        },
+        {
+            "name": "澡",
+            "symbolSize": 25,
+            "children": [
+                {
+                    "name": "氵",
+                    "symbolSize": 25,
+                    "children": []
+                },
+                {
+                    "name": "喿",
+                    "symbolSize": 25,
+                    "children": [
+                        {
+                            "name": "品",
+                            "symbolSize": 25,
+                            "children": [
+                                {
+                                    "name": "口",
+                                    "symbolSize": 25,
+                                    "children": []
+                                },
+                                {
+                                    "name": "口",
+                                    "symbolSize": 25,
+                                    "children": []
+                                },
+                                {
+                                    "name": "口",
+                                    "symbolSize": 25,
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "name": "木",
+                            "symbolSize": 25,
+                            "children": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+};
+
+        // Set the option
+        const option = {
+            tooltip: {
+                trigger: 'item',
+                formatter: function(params) {
+                    if (params.data.decomposition) {
+                        return `<div style="font-size:18px; font-weight:bold; margin-bottom:5px;">${params.data.name}</div>
+                                <div>${params.data.decomposition}</div>`;
+                    } else {
+                        return params.data.name;
+                    }
+                },
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                borderColor: '#ccc',
+                borderWidth: 1,
+                padding: 10,
+                textStyle: {
+                    color: '#333',
+                    fontSize: 16
+                }
+            },
+            series: [
+                {
+                    type: 'tree',
+                    data: [treeData],
+                    top: '5%',
+                    left: '10%',
+                    bottom: '5%',
+                    right: '20%',
+                    symbolSize: 25,
+                    orient: 'TB',
+                    symbol: 'circle',
+                    label: {
+                        position: 'right',
+                        distance: 0,
+                        fontSize: 35,
+                        fontWeight: 'bold'
+                    },
+                    leaves: {
+                        label: {
+                            position: 'right',
+                            verticalAlign: 'middle',
+                            align: 'center'
+                        }
+                    },
+                    emphasis: {
+                        focus: 'descendant'
+                    },
+                    expandAndCollapse: false,
+                    animationDuration: 550,
+                    animationDurationUpdate: 750
+                }
+            ]
+        };
+
+        // Set the initial option and render
+        chart.setOption(option);
+
+        // Handle node click event
+        chart.on('click', function(params) {
+            const zi = params.data.name;
+            if (zi) {
+                const charData = characterData[zi];
+                if (charData) {
+                    // Update info panel
+                    document.getElementById('selected-char').textContent = zi;
+                    document.getElementById('selected-pinyin').textContent = charData.pinyin;
+                    document.getElementById('selected-meaning').textContent = charData.meaning;
+                    document.getElementById('selected-composition').textContent = charData.composition;
+                    document.getElementById('selected-phrases').innerHTML = charData.phrases;
+                }
+            }
+        });
+
+        // Make chart responsive
+        window.addEventListener('resize', function() {
+            chart.resize();
+        });
+    </script>
+</body>
+</html>

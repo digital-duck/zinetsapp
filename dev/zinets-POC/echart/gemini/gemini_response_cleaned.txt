@@ -1,0 +1,199 @@
+
+
+Gemini Model: gemini-2.0-flash
+Datetime: 2025-05-09 08:30:32
+
+{
+  "音": {
+    "pinyin": "yīn\",
+    \"meaning\": \"sound, noise, news, voice",
+    "composition": "Character combines 立 (lì - stand) and 日 (rì - sun). The sun standing still allows one to listen carefully to the sounds.\",
+    \"phrases\": \"音乐 (yīnyuè) - music<br>声音 (shēngyīn) - voice, sound<br>音响 (yīnxiǎng) - audio equipment<br>口音 (kǒuyīn) - accent<br>福音 (fúyīn) - gospel"
+  }
+}
+
+Gemini Model: gemini-2.0-flash
+Datetime: 2025-05-09 08:42:11
+
+{
+  "音": {
+    "pinyin": "yīn",
+    "meaning": "sound, noise, news, voice",
+    "composition": "Character combines 立 (lì, stand) and 日 (rì, sun). It represents the sound emanating from something standing under the sun.",
+    "phrases": "音乐 (yīnyuè) - music<br>声音 (shēngyīn) - voice, sound<br>音响 (yīnxiǎng) - stereo, audio equipment<br>口音 (kǒuyīn) - accent<br>福音 (fúyīn) - gospel"
+  }
+}
+
+Gemini Model: gemini-2.0-flash
+Datetime: 2025-05-09 08:43:46
+
+{
+  "音": {
+    "pinyin": "yīn",
+    "meaning": "sound, noise, news, voice",
+    "composition": "Character combines 立 (lì, stand) and 日 (rì, sun). The sun standing indicates the beginning of a sound or note.",
+    "phrases": "音乐 (yīnyuè) - music<br>声音 (shēngyīn) - voice, sound<br>音响 (yīnxiǎng) - stereo, audio equipment<br>口音 (kǒuyīn) - accent<br>回音 (huíyīn) - echo"
+  }
+}
+
+Gemini Model: gemini-2.0-flash
+Datetime: 2025-05-09 18:58:55
+
+{
+  "音": {
+    "pinyin": "yīn",
+    "meaning": "sound, noise, news, voice",
+    "composition": "Character consists of 立 (lì - stand) on top and 日 (rì - sun) below. It represents the idea of sound standing out and being clear like the sun.",
+    "phrases": "音乐 (yīnyuè) - music<br>声音 (shēngyīn) - voice, sound<br>音响 (yīnxiǎng) - audio equipment, sound system<br>口音 (kǒuyīn) - accent<br>回音 (huíyīn) - echo"
+  }
+}
+
+Gemini Model: gemini-2.0-flash
+Datetime: 2025-05-09 19:00:00
+
+{
+  "音": {
+    "pinyin": "yīn",
+    "meaning": "sound, noise, voice, tone",
+    "composition": "Formed from 立 (lì, stand) and 日 (rì, sun), suggesting sound emanating from a source.",
+    "phrases": "音乐 (yīnyuè) - music<br>声音 (shēngyīn) - sound, voice<br>音响 (yīnxiǎng) - audio equipment<br>口音 (kǒuyīn) - accent<br>音节 (yīnjié) - syllable"
+  },
+  "暗": {
+    "pinyin": "àn",
+    "meaning": "dark, gloomy, hidden, secret",
+    "composition": "Formed from 日 (rì, sun) and 音 (yīn, sound), suggesting the sun is obscured, hence darkness.",
+    "phrases": "黑暗 (hēi'àn) - darkness<br>暗示 (ànshì) - hint, suggest<br>暗中 (ànzhōng) - secretly<br>暗恋 (ànliàn) - unrequited love<br>阴暗 (yīn'àn) - gloomy"
+  },
+  "棉": {
+    "pinyin": "mián",
+    "meaning": "cotton",
+    "composition": "Formed from 木 (mù, wood) and 白 (bái, white), suggesting the white fiber comes from a plant.",
+    "phrases": "棉花 (miánhua) - cotton<br>棉袄 (mián'ǎo) - cotton-padded jacket<br>棉布 (miánbù) - cotton cloth<br>棉衣 (miányī) - cotton clothes<br>纯棉 (chúnmián) - pure cotton"
+  },
+  "日": {
+    "pinyin": "rì",
+    "meaning": "sun, day, date",
+    "composition": "Pictographic character representing the sun.",
+    "phrases": "日子 (rìzi) - day, life<br>生日 (shēngrì) - birthday<br>日常 (rìcháng) - daily<br>假日 (jiàrì) - holiday<br>今日 (jīnrì) - today"
+  },
+  "智": {
+    "pinyin": "zhì",
+    "meaning": "wisdom, intellect, intelligence",
+    "composition": "Formed from 知 (zhī, know) and 日 (rì, sun), suggesting knowledge and clarity like the sun.",
+    "phrases": "智慧 (zhìhuì) - wisdom<br>智力 (zhìlì) - intelligence<br>智商 (zhìshāng) - IQ<br>智者 (zhìzhě) - wise person<br>明智 (míngzhì) - wise, sensible"
+  },
+  "白": {
+    "pinyin": "bái",
+    "meaning": "white, pure, clear, plain",
+    "composition": "Pictographic character representing something white.",
+    "phrases": "白色 (báisè) - white<br>明白 (míngbai) - understand<br>白天 (báitiān) - daytime<br>白菜 (báicài) - cabbage<br>清白 (qīngbái) - innocent"
+  },
+  "帛": {
+    "pinyin": "bó",
+    "meaning": "silk fabric, cloth",
+    "composition": "A variant of 白 (bái, white) with a top stroke, representing a piece of white silk.",
+    "phrases": "帛书 (bóshū) - silk manuscript<br>尺帛 (chǐbó) - a small piece of silk (archaic)<br>化干戈为玉帛 (huà gāngē wéi yùbó) - to turn hostility into friendship<br>帛画 (bóhuà) - silk painting<br>锦帛 (jǐnbó) - brocade and silk"
+  },
+  "锦": {
+    "pinyin": "jǐn",
+    "meaning": "brocade, embroidered",
+    "composition": "Formed from 金 (jīn, metal, gold) and 帛 (bó, silk), suggesting valuable and beautiful silk fabric.",
+    "phrases": "锦绣 (jǐnxiù) - brocade and embroidery, beautiful<br>锦旗 (jǐnqí) - silk banner<br>锦上添花 (jǐn shàng tiān huā) - to add flowers to brocade, to make something even better<br>锦衣玉食 (jǐnyīyùshí) - fine clothes and delicious food<br>锦标 (jǐnbiāo) - trophy"
+  },
+  "晶": {
+    "pinyin": "jīng",
+    "meaning": "crystal, clear, bright",
+    "composition": "Consists of three 日 (rì, sun), suggesting extreme brightness and clarity.",
+    "phrases": "水晶 (shuǐjīng) - crystal<br>晶体 (jīngtǐ) - crystal<br>亮晶晶 (liàngjīngjīng) - sparkling, glittering<br>晶莹 (jīngyíng) - sparkling and translucent<br>晶状体 (jīngzhuàngtǐ) - lens (of the eye)"
+  },
+  "曐": {
+    "pinyin": "xīng",
+    "meaning": "Variant of 星 (xīng) - star",
+    "composition": "A variant form of 星 (xīng).",
+    "phrases": "This is a variant character, use phrases for 星 (xīng) instead: 星星 (xīngxing) - star<br>星空 (xīngkōng) - starry sky<br>明星 (míngxīng) - celebrity<br>星座 (xīngzuò) - constellation<br>行星 (xíngxīng) - planet"
+  },
+  "陌": {
+    "pinyin": "mò",
+    "meaning": "path, street, strange, unfamiliar",
+    "composition": "Formed from 阜 (fù, mound) and 百 (bǎi, hundred), suggesting a path leading to many places.",
+    "phrases": "陌生 (mòshēng) - strange, unfamiliar<br>阡陌 (qiānmò) - footpaths between fields<br>陌路 (mòlù) - strangers<br>陌生的 (mòshēngde) - unfamiliar<br>陌上 (mòshàng) - on the path"
+  },
+  "宿": {
+    "pinyin": "sù, xiǔ, xiù",
+    "meaning": "lodge, stay overnight, constellation, old, former",
+    "composition": "Formed from 宀 (mián, roof) and 百 (bǎi, hundred), suggesting a place where many people stay.",
+    "phrases": "宿舍 (sùshè) - dormitory<br>住宿 (zhùsù) - accommodation<br>星宿 (xīngxiù) - constellation<br>宿愿 (sùyuàn) - long-cherished wish<br>借宿 (jièsù) - to stay overnight"
+  },
+  "伯": {
+    "pinyin": "bó, bài",
+    "meaning": "elder brother, father's elder brother, earl",
+    "composition": "Formed from 亻 (rén, person) and 白 (bái, white), suggesting a senior or respected person.",
+    "phrases": "伯父 (bófù) - father's elder brother<br>伯仲 (bózhòng) - equally matched<br>老伯 (lǎobó) - old man (respectful)<br>伯爵 (bójué) - earl<br>大伯 (dàbó) - father's eldest brother"
+  },
+  "百": {
+    "pinyin": "bǎi",
+    "meaning": "hundred, numerous, all kinds of",
+    "composition": "Represents one hundred, originally a pictograph.",
+    "phrases": "百分 (bǎifēn) - percent<br>百姓 (bǎixìng) - common people<br>百货 (bǎihuò) - general merchandise<br>百般 (bǎibān) - in every possible way<br>百合 (bǎihé) - lily"
+  },
+  "意": {
+    "pinyin": "yì",
+    "meaning": "meaning, idea, intention, wish",
+    "composition": "Formed from 立 (lì, stand) and 心 (xīn, heart), suggesting the heart's intention or meaning.",
+    "phrases": "意思 (yìsi) - meaning, idea<br>意义 (yìyì) - significance<br>愿意 (yuànyì) - willing<br>意见 (yìjiàn) - opinion<br>意外 (yìwài) - accident"
+  }
+}
+
+Gemini Model: gemini-2.0-flash
+Datetime: 2025-05-10 05:04:38
+
+{
+  "口": {
+    "pinyin": "kǒu",
+    "meaning": "mouth, entrance, opening",
+    "composition": "Represents an open mouth",
+    "phrases": "人口 (rén kǒu) - population<br>门口 (mén kǒu) - doorway<br>口味 (kǒu wèi) - taste<br>开口 (kāi kǒu) - to open one's mouth, to start to talk<br>口水 (kǒu shuǐ) - saliva"
+  },
+  "氵": {
+    "pinyin": "shuǐ",
+    "meaning": "water (radical)",
+    "composition": "Simplified form of 水 (water) used as a radical on the left side of characters",
+    "phrases": "This is a radical, not used as a standalone word in common phrases. It is a component of many characters related to water."
+  },
+  "艹": {
+    "pinyin": "cǎo",
+    "meaning": "grass, plant (radical)",
+    "composition": "Represents grass or plants, often found at the top of characters",
+    "phrases": "This is a radical, not used as a standalone word in common phrases. It is a component of many characters related to plants."
+  },
+  "澡": {
+    "pinyin": "zǎo",
+    "meaning": "bath, to bathe",
+    "composition": "Consists of the water radical (氵) on the left and 喿 on the right, indicating the sound",
+    "phrases": "洗澡 (xǐ zǎo) - to take a bath/shower<br>澡堂 (zǎo táng) - bathhouse<br>澡盆 (zǎo pén) - bathtub<br>早澡 (zǎo zǎo) - morning bath<br>泡澡 (pào zǎo) - to soak in a bath"
+  },
+  "喿": {
+    "pinyin": "zào",
+    "meaning": "noise, clamor",
+    "composition": "Composed of four 口 (mouths), representing many voices making noise",
+    "phrases": "This character is not commonly used in modern phrases outside of its use as a component in other characters like 澡 and 噪."
+  },
+  "藻": {
+    "pinyin": "zǎo",
+    "meaning": "algae, seaweed",
+    "composition": "Consists of the grass radical (艹) on top and 喿 below, indicating a type of plant that makes noise (rustling in the water)",
+    "phrases": "海藻 (hǎi zǎo) - seaweed<br>绿藻 (lǜ zǎo) - green algae<br>藻类 (zǎo lèi) - algae<br>藻井 (zǎo jǐng) - caisson (ceiling decoration)<br>水藻 (shuǐ zǎo) - aquatic algae"
+  },
+  "品": {
+    "pinyin": "pǐn",
+    "meaning": "product, goods, article, grade, rank",
+    "composition": "Composed of three 口 (mouths), representing many items or a high standard",
+    "phrases": "产品 (chǎn pǐn) - product<br>商品 (shāng pǐn) - commodity<br>品质 (pǐn zhì) - quality<br>品尝 (pǐn cháng) - to taste<br>人品 (rén pǐn) - moral character"
+  },
+  "木": {
+    "pinyin": "mù",
+    "meaning": "tree, wood",
+    "composition": "Represents the shape of a tree with branches and roots",
+    "phrases": "木头 (mù tou) - wood, timber<br>木材 (mù cái) - lumber<br>木星 (mù xīng) - Jupiter<br>木耳 (mù ěr) - wood ear fungus<br>树木 (shù mù) - trees"
+  }
+}

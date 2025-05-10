@@ -1,0 +1,13 @@
+心
+    - 想 (heart + image)
+        - 愿 (heart + original)
+        - 惟 (heart + only)
+    - 情 (heart + blue)
+        - 愛 (heart + receive)
+        - 恋 (heart + connect)
+    - 忘 (heart + perish)
+        - 怯 (heart + lack)
+        - 悔 (heart + each)
+    - 志 (heart + sign)
+        - 意 (heart + sound)
+        - 思 (heart + field)

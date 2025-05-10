@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZiNets Character Network (Vue + Element Plus)</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/element-plus/2.3.12/index.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/element-plus/2.3.12/index.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+        }
+        
+        .app-container {
+            height: 100vh;
+            display: flex;
+        }
+        
+        .chart-container {
+            width: 60%;
+            height: 100%;
+        }
+        
+        .info-panel {
+            width: 40%;
+            padding: 20px;
+            background-color: #f5f5f5;
+            overflow-y: auto;
+            border-left: 1px solid #ddd;
+        }
+        
+        .character {
+            font-size: 72px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .pinyin {
+            font-size: 18px;
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        
+        .meaning, .composition {
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .phrases {
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="app-container">
+            <div class="chart-container" ref="chartContainer"></div>
+            <div class="info-panel">
+                <div class="character">{{ selectedChar }}</div>
+                <div class="pinyin">{{ selectedCharData.pinyin }}</div>
+                
+                <el-divider></el-divider>
+                
+                <div class="section-title">Meaning</div>
+                <div class="meaning">{{ selectedCharData.meaning }}</div>
+                
+                <div class="section-title">Composition</div>
+                <div class="composition">{{ selectedCharData.composition }}</div>
+                
+                <div class="section-title">Related Phrases</div>
+                <div class="phrases" v-html="selectedCharData.phrases"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { createApp, ref, reactive, onMounted, watch } = Vue;
+        
+        const app = createApp({
+            setup() {
+                // Character data repository
+                const characterData = reactive({
+                    '日': {
+                        pinyin: 'rì',
+                        meaning: 'sun; day; date, day of the month',
+                        composition: 'Pictograph of the sun',
+                        phrases: '日出 (rì chū) - sunrise<br>日落 (rì luò) - sunset<br>日子 (rì zi) - day; date; life<br>日常 (rì cháng) - daily; everyday<br>日期 (rì qī) - date'
+                    },
+                    '音': {
+                        pinyin: 'yīn',
+                        meaning: 'sound; tone; news; syllable',
+                        composition: '立 (stand) + 日 (sun)',
+                        phrases: '声音 (shēng yīn) - sound<br>音乐 (yīn yuè) - music<br>音量 (yīn liàng) - volume<br>音节 (yīn jié) - syllable<br>音符 (yīn fú) - musical note'
+                    },
+                    '智': {
+                        pinyin: 'zhì',
+                        meaning: 'wisdom; knowledge; intelligence',
+                        composition: '知 (knowledge) + 日 (sun) - enlightened knowledge',
+                        phrases: '智慧 (zhì huì) - wisdom<br>智能 (zhì néng) - intelligence<br>智商 (zhì shāng) - IQ<br>智力 (zhì lì) - intellect<br>人工智能 (rén gōng zhì néng) - artificial intelligence'
+                    },
+                    '暗': {
+                        pinyin: 'àn',
+                        meaning: 'dark; hidden; secret; dim',
+                        composition: '日 (sun) + 音 (sound) - absence of light (sun)',
+                        phrases: '黑暗 (hēi àn) - darkness<br>暗示 (àn shì) - hint; suggest<br>暗中 (àn zhōng) - in the dark<br>暗号 (àn hào) - secret code<br>暗访 (àn fǎng) - to investigate secretly'
+                    },
+                    '意': {
+                        pinyin: 'yì',
+                        meaning: 'meaning; idea; intention; wish',
+                        composition: '心 (heart) + 音 (sound) - thoughts expressed through sound',
+                        phrases: '意思 (yì si) - meaning<br>意见 (yì jiàn) - opinion<br>注意 (zhù yì) - pay attention<br>意图 (yì tú) - intention<br>意外 (yì wài) - accident'
+                    },
+                    '白': {
+                        pinyin: 'bái',
+                        meaning: 'white; pure; clear; blank',
+                        composition: '丿 (slash) + 日 (sun) - bright light from the sun',
+                        phrases: '白色 (bái sè) - white color<br>明白 (míng bai) - to understand<br>白天 (bái tiān) - daytime<br>白纸 (bái zhǐ) - blank paper<br>白费 (bái fèi) - in vain'
+                    },
+                    '伯': {
+                        pinyin: 'bó',
+                        meaning: 'eldest uncle; count; earl',
+                        composition: '亻 (person) + 白 (white) - respected elder',
+                        phrases: '伯父 (bó fù) - father\'s elder brother<br>伯爵 (bó jué) - earl; count<br>大伯 (dà bó) - husband\'s elder brother<br>伯乐 (bó lè) - good judge of talent<br>伯仲 (bó zhòng) - to rank equally'
+                    },
+                    '百': {
+                        pinyin: 'bǎi',
+                        meaning: 'hundred; numerous; all kinds',
+                        composition: '一 (one) + 白 (white) - one hundred',
+                        phrases: '百分 (bǎi fēn) - percent<br>百科 (bǎi kē) - encyclopedia<br>百货 (bǎi huò) - department store<br>百姓 (bǎi xìng) - common people<br>百年 (bǎi nián) - century'
+                    },
+                    '陌': {
+                        pinyin: 'mò',
+                        meaning: 'path between fields; street; stranger',
+                        composition: '阝 (mound) + 百 (hundred) - many paths',
+                        phrases: '陌生 (mò shēng) - strange; unfamiliar<br>陌生人 (mò shēng rén) - stranger<br>陌路 (mò lù) - unfamiliar road<br>街陌 (jiē mò) - streets and alleys<br>田陌 (tián mò) - path between fields'
+                    },
+                    '宿': {
+                        pinyin: 'sù/xiǔ',
+                        meaning: 'lodge; stay overnight; constellation',
+                        composition: '亻 (person) + 宀 (roof) + 百 (hundred) - many people under a roof',
+                        phrases: '住宿 (zhù sù) - accommodation<br>宿舍 (sù shè) - dormitory<br>留宿 (liú sù) - to stay overnight<br>星宿 (xīng xiǔ) - constellation<br>宿命 (sù mìng) - predestination'
+                    },
+                    '帛': {
+                        pinyin: 'bó',
+                        meaning: 'silk; cloth',
+                        composition: '白 (white) + 巾 (cloth) - white silk',
+                        phrases: '绸帛 (chóu bó) - silks<br>布帛 (bù bó) - cloth and silk<br>帛书 (bó shū) - ancient silk manuscripts<br>金帛 (jīn bó) - wealth<br>缯帛 (zēng bó) - silk fabric'
+                    },
+                    '棉': {
+                        pinyin: 'mián',
+                        meaning: 'cotton',
+                        composition: '木 (tree/plant) + 帛 (silk) - plant fiber cloth',
+                        phrases: '棉花 (mián huā) - cotton<br>棉被 (mián bèi) - cotton quilt<br>棉衣 (mián yī) - cotton-padded clothes<br>棉布 (mián bù) - cotton cloth<br>棉质 (mián zhì) - cotton material'
+                    },
+                    '锦': {
+                        pinyin: 'jǐn',
+                        meaning: 'brocade; embroidered',
+                        composition: '钅 (metal/gold) + 帛 (silk) - decorated fine cloth',
+                        phrases: '锦绣 (jǐn xiù) - splendid; beautiful<br>锦旗 (jǐn qí) - silk banner<br>锦囊 (jǐn náng) - brocade bag; good plan<br>前程似锦 (qián chéng sì jǐn) - bright future<br>衣锦还乡 (yī jǐn huán xiāng) - return home in glory'
+                    },
+                    '晶': {
+                        pinyin: 'jīng',
+                        meaning: 'crystal; bright; clear',
+                        composition: '日 (sun) + 日 (sun) + 日 (sun) - brilliant light',
+                        phrases: '水晶 (shuǐ jīng) - crystal<br>晶莹 (jīng yíng) - bright and clear<br>晶体 (jīng tǐ) - crystal; crystalline<br>结晶 (jié jīng) - crystallization<br>晶格 (jīng gé) - crystal lattice'
+                    },
+                    '曐': {
+                        pinyin: 'lóng',
+                        meaning: 'bright; clear; luminous (rare character)',
+                        composition: '晶 (crystal) + 生 (life/growth) - life-giving brightness',
+                        phrases: '曐亮 (lóng liàng) - bright and clear<br>曐光 (lóng guāng) - brilliant light<br>曐曚 (lóng méng) - dim light<br>曐耀 (lóng yào) - dazzling<br>曐煌 (lóng huáng) - brilliant'
+                    }
+                });
+
+                // Define the tree structure for ECharts
+                const treeData = {
+                    name: '日',
+                    children: [
+                        {
+                            name: '音',
+                            symbolSize: 25,
+                            decomposition: '立 + 日',
+                            children: [
+                                {
+                                    name: '暗',
+                                    symbolSize: 25,
+                                    decomposition: '日 + 音'
+                                },
+                                {
+                                    name: '意',
+                                    symbolSize: 25,
+                                    decomposition: '心 + 音'
+                                }
+                            ]
+                        },
+                        {
+                            name: '智',
+                            symbolSize: 25,
+                            decomposition: '知 + 日'
+                        },
+                        {
+                            name: '暗',
+                            symbolSize: 25,
+                            decomposition: '日 + 音'
+                        },
+                        {
+                            name: '白',
+                            symbolSize: 25,
+                            decomposition: '丿 + 日',
+                            children: [
+                                {
+                                    name: '伯',
+                                    symbolSize: 25,
+                                    decomposition: '亻 + 白'
+                                },
+                                {
+                                    name: '百',
+                                    symbolSize: 25,
+                                    decomposition: '一 + 白',
+                                    children: [
+                                        {
+                                            name: '陌',
+                                            symbolSize: 25,
+                                            decomposition: '阝 + 百'
+                                        },
+                                        {
+                                            name: '宿',
+                                            symbolSize: 25,
+                                            decomposition: '亻 + 宀 + 百'
+                                        }
+                                    ]
+                                },
+                                {
+                                    name: '帛',
+                                    symbolSize: 25,
+                                    decomposition: '白 + 巾',
+                                    children: [
+                                        {
+                                            name: '棉',
+                                            symbolSize: 25,
+                                            decomposition: '木 + 帛'
+                                        },
+                                        {
+                                            name: '锦',
+                                            symbolSize: 25,
+                                            decomposition: '钅 + 帛'
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            name: '晶',
+                            symbolSize: 25,
+                            decomposition: '日 + 日 + 日',
+                            children: [
+                                {
+                                    name: '曐',
+                                    symbolSize: 25,
+                                    decomposition: '晶 + 生'
+                                }
+                            ]
+                        }
+                    ]
+                };
+
+                // Selected character state
+                const selectedChar = ref('日');
+                const selectedCharData = ref(characterData['日']);
+
+                // Chart reference
+                const chartContainer = ref(null);
+                let chart = null;
+
+                // Initialize ECharts
+                const initChart = () => {
+                    if (chartContainer.value) {
+                        chart = echarts.init(chartContainer.value);
+                        
+                        const option = {
+                            tooltip: {
+                                trigger: 'item',
+                                formatter: function(params) {
+                                    if (params.data.decomposition) {
+                                        return `<div style="font-size:18px; font-weight:bold; margin-bottom:5px;">${params.data.name}</div>
+                                                <div>${params.data.decomposition}</div>`;
+                                    } else {
+                                        return params.data.name;
+                                    }
+                                },
+                                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                                borderColor: '#ccc',
+                                borderWidth: 1,
+                                padding: 10,
+                                textStyle: {
+                                    color: '#333',
+                                    fontSize: 16
+                                }
+                            },
+                            series: [
+                                {
+                                    type: 'tree',
+                                    data: [treeData],
+                                    top: '5%',
+                                    left: '10%',
+                                    bottom: '5%',
+                                    right: '20%',
+                                    symbolSize: 25,
+                                    orient: 'TB',
+                                    symbol: 'circle',
+                                    label: {
+                                        position: 'right',
+                                        distance: 0,
+                                        fontSize: 30,
+                                        fontWeight: 'bold'
+                                    },
+                                    leaves: {
+                                        label: {
+                                            position: 'right'
+                                        }
+                                    },
+                                    emphasis: {
+                                        focus: 'descendant'
+                                    },
+                                    expandAndCollapse: false,
+                                    animationDuration: 550,
+                                    animationDurationUpdate: 750
+                                }
+                            ]
+                        };
+                        
+                        chart.setOption(option);
+                        
+                        // Handle node click event
+                        chart.on('click', (params) => {
+                            if (params.data.name && characterData[params.data.name]) {
+                                selectedChar.value = params.data.name;
+                                selectedCharData.value = characterData[params.data.name];
+                            }
+                        });
+                        
+                        // Make chart responsive
+                        window.addEventListener('resize', () => {
+                            if (chart) {
+                                chart.resize();
+                            }
+                        });
+                    }
+                };
+                
+                // Initialize on component mount
+                onMounted(() => {
+                    initChart();
+                });
+                
+                return {
+                    selectedChar,
+                    selectedCharData,
+                    chartContainer
+                };
+            }
+        });
+        
+        app.use(ElementPlus);
+        app.mount('#app');
+    </script>
+</body>
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chinese Character Network</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+        #chart-container {
+            width: 60%;
+            height: 100%;
+        }
+        #info-panel {
+            width: 40%;
+            padding: 20px;
+            background-color: #f5f5f5;
+            overflow-y: auto;
+            border-left: 1px solid #ddd;
+        }
+        .node-tooltip {
+            position: absolute;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            pointer-events: none;
+            font-size: 14px;
+            display: none;
+        }
+        .character {
+            font-size: 72px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .pinyin {
+            font-size: 18px;
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section h3 {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            color: #333;
+        }
+        .composition {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .phrases {
+            line-height: 1.6;
+        }
+        .meaning {
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div id="chart-container"></div>
+    <div id="info-panel">
+        <div class="character" id="selected-char">日</div>
+        <div class="pinyin" id="selected-pinyin">rì</div>
+
+        <div class="section">
+            <h3>Meaning</h3>
+            <div class="meaning" id="selected-meaning">
+                sun, day, date
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Composition</h3>
+            <div class="composition" id="selected-composition">
+                Pictographic character depicting the sun.
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Related Phrases</h3>
+            <div class="phrases" id="selected-phrases">
+                日期 (rì qī) - date<br>生日 (shēng rì) - birthday<br>每天 (měi tiān) - every day<br>日子 (rì zi) - day, life<br>日本 (Rì běn) - Japan
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Character data repository
+        const characterData = {
+    "白": {
+        "pinyin": "bái",
+        "meaning": "white, pure, clear, plain, blank, bright, in vain",
+        "composition": "Pictographic character depicting a grain of rice, representing whiteness.",
+        "phrases": "白色 (bái sè) - white color<br>明白 (míng bái) - to understand, clear<br>白天 (bái tiān) - daytime<br>白费 (bái fèi) - to waste, in vain<br>白菜 (bái cài) - Chinese cabbage"
+    },
+    "日": {
+        "pinyin": "rì",
+        "meaning": "sun, day, date",
+        "composition": "Pictographic character depicting the sun.",
+        "phrases": "日期 (rì qī) - date<br>生日 (shēng rì) - birthday<br>每天 (měi tiān) - every day<br>日子 (rì zi) - day, life<br>日本 (Rì běn) - Japan"
+    },
+    "锦": {
+        "pinyin": "jǐn",
+        "meaning": "brocade, embroidered, bright, beautiful",
+        "composition": "金 (jīn - gold) + 帛 (bó - silk fabric), indicating valuable silk fabric.",
+        "phrases": "锦绣 (jǐn xiù) - brocade, beautiful<br>锦旗 (jǐn qí) - silk banner (presented as a reward)<br>锦上添花 (jǐn shàng tiān huā) - to add flowers to brocade (to make something already good even better)<br>锦衣玉食 (jǐn yī yù shí) - fine clothes and sumptuous food<br>前程似锦 (qián chéng sì jǐn) - have a bright future"
+    },
+    "百": {
+        "pinyin": "bǎi",
+        "meaning": "hundred, numerous, all kinds of",
+        "composition": "一 (yī - one) above 白 (bái - white), originally representing a large number.",
+        "phrases": "百分之 (bǎi fēn zhī) - percent<br>百姓 (bǎi xìng) - common people<br>一百 (yī bǎi) - one hundred<br>百货 (bǎi huò) - general merchandise<br>百忙之中 (bǎi máng zhī zhōng) - in the midst of pressing affairs"
+    },
+    "意": {
+        "pinyin": "yì",
+        "meaning": "meaning, idea, thought, intention, wish, sense",
+        "composition": "音 (yīn - sound) + 心 (xīn - heart), representing the sound or feeling in one's heart.",
+        "phrases": "意思 (yì si) - meaning, idea<br>愿意 (yuàn yì) - to be willing<br>注意 (zhù yì) - to pay attention<br>意见 (yì jiàn) - opinion<br>意义 (yì yì) - significance"
+    },
+    "曐": {
+        "pinyin": "xīng",
+        "meaning": "(Variant of 星) star, celestial body, a little bit, sparkling, starlight",
+        "composition": "日 (rì - sun) + 生 (shēng - to give birth, to produce), representing something that shines like the sun. This is a variant of 星.",
+        "phrases": "This character is rarely used in modern Chinese. Phrases typically use 星 (xīng) instead. Examples using 星: 星星 (xīng xīng) - star<br>星期 (xīng qī) - week<br>星空 (xīng kōng) - starry sky<br>明星 (míng xīng) - star (celebrity)<br>星座 (xīng zuò) - constellation"
+    },
+    "智": {
+        "pinyin": "zhì",
+        "meaning": "wisdom, knowledge, intelligence",
+        "composition": "知 (zhī - to know) + 日 (rì - sun), representing clear understanding like the sun.",
+        "phrases": "智慧 (zhì huì) - wisdom<br>智力 (zhì lì) - intelligence<br>智商 (zhì shāng) - IQ<br>智者 (zhì zhě) - wise person<br>机智 (jī zhì) - witty, quick-witted"
+    },
+    "棉": {
+        "pinyin": "mián",
+        "meaning": "cotton",
+        "composition": "木 (mù - wood) + 帛 (bó - silk fabric), representing a plant that produces a soft, silky fiber.",
+        "phrases": "棉花 (mián hua) - cotton<br>棉袄 (mián ǎo) - cotton-padded jacket<br>棉布 (mián bù) - cotton cloth<br>棉衣 (mián yī) - cotton clothes<br>纯棉 (chún mián) - pure cotton"
+    },
+    "伯": {
+        "pinyin": "bó",
+        "meaning": "eldest brother, father's elder brother, uncle, count (noble title)",
+        "composition": "亻 (rén - person radical) + 白 (bái - white), representing a senior or elder person.",
+        "phrases": "伯父 (bó fù) - father's elder brother, uncle<br>伯母 (bó mǔ) - wife of father's elder brother, aunt<br>伯仲 (bó zhòng) - elder and younger brother, roughly equal<br>老伯 (lǎo bó) - old man (respectful term)<br>This character is not commonly used in many modern phrases outside of family relations."
+    },
+    "宿": {
+        "pinyin": "sù, xiǔ, xiù",
+        "meaning": "stay overnight, lodge, old, former, constellation",
+        "composition": "宀 (mián - roof radical) + 百 (bǎi - hundred), representing a place to stay.",
+        "phrases": "宿舍 (sù shè) - dormitory<br>住宿 (zhù sù) - accommodation<br>星宿 (xīng xiù) - constellation<br>宿愿 (sù yuàn) - long-cherished wish<br>宿醉 (sù zuì) - hangover"
+    },
+    "晶": {
+        "pinyin": "jīng",
+        "meaning": "crystal, clear, bright, sparkling",
+        "composition": "Three 日 (rì - sun) stacked together, representing extreme brightness.",
+        "phrases": "晶体 (jīng tǐ) - crystal<br>水晶 (shuǐ jīng) - crystal, rock crystal<br>亮晶晶 (liàng jīng jīng) - sparkling, glittering<br>晶莹 (jīng yíng) - sparkling and translucent<br>晶片 (jīng piàn) - chip (electronics)"
+    },
+    "陌": {
+        "pinyin": "mò",
+        "meaning": "path, street, strange, unfamiliar",
+        "composition": "阝(fù - mound, city radical) + 百 (bǎi - hundred), representing a path or street.",
+        "phrases": "陌生 (mò shēng) - strange, unfamiliar<br>阡陌 (qiān mò) - footpaths between fields<br>陌路 (mò lù) - strangers<br>This character is not commonly used in many modern phrases outside of 陌生. This character is not commonly used in many modern phrases outside of 陌生. This character is not commonly used in many modern phrases outside of 陌生. This character is not commonly used in many modern phrases outside of 陌生. This character is not commonly used in many modern phrases outside of 陌生."
+    },
+    "暗": {
+        "pinyin": "àn",
+        "meaning": "dark, gloomy, secret, hidden",
+        "composition": "日 (rì - sun) + 音 (yīn - sound), representing the sun hidden, hence darkness.",
+        "phrases": "黑暗 (hēi àn) - darkness<br>暗示 (àn shì) - to hint, suggestion<br>暗中 (àn zhōng) - secretly, in secret<br>暗恋 (àn liàn) - secret love<br>阴暗 (yīn àn) - gloomy, shady"
+    },
+    "帛": {
+        "pinyin": "bó",
+        "meaning": "silk fabric, cloth",
+        "composition": "白 (bái - white) + 巾 (jīn - towel), representing white silk cloth.",
+        "phrases": "帛书 (bó shū) - silk book (ancient writing on silk)<br>This character is not commonly used in many modern phrases. It is mostly found in historical contexts. This character is not commonly used in many modern phrases. It is mostly found in historical contexts. This character is not commonly used in many modern phrases. It is mostly found in historical contexts. This character is not commonly used in many modern phrases. It is mostly found in historical contexts. This character is not commonly used in many modern phrases. It is mostly found in historical contexts."
+    },
+    "音": {
+        "pinyin": "yīn",
+        "meaning": "sound, noise, tone, news, syllable",
+        "composition": "立 (lì - to stand) + 日 (rì - sun), representing the vibration of air caused by the sun's energy, hence sound.",
+        "phrases": "音乐 (yīn yuè) - music<br>声音 (shēng yīn) - voice, sound<br>音响 (yīn xiǎng) - sound system<br>音节 (yīn jié) - syllable<br>音标 (yīn biāo) - phonetic symbol"
+    }
+};
+
+        // Initialize ECharts
+        const chartContainer = document.getElementById('chart-container');
+        const chart = echarts.init(chartContainer);
+
+        // Define the tree structure based on your data
+        const treeData = {
+    "name": "日",
+    "children": [
+        {
+            "name": "音",
+            "symbolSize": 25,
+            "children": [
+                {
+                    "name": "暗",
+                    "symbolSize": 25,
+                    "children": [],
+                    "decomposition": "日 + 音"
+                },
+                {
+                    "name": "意",
+                    "symbolSize": 25,
+                    "children": [],
+                    "decomposition": "心 + 音"
+                }
+            ],
+            "decomposition": "立 + 日"
+        },
+        {
+            "name": "智",
+            "symbolSize": 25,
+            "children": [],
+            "decomposition": "知 + 日"
+        },
+        {
+            "name": "暗",
+            "symbolSize": 25,
+            "children": [],
+            "decomposition": "日 + 音"
+        },
+        {
+            "name": "白",
+            "symbolSize": 25,
+            "children": [
+                {
+                    "name": "伯",
+                    "symbolSize": 25,
+                    "children": [],
+                    "decomposition": "亻 + 白"
+                },
+                {
+                    "name": "百",
+                    "symbolSize": 25,
+                    "children": [
+                        {
+                            "name": "陌",
+                            "symbolSize": 25,
+                            "children": [],
+                            "decomposition": "阝 + 百"
+                        },
+                        {
+                            "name": "宿",
+                            "symbolSize": 25,
+                            "children": [],
+                            "decomposition": "亻 + 宀 + 百"
+                        }
+                    ],
+                    "decomposition": "一 + 白"
+                },
+                {
+                    "name": "帛",
+                    "symbolSize": 25,
+                    "children": [
+                        {
+                            "name": "棉",
+                            "symbolSize": 25,
+                            "children": [],
+                            "decomposition": "木 + 帛"
+                        },
+                        {
+                            "name": "锦",
+                            "symbolSize": 25,
+                            "children": [],
+                            "decomposition": "钅 + 帛"
+                        }
+                    ],
+                    "decomposition": "白 + 巾"
+                }
+            ],
+            "decomposition": "丿 + 日"
+        },
+        {
+            "name": "晶",
+            "symbolSize": 25,
+            "children": [
+                {
+                    "name": "曐",
+                    "symbolSize": 25,
+                    "children": [],
+                    "decomposition": "晶 + 生"
+                }
+            ],
+            "decomposition": "日 + 日 + 日"
+        }
+    ]
+};
+
+        // Set the option
+        const option = {
+            tooltip: {
+                trigger: 'item',
+                formatter: function(params) {
+                    if (params.data.decomposition) {
+                        return `<div style="font-size:18px; font-weight:bold; margin-bottom:5px;">${params.data.name}</div>
+                                <div>${params.data.decomposition}</div>`;
+                    } else {
+                        return params.data.name;
+                    }
+                },
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                borderColor: '#ccc',
+                borderWidth: 1,
+                padding: 10,
+                textStyle: {
+                    color: '#333',
+                    fontSize: 16
+                }
+            },
+            series: [
+                {
+                    type: 'tree',
+                    data: [treeData],
+                    top: '5%',
+                    left: '10%',
+                    bottom: '5%',
+                    right: '20%',
+                    symbolSize: 25,
+                    orient: 'TB',
+                    symbol: 'circle',
+                    label: {
+                        position: 'right',
+                        distance: 0,
+                        fontSize: 35,
+                        fontWeight: 'bold'
+                    },
+                    leaves: {
+                        label: {
+                            position: 'right',
+                            verticalAlign: 'middle',
+                            align: 'center'
+                        }
+                    },
+                    emphasis: {
+                        focus: 'descendant'
+                    },
+                    expandAndCollapse: false,
+                    animationDuration: 550,
+                    animationDurationUpdate: 750
+                }
+            ]
+        };
+
+        // Set the initial option and render
+        chart.setOption(option);
+
+        // Handle node click event
+        chart.on('click', function(params) {
+            const zi = params.data.name;
+            if (zi) {
+                const charData = characterData[zi];
+                if (charData) {
+                    // Update info panel
+                    document.getElementById('selected-char').textContent = zi;
+                    document.getElementById('selected-pinyin').textContent = charData.pinyin;
+                    document.getElementById('selected-meaning').textContent = charData.meaning;
+                    document.getElementById('selected-composition').textContent = charData.composition;
+                    document.getElementById('selected-phrases').innerHTML = charData.phrases;
+                }
+            }
+        });
+
+        // Make chart responsive
+        window.addEventListener('resize', function() {
+            chart.resize();
+        });
+    </script>
+</body>
+</html>

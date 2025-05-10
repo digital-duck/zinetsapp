@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chinese Character Network</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+        #chart-container {
+            width: 60%;
+            height: 100%;
+        }
+        #info-panel {
+            width: 40%;
+            padding: 20px;
+            background-color: #f5f5f5;
+            overflow-y: auto;
+            border-left: 1px solid #ddd;
+        }
+        .node-tooltip {
+            position: absolute;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            pointer-events: none;
+            font-size: 14px;
+            display: none;
+        }
+        .character {
+            font-size: 72px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .pinyin {
+            font-size: 18px;
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section h3 {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            color: #333;
+        }
+        .composition {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .phrases {
+            line-height: 1.6;
+        }
+        .meaning {
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div id="chart-container"></div>
+    <div id="info-panel">
+        <div class="character" id="selected-char">藻</div>
+        <div class="pinyin" id="selected-pinyin">zǎo</div>
+
+        <div class="section">
+            <h3>Meaning</h3>
+            <div class="meaning" id="selected-meaning">
+                algae, seaweed
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Composition</h3>
+            <div class="composition" id="selected-composition">
+                艹 (cǎo, grass) on top, indicating it's a plant, and 喿 (zào) on the bottom, which is a phonetic component.
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Related Phrases</h3>
+            <div class="phrases" id="selected-phrases">
+                海藻 (hǎi zǎo) - seaweed<br>藻类 (zǎo lèi) - algae<br>绿藻 (lǜ zǎo) - green algae<br>红藻 (hóng zǎo) - red algae<br>蓝藻 (lán zǎo) - blue-green algae
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Character data repository
+        const characterData = {
+    "氵": {
+        "pinyin": "shuǐ",
+        "meaning": "water (radical)",
+        "composition": "Pictorial representation of water droplets. It's the water radical, appearing on the left side of characters related to water.",
+        "phrases": "游泳 (yóu yǒng) - swimming<br>河流 (hé liú) - river<br>海洋 (hǎi yáng) - ocean<br>洗澡 (xǐ zǎo) - to take a bath<br>泪水 (lèi shuǐ) - tears"
+    },
+    "艹": {
+        "pinyin": "cǎo",
+        "meaning": "grass (radical)",
+        "composition": "Pictorial representation of grass. It's the grass radical, appearing at the top of characters related to plants.",
+        "phrases": "草地 (cǎo dì) - lawn; grassland<br>花草 (huā cǎo) - flowers and grass<br>草莓 (cǎo méi) - strawberry<br>药草 (yào cǎo) - medicinal herb<br>草原 (cǎo yuán) - prairie; grassland"
+    },
+    "品": {
+        "pinyin": "pǐn",
+        "meaning": "product, article, commodity, grade, rank, character, moral quality",
+        "composition": "Three 口 (kǒu, mouth) stacked on top of each other. Originally meant \"many mouths,\" implying a crowd or a large number of people, later evolving to mean \"product\" or \"quality\" because a good product is praised by many.",
+        "phrases": "产品 (chǎn pǐn) - product<br>品质 (pǐn zhì) - quality<br>商品 (shāng pǐn) - commodity<br>品尝 (pǐn cháng) - to taste<br>人品 (rén pǐn) - moral character"
+    },
+    "澡": {
+        "pinyin": "zǎo",
+        "meaning": "bath, bathe",
+        "composition": "氵 (shuǐ, water) on the left, indicating it's related to water, and 喿 (zào) on the right, which is a phonetic component.",
+        "phrases": "洗澡 (xǐ zǎo) - to take a bath<br>澡堂 (zǎo táng) - bathhouse<br>淋浴澡 (lín yù zǎo) - shower<br>泡澡 (pào zǎo) - to soak in a bath<br>洗个澡 (xǐ ge zǎo) - take a bath"
+    },
+    "喿": {
+        "pinyin": "zào",
+        "meaning": "noisy, chirping of birds",
+        "composition": "Four 口 (kǒu, mouth) arranged in a square. Represents many mouths making noise, like birds chirping.",
+        "phrases": "(This character is rarely used alone in modern Chinese. It's mostly used as a component in other characters.)<br>It appears in 噪 (zào) - noisy, clamorous<br>It appears in 操 (cāo) - to grasp, to hold, to do<br>It appears in 燥 (zào) - dry, parched<br>It appears in 躁 (zào) - restless, fidgety<br>It appears in 藻 (zǎo) - algae"
+    },
+    "口": {
+        "pinyin": "kǒu",
+        "meaning": "mouth, opening, entrance, measure word (for people, wells, etc.)",
+        "composition": "Pictorial representation of a mouth.",
+        "phrases": "人口 (rén kǒu) - population<br>门口 (mén kǒu) - doorway, entrance<br>开口 (kāi kǒu) - to open one's mouth, to start to speak<br>口味 (kǒu wèi) - taste, flavor<br>一口 (yī kǒu) - one mouthful"
+    },
+    "藻": {
+        "pinyin": "zǎo",
+        "meaning": "algae, seaweed",
+        "composition": "艹 (cǎo, grass) on top, indicating it's a plant, and 喿 (zào) on the bottom, which is a phonetic component.",
+        "phrases": "海藻 (hǎi zǎo) - seaweed<br>藻类 (zǎo lèi) - algae<br>绿藻 (lǜ zǎo) - green algae<br>红藻 (hóng zǎo) - red algae<br>蓝藻 (lán zǎo) - blue-green algae"
+    },
+    "木": {
+        "pinyin": "mù",
+        "meaning": "tree, wood",
+        "composition": "Pictorial representation of a tree with branches and roots.",
+        "phrases": "树木 (shù mù) - trees<br>木头 (mù tou) - wood, lumber<br>木材 (mù cái) - timber, lumber<br>木星 (mù xīng) - Jupiter<br>木耳 (mù ěr) - wood ear fungus"
+    }
+};
+
+        // Initialize ECharts
+        const chartContainer = document.getElementById('chart-container');
+        const chart = echarts.init(chartContainer);
+
+        // Define the tree structure based on your data
+        const treeData = {
+    "name": "藻",
+    "children": [
+        {
+            "name": "艹",
+            "symbolSize": 25,
+            "children": []
+        },
+        {
+            "name": "澡",
+            "symbolSize": 25,
+            "children": [
+                {
+                    "name": "氵",
+                    "symbolSize": 25,
+                    "children": []
+                },
+                {
+                    "name": "喿",
+                    "symbolSize": 25,
+                    "children": [
+                        {
+                            "name": "品",
+                            "symbolSize": 25,
+                            "children": [
+                                {
+                                    "name": "口",
+                                    "symbolSize": 25,
+                                    "children": []
+                                },
+                                {
+                                    "name": "口",
+                                    "symbolSize": 25,
+                                    "children": []
+                                },
+                                {
+                                    "name": "口",
+                                    "symbolSize": 25,
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "name": "木",
+                            "symbolSize": 25,
+                            "children": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+};
+
+        // Set the option
+        const option = {
+            tooltip: {
+                trigger: 'item',
+                formatter: function(params) {
+                    if (params.data.decomposition) {
+                        return `<div style="font-size:18px; font-weight:bold; margin-bottom:5px;">${params.data.name}</div>
+                                <div>${params.data.decomposition}</div>`;
+                    } else {
+                        return params.data.name;
+                    }
+                },
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                borderColor: '#ccc',
+                borderWidth: 1,
+                padding: 10,
+                textStyle: {
+                    color: '#333',
+                    fontSize: 16
+                }
+            },
+            series: [
+                {
+                    type: 'tree',
+                    data: [treeData],
+                    top: '5%',
+                    left: '10%',
+                    bottom: '5%',
+                    right: '20%',
+                    symbolSize: 25,
+                    orient: 'TB',
+                    symbol: 'circle',
+                    label: {
+                        position: 'right',
+                        distance: 0,
+                        fontSize: 35,
+                        fontWeight: 'bold'
+                    },
+                    leaves: {
+                        label: {
+                            position: 'right',
+                            verticalAlign: 'middle',
+                            align: 'center'
+                        }
+                    },
+                    emphasis: {
+                        focus: 'descendant'
+                    },
+                    expandAndCollapse: false,
+                    animationDuration: 550,
+                    animationDurationUpdate: 750
+                }
+            ]
+        };
+
+        // Set the initial option and render
+        chart.setOption(option);
+
+        // Handle node click event
+        chart.on('click', function(params) {
+            const zi = params.data.name;
+            if (zi) {
+                const charData = characterData[zi];
+                if (charData) {
+                    // Update info panel
+                    document.getElementById('selected-char').textContent = zi;
+                    document.getElementById('selected-pinyin').textContent = charData.pinyin;
+                    document.getElementById('selected-meaning').textContent = charData.meaning;
+                    document.getElementById('selected-composition').textContent = charData.composition;
+                    document.getElementById('selected-phrases').innerHTML = charData.phrases;
+                }
+            }
+        });
+
+        // Make chart responsive
+        window.addEventListener('resize', function() {
+            chart.resize();
+        });
+    </script>
+</body>
+</html>

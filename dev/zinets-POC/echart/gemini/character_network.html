@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chinese Character Network</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+        #chart-container {
+            width: 60%;
+            height: 100%;
+        }
+        #info-panel {
+            width: 40%;
+            padding: 20px;
+            background-color: #f5f5f5;
+            overflow-y: auto;
+            border-left: 1px solid #ddd;
+        }
+        .node-tooltip {
+            position: absolute;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            pointer-events: none;
+            font-size: 14px;
+            display: none;
+        }
+        .character {
+            font-size: 72px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .pinyin {
+            font-size: 18px;
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section h3 {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            color: #333;
+        }
+        .composition {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .phrases {
+            line-height: 1.6;
+        }
+        .meaning {
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div id="chart-container"></div>
+    <div id="info-panel">
+        <div class="character" id="selected-char">日</div>
+        <div class="pinyin" id="selected-pinyin">Unknown</div>
+        
+        <div class="section">
+            <h3>Meaning</h3>
+            <div class="meaning" id="selected-meaning">
+                Meaning not available
+            </div>
+        </div>
+        
+        <div class="section">
+            <h3>Composition</h3>
+            <div class="composition" id="selected-composition">
+                Composition not available
+            </div>
+        </div>
+        
+        <div class="section">
+            <h3>Related Phrases</h3>
+            <div class="phrases" id="selected-phrases">
+                日语 - Example phrase 1<br>日文 - Example phrase 2
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Character data repository
+        const characterData = {
+    "锦": {
+        "pinyin": "Unknown",
+        "meaning": "Meaning not available",
+        "composition": "Composition not available",
+        "phrases": "锦语 - Example phrase 1<br>锦文 - Example phrase 2"
+    },
+    "百": {
+        "pinyin": "Unknown",
+        "meaning": "Meaning not available",
+        "composition": "Composition not available",
+        "phrases": "百语 - Example phrase 1<br>百文 - Example phrase 2"
+    },
+    "帛": {
+        "pinyin": "Unknown",
+        "meaning": "Meaning not available",
+        "composition": "Composition not available",
+        "phrases": "帛语 - Example phrase 1<br>帛文 - Example phrase 2"
+    },
+    "棉": {
+        "pinyin": "Unknown",
+        "meaning": "Meaning not available",
+        "composition": "Composition not available",
+        "phrases": "棉语 - Example phrase 1<br>棉文 - Example phrase 2"
+    },
+    "白": {
+        "pinyin": "Unknown",
+        "meaning": "Meaning not available",
+        "composition": "Composition not available",
+        "phrases": "白语 - Example phrase 1<br>白文 - Example phrase 2"
+    },
+    "音": {
+        "pinyin": "Unknown",
+        "meaning": "Meaning not available",
+        "composition": "Composition not available",
+        "phrases": "音语 - Example phrase 1<br>音文 - Example phrase 2"
+    },
+    "伯": {
+        "pinyin": "Unknown",
+        "meaning": "Meaning not available",
+        "composition": "Composition not available",
+        "phrases": "伯语 - Example phrase 1<br>伯文 - Example phrase 2"
+    },
+    "晶": {
+        "pinyin": "Unknown",
+        "meaning": "Meaning not available",
+        "composition": "Composition not available",
+        "phrases": "晶语 - Example phrase 1<br>晶文 - Example phrase 2"
+    },
+    "陌": {
+        "pinyin": "Unknown",
+        "meaning": "Meaning not available",
+        "composition": "Composition not available",
+        "phrases": "陌语 - Example phrase 1<br>陌文 - Example phrase 2"
+    },
+    "意": {
+        "pinyin": "Unknown",
+        "meaning": "Meaning not available",
+        "composition": "Composition not available",
+        "phrases": "意语 - Example phrase 1<br>意文 - Example phrase 2"
+    },
+    "暗": {
+        "pinyin": "Unknown",
+        "meaning": "Meaning not available",
+        "composition": "Composition not available",
+        "phrases": "暗语 - Example phrase 1<br>暗文 - Example phrase 2"
+    },
+    "智": {
+        "pinyin": "Unknown",
+        "meaning": "Meaning not available",
+        "composition": "Composition not available",
+        "phrases": "智语 - Example phrase 1<br>智文 - Example phrase 2"
+    },
+    "日": {
+        "pinyin": "Unknown",
+        "meaning": "Meaning not available",
+        "composition": "Composition not available",
+        "phrases": "日语 - Example phrase 1<br>日文 - Example phrase 2"
+    },
+    "曐": {
+        "pinyin": "Unknown",
+        "meaning": "Meaning not available",
+        "composition": "Composition not available",
+        "phrases": "曐语 - Example phrase 1<br>曐文 - Example phrase 2"
+    },
+    "宿": {
+        "pinyin": "Unknown",
+        "meaning": "Meaning not available",
+        "composition": "Composition not available",
+        "phrases": "宿语 - Example phrase 1<br>宿文 - Example phrase 2"
+    }
+};
+
+        // Initialize ECharts
+        const chartContainer = document.getElementById('chart-container');
+        const chart = echarts.init(chartContainer);
+
+        // Define the tree structure based on your data
+        const treeData = {
+    "name": "日",
+    "children": [
+        {
+            "name": "音",
+            "symbolSize": 25,
+            "children": [
+                {
+                    "name": "暗",
+                    "symbolSize": 25,
+                    "children": [],
+                    "decomposition": "日 + 音"
+                },
+                {
+                    "name": "意",
+                    "symbolSize": 25,
+                    "children": [],
+                    "decomposition": "心 + 音"
+                }
+            ],
+            "decomposition": "立 + 日"
+        },
+        {
+            "name": "智",
+            "symbolSize": 25,
+            "children": [],
+            "decomposition": "知 + 日"
+        },
+        {
+            "name": "暗",
+            "symbolSize": 25,
+            "children": [],
+            "decomposition": "日 + 音"
+        },
+        {
+            "name": "白",
+            "symbolSize": 25,
+            "children": [
+                {
+                    "name": "伯",
+                    "symbolSize": 25,
+                    "children": [],
+                    "decomposition": "亻 + 白"
+                },
+                {
+                    "name": "百",
+                    "symbolSize": 25,
+                    "children": [
+                        {
+                            "name": "陌",
+                            "symbolSize": 25,
+                            "children": [],
+                            "decomposition": "阝 + 百"
+                        },
+                        {
+                            "name": "宿",
+                            "symbolSize": 25,
+                            "children": [],
+                            "decomposition": "亻 + 宀 + 百"
+                        }
+                    ],
+                    "decomposition": "一 + 白"
+                },
+                {
+                    "name": "帛",
+                    "symbolSize": 25,
+                    "children": [
+                        {
+                            "name": "棉",
+                            "symbolSize": 25,
+                            "children": [],
+                            "decomposition": "木 + 帛"
+                        },
+                        {
+                            "name": "锦",
+                            "symbolSize": 25,
+                            "children": [],
+                            "decomposition": "钅 + 帛"
+                        }
+                    ],
+                    "decomposition": "白 + 巾"
+                }
+            ],
+            "decomposition": "丿 + 日"
+        },
+        {
+            "name": "晶",
+            "symbolSize": 25,
+            "children": [
+                {
+                    "name": "曐",
+                    "symbolSize": 25,
+                    "children": [],
+                    "decomposition": "晶 + 生"
+                }
+            ],
+            "decomposition": "日 + 日 + 日"
+        }
+    ]
+};
+
+        // Set the option
+        const option = {
+            tooltip: {
+                trigger: 'item',
+                formatter: function(params) {
+                    if (params.data.decomposition) {
+                        return `<div style="font-size:18px; font-weight:bold; margin-bottom:5px;">${params.data.name}</div>
+                                <div>${params.data.decomposition}</div>`;
+                    } else {
+                        return params.data.name;
+                    }
+                },
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                borderColor: '#ccc',
+                borderWidth: 1,
+                padding: 10,
+                textStyle: {
+                    color: '#333',
+                    fontSize: 16
+                }
+            },
+            series: [
+                {
+                    type: 'tree',
+                    data: [treeData],
+                    top: '5%',
+                    left: '10%',
+                    bottom: '5%',
+                    right: '20%',
+                    symbolSize: 25,
+                    orient: 'TB',
+                    symbol: 'circle',
+                    label: {
+                        position: 'right',
+                        distance: 0,
+                        fontSize: 35,
+                        fontWeight: 'bold'
+                    },
+                    leaves: {
+                        label: {
+                            position: 'right',
+                            verticalAlign: 'middle',
+                            align: 'center'
+                        }
+                    },
+                    emphasis: {
+                        focus: 'descendant'
+                    },
+                    expandAndCollapse: false,
+                    animationDuration: 550,
+                    animationDurationUpdate: 750
+                }
+            ]
+        };
+
+        // Set the initial option and render
+        chart.setOption(option);
+
+        // Handle node click event
+        chart.on('click', function(params) {
+            const zi = params.data.name;
+            if (zi) {
+                const charData = characterData[zi];
+                if (charData) {
+                    // Update info panel
+                    document.getElementById('selected-char').textContent = zi;
+                    document.getElementById('selected-pinyin').textContent = charData.pinyin;
+                    document.getElementById('selected-meaning').textContent = charData.meaning;
+                    document.getElementById('selected-composition').textContent = charData.composition;
+                    document.getElementById('selected-phrases').innerHTML = charData.phrases;
+                }
+            }
+        });
+
+        // Make chart responsive
+        window.addEventListener('resize', function() {
+            chart.resize();
+        });
+    </script>
+</body>
+</html>

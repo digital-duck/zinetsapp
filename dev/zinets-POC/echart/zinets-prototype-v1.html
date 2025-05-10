@@ -108,6 +108,12 @@
                 composition: 'Pictograph of the sun',
                 phrases: '日出 (rì chū) - sunrise<br>日落 (rì luò) - sunset<br>日子 (rì zi) - day; date; life<br>日常 (rì cháng) - daily; everyday<br>日期 (rì qī) - date'
             },
+            '音': {
+                pinyin: 'yīn',
+                meaning: 'sound; tone; news; syllable',
+                composition: '立 (stand) + 日 (sun)',
+                phrases: '声音 (shēng yīn) - sound<br>音乐 (yīn yuè) - music<br>音量 (yīn liàng) - volume<br>音节 (yīn jié) - syllable<br>音符 (yīn fú) - musical note'
+            },
             '智': {
                 pinyin: 'zhì',
                 meaning: 'wisdom; knowledge; intelligence',
@@ -119,6 +125,12 @@
                 meaning: 'dark; hidden; secret; dim',
                 composition: '日 (sun) + 音 (sound) - absence of light (sun)',
                 phrases: '黑暗 (hēi àn) - darkness<br>暗示 (àn shì) - hint; suggest<br>暗中 (àn zhōng) - in the dark<br>暗号 (àn hào) - secret code<br>暗访 (àn fǎng) - to investigate secretly'
+            },
+            '意': {
+                pinyin: 'yì',
+                meaning: 'meaning; idea; intention; wish',
+                composition: '心 (heart) + 音 (sound) - thoughts expressed through sound',
+                phrases: '意思 (yì si) - meaning<br>意见 (yì jiàn) - opinion<br>注意 (zhù yì) - pay attention<br>意图 (yì tú) - intention<br>意外 (yì wài) - accident'
             },
             '白': {
                 pinyin: 'bái',
@@ -167,60 +179,111 @@
                 meaning: 'brocade; embroidered',
                 composition: '钅 (metal/gold) + 帛 (silk) - decorated fine cloth',
                 phrases: '锦绣 (jǐn xiù) - splendid; beautiful<br>锦旗 (jǐn qí) - silk banner<br>锦囊 (jǐn náng) - brocade bag; good plan<br>前程似锦 (qián chéng sì jǐn) - bright future<br>衣锦还乡 (yī jǐn huán xiāng) - return home in glory'
+            },
+            '晶': {
+                pinyin: 'jīng',
+                meaning: 'crystal; bright; clear',
+                composition: '日 (sun) + 日 (sun) + 日 (sun) - brilliant light',
+                phrases: '水晶 (shuǐ jīng) - crystal<br>晶莹 (jīng yíng) - bright and clear<br>晶体 (jīng tǐ) - crystal; crystalline<br>结晶 (jié jīng) - crystallization<br>晶格 (jīng gé) - crystal lattice'
+            },
+            '曐': {
+                pinyin: 'lóng',
+                meaning: 'bright; clear; luminous (rare character)',
+                composition: '晶 (crystal) + 生 (life/growth) - life-giving brightness',
+                phrases: '曐亮 (lóng liàng) - bright and clear<br>曐光 (lóng guāng) - brilliant light<br>曐曚 (lóng méng) - dim light<br>曐耀 (lóng yào) - dazzling<br>曐煌 (lóng huáng) - brilliant'
             }
         };
 
         // Initialize ECharts
-        const chartDom = document.getElementById('chart-container');
-        const myChart = echarts.init(chartDom);
+        const chartContainer = document.getElementById('chart-container');
+        const chart = echarts.init(chartContainer);
 
         // Define the tree structure based on your data
         const treeData = {
             name: '日',
             children: [
                 {
+                    name: '音',
+                    symbolSize: 25,
+                    decomposition: '立 + 日',
+                    children: [
+                        {
+                            name: '暗',
+                            symbolSize: 25,
+                            decomposition: '日 + 音'
+                        },
+                        {
+                            name: '意',
+                            symbolSize: 25,
+                            decomposition: '心 + 音'
+                        }
+                    ]
+                },
+                {
                     name: '智',
-                    symbolSize: 25
+                    symbolSize: 25,
+                    decomposition: '知 + 日'
                 },
                 {
                     name: '暗',
-                    symbolSize: 25
+                    symbolSize: 25,
+                    decomposition: '日 + 音'
                 },
                 {
                     name: '白',
                     symbolSize: 25,
+                    decomposition: '丿 + 日',
                     children: [
                         {
                             name: '伯',
-                            symbolSize: 25
+                            symbolSize: 25,
+                            decomposition: '亻 + 白'
                         },
                         {
                             name: '百',
                             symbolSize: 25,
+                            decomposition: '一 + 白',
                             children: [
                                 {
                                     name: '陌',
-                                    symbolSize: 25
+                                    symbolSize: 25,
+                                    decomposition: '阝 + 百'
                                 },
                                 {
                                     name: '宿',
-                                    symbolSize: 25
+                                    symbolSize: 25,
+                                    decomposition: '亻 + 宀 + 百'
                                 }
                             ]
                         },
                         {
                             name: '帛',
                             symbolSize: 25,
+                            decomposition: '白 + 巾',
                             children: [
                                 {
                                     name: '棉',
-                                    symbolSize: 25
+                                    symbolSize: 25,
+                                    decomposition: '木 + 帛'
                                 },
                                 {
                                     name: '锦',
-                                    symbolSize: 25
+                                    symbolSize: 25,
+                                    decomposition: '钅 + 帛'
                                 }
                             ]
+                        }
+                    ]
+                },
+                {
+                    name: '晶',
+                    symbolSize: 25,
+                    decomposition: '日 + 日 + 日',
+                    children: [
+                        {
+                            name: '曐',
+                            symbolSize: 25,
+                            decomposition: '晶 + 生'
                         }
                     ]
                 }
@@ -231,7 +294,14 @@
         const option = {
             tooltip: {
                 trigger: 'item',
-                formatter: '{b}',
+                formatter: function(params) {
+                    if (params.data.decomposition) {
+                        return `<div style="font-size:18px; font-weight:bold; margin-bottom:5px;">${params.data.name}</div>
+                                <div>${params.data.decomposition}</div>`;
+                    } else {
+                        return params.data.name;
+                    }
+                },
                 backgroundColor: 'rgba(255, 255, 255, 0.9)',
                 borderColor: '#ccc',
                 borderWidth: 1,
@@ -276,10 +346,10 @@
         };
 
         // Set the initial option and render
-        myChart.setOption(option);
+        chart.setOption(option);
 
         // Handle node click event
-        myChart.on('click', function(params) {
+        chart.on('click', function(params) {
             const zi = params.data.name;
             if (zi) {
                 const charData = characterData[zi];
@@ -296,7 +366,7 @@
 
         // Make chart responsive
         window.addEventListener('resize', function() {
-            myChart.resize();
+            chart.resize();
         });
     </script>
 </body>
