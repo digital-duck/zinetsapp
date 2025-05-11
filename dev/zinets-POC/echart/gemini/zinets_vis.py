@@ -231,6 +231,10 @@ def parse_markdown_to_tree_data(markdown_text):
     More robust indentation detection to handle files from different editors.
     Handles comments properly - anything after # is considered a comment and ignored.
     Fixes hierarchy nesting for proper parent-child relationships.
+
+    Notes:
+        when working with data from zinets database,
+        use `convert_d3graph_to_tree()` from `zinets/app/zadmin/pages/4-字形 Zi Structure.py`
     """
     lines = markdown_text.strip().split('\n')
     if not lines:
