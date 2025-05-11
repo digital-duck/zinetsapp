@@ -27,10 +27,10 @@ DEBUG_FLAG = True
 
 DEFAULT_NETWORK = """藻
         - 艹
-        - 澡
+        - 澡(氵+喿)
             - 氵
-            - 喿
-                - 品
+            - 喿(品+木)
+                - 品(口+口+口)
                         - 口 
                         - 口 
                         - 口 
@@ -392,7 +392,7 @@ def parse_markdown_to_tree_data(markdown_text):
         # Create new node
         new_node = {
             'name': char_name,
-            'symbolSize': 25,
+            # 'symbolSize': 25,
             'children': []
         }
         
@@ -900,7 +900,7 @@ def generate_html(tree_data, character_data, title="ZiNets Visualization"):
                 {{
                     type: 'tree',
                     data: [treeData],
-                    symbolSize: 70,
+                    symbolSize: 40,
                     orient: 'TB',
                     symbol: 'rect',
                     label: {{
@@ -914,9 +914,9 @@ def generate_html(tree_data, character_data, title="ZiNets Visualization"):
                     emphasis: {{
                         focus: 'relative',
                         itemStyle: {{
-                            shadowBlur: 10,
+                            shadowBlur: 40,
                             shadowOffsetX: 0,
-                            shadowColor: 'rgba(70, 70, 70, 0.5)'
+                            shadowColor: 'rgba(10, 10, 10, 0.75)'
                         }}
                     }},
                     expandAndCollapse: false,
@@ -995,6 +995,12 @@ def process_semantic_network(markdown_text, output_file="zi_vis.html", use_gemin
     """
     # Parse markdown to tree data
     tree_data = parse_markdown_to_tree_data(markdown_text)
+    if debug and tree_data:
+        # Save the parsed tree data for debugging
+        file_tree = "parsed_tree_data.json"
+        with open(file_tree, "w", encoding="utf-8") as f:
+            json.dump(tree_data, f, ensure_ascii=False, indent=4)
+        click.echo(f"Parsed tree data saved to {file_tree}")
 
     # Extract all characters from the tree
     characters = extract_all_characters(tree_data)

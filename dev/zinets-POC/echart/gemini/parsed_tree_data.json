@@ -1,0 +1,47 @@
+{
+    "name": "藻",
+    "children": [
+        {
+            "name": "艹",
+            "children": []
+        },
+        {
+            "name": "澡",
+            "children": [
+                {
+                    "name": "氵",
+                    "children": []
+                },
+                {
+                    "name": "喿",
+                    "children": [
+                        {
+                            "name": "品",
+                            "children": [
+                                {
+                                    "name": "口",
+                                    "children": []
+                                },
+                                {
+                                    "name": "口",
+                                    "children": []
+                                },
+                                {
+                                    "name": "口",
+                                    "children": []
+                                }
+                            ],
+                            "decomposition": "口+口+口"
+                        },
+                        {
+                            "name": "木",
+                            "children": []
+                        }
+                    ],
+                    "decomposition": "品+木"
+                }
+            ],
+            "decomposition": "氵+喿"
+        }
+    ]
+}

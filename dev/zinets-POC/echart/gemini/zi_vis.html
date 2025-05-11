@@ -101,7 +101,7 @@
         </div>
         <br><br>
         <div class="footer">
-            Provided by ZiNets on 2025-05-11 07:10:10
+            Provided by ZiNets on 2025-05-11 15:08:48
         </div>
     </div>
 
@@ -120,6 +120,30 @@
         "composition": "A simple pictograph representing a tree.",
         "phrases": "木头 (mù tou) - wood; log; blockhead<br>木材 (mù cái) - timber; lumber<br>木星 (mù xīng) - Jupiter<br>木耳 (mù ěr) - wood ear fungus<br>木匠 (mù jiàng) - carpenter"
     },
+    "艹": {
+        "pinyin": "cǎo",
+        "meaning": "grass (radical)",
+        "composition": "Represents grass or plants.",
+        "phrases": "(This is a radical, not a standalone character with common phrases. It's used in many characters related to plants.)"
+    },
+    "喿": {
+        "pinyin": "zào",
+        "meaning": "noisy; chirping of birds",
+        "composition": "Four '口' (mouth) characters, suggesting many mouths making noise.",
+        "phrases": "喧喿 (xuān zào) - noisy<br>喿杂 (zào zá) - clamorous; disorderly<br>无喿 (wú zào) - quiet; silent<br>喿鸣 (zào míng) - chirping (of birds)<br> (rarely used in modern common phrases)"
+    },
+    "口": {
+        "pinyin": "kǒu",
+        "meaning": "mouth; entrance; measure word (for people, wells, etc.)",
+        "composition": "A simple pictograph representing a mouth.",
+        "phrases": "人口 (rén kǒu) - population<br>门口 (mén kǒu) - doorway; entrance<br>口味 (kǒu wèi) - taste; flavor<br>开口 (kāi kǒu) - to open one's mouth; to start to speak<br>口水 (kǒu shuǐ) - saliva"
+    },
+    "澡": {
+        "pinyin": "zǎo",
+        "meaning": "to bathe; to wash",
+        "composition": "'氵' (water radical) + '喿' (noise/chirping - phonetic component).",
+        "phrases": "洗澡 (xǐ zǎo) - to take a bath/shower<br>澡堂 (zǎo táng) - bathhouse<br>澡盆 (zǎo pén) - bathtub<br>淋浴澡 (lín yù zǎo) - shower<br>泡澡 (pào zǎo) - to soak in a bath"
+    },
     "氵": {
         "pinyin": "shuǐ",
         "meaning": "water (radical)",
@@ -131,30 +155,6 @@
         "meaning": "algae; seaweed",
         "composition": "'艹' (grass radical) + '喿' (noise/chirping - phonetic component).",
         "phrases": "海藻 (hǎi zǎo) - seaweed<br>藻类 (zǎo lèi) - algae<br>绿藻 (lǜ zǎo) - green algae<br>藻饰 (zǎo shì) - embellishment; ornamentation (literary)<br>蓝藻 (lán zǎo) - blue algae"
-    },
-    "口": {
-        "pinyin": "kǒu",
-        "meaning": "mouth; entrance; measure word (for people, wells, etc.)",
-        "composition": "A simple pictograph representing a mouth.",
-        "phrases": "人口 (rén kǒu) - population<br>门口 (mén kǒu) - doorway; entrance<br>口味 (kǒu wèi) - taste; flavor<br>开口 (kāi kǒu) - to open one's mouth; to start to speak<br>口水 (kǒu shuǐ) - saliva"
-    },
-    "喿": {
-        "pinyin": "zào",
-        "meaning": "noisy; chirping of birds",
-        "composition": "Four '口' (mouth) characters, suggesting many mouths making noise.",
-        "phrases": "喧喿 (xuān zào) - noisy<br>喿杂 (zào zá) - clamorous; disorderly<br>无喿 (wú zào) - quiet; silent<br>喿鸣 (zào míng) - chirping (of birds)<br> (rarely used in modern common phrases)"
-    },
-    "艹": {
-        "pinyin": "cǎo",
-        "meaning": "grass (radical)",
-        "composition": "Represents grass or plants.",
-        "phrases": "(This is a radical, not a standalone character with common phrases. It's used in many characters related to plants.)"
-    },
-    "澡": {
-        "pinyin": "zǎo",
-        "meaning": "to bathe; to wash",
-        "composition": "'氵' (water radical) + '喿' (noise/chirping - phonetic component).",
-        "phrases": "洗澡 (xǐ zǎo) - to take a bath/shower<br>澡堂 (zǎo táng) - bathhouse<br>澡盆 (zǎo pén) - bathtub<br>淋浴澡 (lín yù zǎo) - shower<br>泡澡 (pào zǎo) - to soak in a bath"
     }
 };
 
@@ -168,51 +168,45 @@
     "children": [
         {
             "name": "艹",
-            "symbolSize": 25,
             "children": []
         },
         {
             "name": "澡",
-            "symbolSize": 25,
             "children": [
                 {
                     "name": "氵",
-                    "symbolSize": 25,
                     "children": []
                 },
                 {
                     "name": "喿",
-                    "symbolSize": 25,
                     "children": [
                         {
                             "name": "品",
-                            "symbolSize": 25,
                             "children": [
                                 {
                                     "name": "口",
-                                    "symbolSize": 25,
                                     "children": []
                                 },
                                 {
                                     "name": "口",
-                                    "symbolSize": 25,
                                     "children": []
                                 },
                                 {
                                     "name": "口",
-                                    "symbolSize": 25,
                                     "children": []
                                 }
-                            ]
+                            ],
+                            "decomposition": "口+口+口"
                         },
                         {
                             "name": "木",
-                            "symbolSize": 25,
                             "children": []
                         }
-                    ]
+                    ],
+                    "decomposition": "品+木"
                 }
-            ]
+            ],
+            "decomposition": "氵+喿"
         }
     ]
 };
@@ -242,7 +236,7 @@
                 {
                     type: 'tree',
                     data: [treeData],
-                    symbolSize: 70,
+                    symbolSize: 40,
                     orient: 'TB',
                     symbol: 'rect',
                     label: {
@@ -256,9 +250,9 @@
                     emphasis: {
                         focus: 'relative',
                         itemStyle: {
-                            shadowBlur: 10,
+                            shadowBlur: 40,
                             shadowOffsetX: 0,
-                            shadowColor: 'rgba(70, 70, 70, 0.5)'
+                            shadowColor: 'rgba(10, 10, 10, 0.75)'
                         }
                     },
                     expandAndCollapse: false,
