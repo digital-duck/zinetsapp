@@ -1,19 +1,3 @@
-"""
-    This script generates a visualization of Chinese characters and their meanings using ECharts.
-    It fetches data from the Google Gemini API and caches it in a SQLite database.
-
-Usages:
-1. To visualize default network:
-    $ python zinets_vis.py
-
-2. To visualize a specific character network:
-    $ python zinets_vis.py -i in_water.md -o vis_water.html
-
-3. show cache statistics:
-    $ python zinets_vis.py --cache-stats
-
-"""
-
 import json
 import os
 import re
@@ -230,7 +214,6 @@ def parse_markdown_to_tree_data(markdown_text):
     Parse semantic network data in markdown format into a tree data structure.
     More robust indentation detection to handle files from different editors.
     Handles comments properly - anything after # is considered a comment and ignored.
-    Fixes hierarchy nesting for proper parent-child relationships.
     """
     lines = markdown_text.strip().split('\n')
     if not lines:
@@ -250,10 +233,11 @@ def parse_markdown_to_tree_data(markdown_text):
         'children': []
     }
 
-    # First pass: Analyze indentation patterns in the file
-    line_indentations = []  # Store actual indentation for each line
-    indent_levels = []      # Store logical level for each line
+    # Find indentation pattern in the file
+    indent_sizes = {}
+    min_indent_size = float('inf')
     
+    # Analyze the file to detect indentation patterns
     for i in range(1, len(lines)):
         original_line = lines[i]
         
@@ -265,125 +249,81 @@ def parse_markdown_to_tree_data(markdown_text):
             
         line = line_without_comment.strip()
         if not line:
-            # Skip empty lines
-            line_indentations.append(None)
-            indent_levels.append(None)
             continue
             
-        # Only process lines that start with dash
+        # Only analyze lines that start with dash for indentation patterns
         if not line_without_comment.lstrip(' \t').startswith('-'):
-            # Skip non-dash lines
-            line_indentations.append(None)
-            indent_levels.append(None)
             continue
-        
-        # Measure actual indentation
+            
+        # Count leading spaces
         leading_spaces = len(line_without_comment) - len(line_without_comment.lstrip(' '))
+        if leading_spaces > 0:
+            indent_sizes[leading_spaces] = indent_sizes.get(leading_spaces, 0) + 1
+            if leading_spaces < min_indent_size:
+                min_indent_size = leading_spaces
+            
+        # Count leading tabs
         leading_tabs = len(line_without_comment) - len(line_without_comment.lstrip('\t'))
-        
-        # Store raw indentation (we'll convert to logical levels later)
         if leading_tabs > 0:
-            # Tab-based
-            line_indentations.append(('tab', leading_tabs))
+            # Treat tabs specially - each tab is one level
+            indent_sizes[-1] = indent_sizes.get(-1, 0) + 1
+    
+    # Determine the most common indent size
+    common_indent = 4  # Default to 4 spaces if no pattern detected
+    
+    if indent_sizes:
+        if -1 in indent_sizes and indent_sizes[-1] > 0:
+            # Tabs detected, use tab-based indentation
+            common_indent = -1
         else:
-            # Space-based
-            line_indentations.append(('space', leading_spaces))
-    
-    # Determine indentation pattern from collected data
-    tab_counts = {}
-    space_counts = {}
-    space_sequences = []
-    
-    for indent in line_indentations:
-        if indent is None:
-            continue
+            # Find the most common space-based indentation
+            sorted_indents = sorted(indent_sizes.items(), key=lambda x: x[1], reverse=True)
+            common_indent = sorted_indents[0][0]
             
-        indent_type, indent_size = indent
-        
-        if indent_type == 'tab':
-            tab_counts[indent_size] = tab_counts.get(indent_size, 0) + 1
-        else:
-            space_counts[indent_size] = space_counts.get(indent_size, 0) + 1
-            if indent_size > 0:
-                space_sequences.append(indent_size)
-    
-    # Determine if we're using tabs or spaces
-    using_tabs = sum(tab_counts.values()) > sum(space_counts.values())
-    
-    # Convert raw indentations to logical levels
-    if using_tabs:
-        # Tab-based: each tab is one level
-        for i, indent in enumerate(line_indentations):
-            if indent is None:
-                indent_levels.append(None)
-            else:
-                indent_type, indent_size = indent
-                if indent_type == 'tab':
-                    indent_levels.append(indent_size)
-                else:
-                    # Convert spaces to equivalent tabs (assuming 4 spaces = 1 tab)
-                    indent_levels.append(indent_size // 4)
-    else:
-        # Space-based: determine common increment
-        space_diffs = []
-        sorted_spaces = sorted(list(set(space_sequences)))
-        
-        if len(sorted_spaces) > 1:
-            for i in range(1, len(sorted_spaces)):
-                diff = sorted_spaces[i] - sorted_spaces[i-1]
-                if diff > 0:
-                    space_diffs.append(diff)
-        
-        # Determine the common indentation unit
-        if space_diffs:
-            # Use the most common difference
-            from collections import Counter
-            common_diff = Counter(space_diffs).most_common(1)[0][0]
-        else:
-            # Default to 2 or 4 spaces based on what appears most
-            space_2_count = space_counts.get(2, 0) + space_counts.get(4, 0) + space_counts.get(6, 0) + space_counts.get(8, 0)
-            space_4_count = space_counts.get(4, 0) + space_counts.get(8, 0) + space_counts.get(12, 0)
-            common_diff = 2 if space_2_count > space_4_count else 4
-        
-        # Convert spaces to logical levels
-        base_indent = min(space_sequences) if space_sequences else common_diff
-        
-        for i, indent in enumerate(line_indentations):
-            if indent is None:
-                indent_levels.append(None)
-            else:
-                indent_type, indent_size = indent
-                if indent_type == 'space':
-                    # Round to nearest level (to handle inconsistent indentation)
-                    indent_levels.append(round(indent_size / common_diff))
-                else:
-                    # Convert tabs to spaces
-                    indent_levels.append(indent_size * (4 // common_diff))
-    
-    # Second pass: build the tree using determined indent levels
-    stack = [(0, tree_data)]  # (level, node)
-    
+            # If the common indent is not divisible by the minimum indent, use the minimum
+            if min_indent_size != float('inf') and common_indent % min_indent_size != 0:
+                common_indent = min_indent_size
+                
+    # Stack to keep track of current parent node at each level
+    stack = [(0, tree_data)]  # (indent_level, node)
+
     for i in range(1, len(lines)):
-        level = indent_levels[i-1]  # -1 because we started storing from lines[1]
-        
-        if level is None:
-            continue
-            
         original_line = lines[i]
         
-        # Remove comments
+        # Remove comments - anything after # is ignored
         if '#' in original_line:
             line_without_comment = original_line.split('#', 1)[0]
         else:
             line_without_comment = original_line
             
         line = line_without_comment.strip()
+        if not line:
+            continue
+            
+        # Must start with a dash to be a node
+        if not line_without_comment.lstrip(' \t').startswith('-'):
+            # Skip non-dash lines
+            continue
         
-        # Extract character name and decomposition
+        # Calculate indentation level based on the detected pattern
+        if common_indent == -1:
+            # Tab-based indentation (each tab is one level)
+            indent_level = len(line_without_comment) - len(line_without_comment.lstrip('\t'))
+        else:
+            # Space-based indentation
+            leading_spaces = len(line_without_comment) - len(line_without_comment.lstrip(' '))
+            indent_level = leading_spaces // common_indent if common_indent > 0 else 0
+            
+            # Handle mixed indentation (both spaces and tabs)
+            leading_tabs = len(line_without_comment) - len(line_without_comment.lstrip('\t'))
+            if leading_tabs > 0:
+                indent_level += leading_tabs
+                
+        # Extract character name and decomposition if present
         parts = line.split('（')
         if len(parts) == 1:
             parts = line.split('(')
-            
+
         char_name = parts[0].strip('- \t')
         decomposition = None
         if len(parts) > 1:
@@ -395,25 +335,27 @@ def parse_markdown_to_tree_data(markdown_text):
             'symbolSize': 25,
             'children': []
         }
-        
+
         if decomposition:
             new_node['decomposition'] = decomposition
-            
-        # Find appropriate parent
-        while stack and stack[-1][0] >= level:
+
+        # Find the appropriate parent for this node
+        while stack and stack[-1][0] >= indent_level:
             stack.pop()
-            
-        # Ensure stack is never empty
+
+        # Critical fix: Ensure stack is never empty
         if not stack:
+            # If stack becomes empty, reattach to root node
             stack = [(0, tree_data)]
-            
-        # Add node to parent
+
+        # Add the new node to its parent's children
         parent = stack[-1][1]
         parent['children'].append(new_node)
-        
-        # Add to stack
-        stack.append((level, new_node))
-        
+
+        # Add this node to the stack as a potential parent for subsequent nodes
+        stack.append((indent_level, new_node))
+
+    # Return the tree
     return tree_data
 
 def extract_all_characters(tree_data):
@@ -433,69 +375,37 @@ def extract_all_characters(tree_data):
     dfs(tree_data)
     return list(characters)
 
-def get_character_data_from_gemini(characters, debug=DEBUG_FLAG, use_cache=True):
+def get_character_data_from_gemini(characters, use_cache=True, debug=DEBUG_FLAG):
     """
     Use Google Gemini API to generate character data using the official Python library.
-    With caching support to reduce API calls.
-    
+    This implementation combines the best of both approaches:
+    1. It tries to get all characters at once for efficiency
+    2. If that fails, it falls back to one-by-one processing
+
     Args:
         characters: A list of Chinese characters
-        debug: Whether to save debug information
-        use_cache: Whether to use cached data
 
     Returns:
         A dictionary with character data
     """
-    # Set up cache database if using cache
+    # Set up cache database if using cache and it doesn't exist
     if use_cache:
         if not os.path.exists(CACHE_DB):
             setup_cache_db()
-    
+
     # Initialize result dictionary
     character_data = {}
-    
-    # Check cache first if enabled
-    if use_cache:
-        # Create a progress bar for cache lookup
-        with tqdm(total=len(characters), desc="Checking cache", disable=len(characters) < 5) as pbar:
-            for char in characters:
-                cached_data = get_cached_character(char)
-                if cached_data:
-                    character_data[char] = cached_data
-                pbar.update(1)
-    
-    if cached_chars := len(character_data):
-        click.echo(f"Found {cached_chars} characters in cache: {list(character_data.keys())} ! ")
 
-    # Determine which characters we need to fetch from Gemini
-    missing_chars = [char for char in characters if char not in character_data]
-    
-    # If all characters are in cache, return early
-    if not missing_chars:
-        click.echo("All characters found in cache.")
-        return character_data
-        
-    
-    click.echo(f"Fetching data for {len(missing_chars)} characters not in cache...")
-    
     try:
         import google.generativeai as genai
     except ImportError:
-        click.echo("Google Generative AI library not found. Install with 'pip install google-generativeai'")
-        # Generate placeholder data for missing characters
-        for char in missing_chars:
-            character_data[char] = generate_placeholder_data(char)
-            # Note: We don't cache placeholder data anymore
-        return character_data
+        print("Google Generative AI library not found. Install with 'pip install google-generativeai'")
+        return {char: generate_placeholder_data(char) for char in characters}
 
     api_key = os.environ.get('GEMINI_API_KEY')
     if not api_key:
-        click.echo("[ERROR] GEMINI_API_KEY not found in environment variables. Using placeholder data.")
-        # Generate placeholder data for missing characters
-        for char in missing_chars:
-            character_data[char] = generate_placeholder_data(char)
-            # Note: We don't cache placeholder data anymore
-        return character_data
+        print("[ERROR] GEMINI_API_KEY not found in environment variables. Using placeholder data.")
+        return {char: generate_placeholder_data(char) for char in characters}
 
     # Configure the Google Generative AI library with your API key
     genai.configure(api_key=api_key)
@@ -503,6 +413,7 @@ def get_character_data_from_gemini(characters, debug=DEBUG_FLAG, use_cache=True)
     # Use the correct model
     try:
         # Try to use the best available model, falling back to others if needed
+        # https://ai.google.dev/gemini-api/docs/models
         models_to_try = [
             "gemini-2.0-flash",
             'gemini-1.5-flash', 
@@ -511,27 +422,21 @@ def get_character_data_from_gemini(characters, debug=DEBUG_FLAG, use_cache=True)
         ]
 
         model = None
-        model_name = None
-        for name in models_to_try:
+        for model_name in models_to_try:
             try:
-                model = genai.GenerativeModel(name)
-                model_name = name
-                click.echo(f"Using Gemini model: {model_name}")
+                model = genai.GenerativeModel(model_name)
+                print(f"Using Gemini model: {model_name}")
                 break
             except Exception as model_error:
-                click.echo(f"Could not use model {name}: {model_error}")
+                print(f"Could not use model {model_name}: {model_error}")
                 continue
 
         if model is None:
             raise Exception("No Gemini models are available")
 
     except Exception as e:
-        click.echo(f"Error initializing Gemini model: {e}")
-        # Generate placeholder data for missing characters
-        for char in missing_chars:
-            character_data[char] = generate_placeholder_data(char)
-            # Note: We don't cache placeholder data anymore
-        return character_data
+        print(f"Error initializing Gemini model: {e}")
+        return {char: generate_placeholder_data(char) for char in characters}
 
     # Generation config for better output
     generation_config = {
@@ -542,11 +447,11 @@ def get_character_data_from_gemini(characters, debug=DEBUG_FLAG, use_cache=True)
     }
 
     # APPROACH 1: Try to get all characters at once first for efficiency
-    if len(missing_chars) > 1:
+    if len(characters) > 1:
         try:
-            click.echo(f"Attempting to get data for all {len(missing_chars)} characters at once...")
+            print(f"Attempting to get data for all {len(characters)} characters at once...")
 
-            chars_str = ', '.join([f"'{char}'" for char in missing_chars])
+            chars_str = ', '.join([f"'{char}'" for char in characters])
             batch_prompt = f"""
             Generate information about these Chinese characters: {chars_str}
 
@@ -577,17 +482,17 @@ def get_character_data_from_gemini(characters, debug=DEBUG_FLAG, use_cache=True)
 
             # Save response for debugging
             if debug:
-                LINE_MARKER = "===" * 80
-                log_header = f"\n\nGemini Model: {model_name}\nDatetime: {time.strftime('%Y-%m-%d %H:%M:%S')}\n{LINE_MARKER}\n"
+                log_header = f"\n\nGemini Model: {model_name}\nDatetime: {time.strftime('%Y-%m-%d %H:%M:%S')}\n\n"
                 # Save the raw response for debugging
                 file_raw = "gemini_response_batch.txt"
                 with open(file_raw, "a", encoding="utf-8") as f:
                     f.write(log_header)
                     f.write(response_text)
-                click.echo(f"Gemini API response saved to {file_raw}")
+                print(f"Gemini API response saved to {file_raw}")
+
 
             # Parse the non-JSON response format
-            batch_character_data = {}
+            character_data = {}
             lines = response_text.split('\n')
 
             current_char = None
@@ -603,11 +508,7 @@ def get_character_data_from_gemini(characters, debug=DEBUG_FLAG, use_cache=True)
                 if line.startswith('Character:'):
                     # Save previous character if we were processing one
                     if current_char and current_data:
-                        if all(field in current_data for field in ['pinyin', 'meaning', 'composition', 'phrases']):
-                            batch_character_data[current_char] = current_data
-                            # Cache the character data
-                            if use_cache and current_data['pinyin'] != 'Unknown':
-                                cache_character(current_char, current_data, llm_provider="Google", llm_model_name=model_name)
+                        character_data[current_char] = current_data
 
                     # Start new character
                     char_parts = line.split(':', 1)
@@ -615,7 +516,7 @@ def get_character_data_from_gemini(characters, debug=DEBUG_FLAG, use_cache=True)
                         potential_char = char_parts[1].strip()
                         # Handle cases where the character might have extra text
                         for c in potential_char:
-                            if c in missing_chars:
+                            if c in characters:
                                 current_char = c
                                 break
                         else:
@@ -641,106 +542,93 @@ def get_character_data_from_gemini(characters, debug=DEBUG_FLAG, use_cache=True)
 
             # Add the last character
             if current_char and current_data:
-                if all(field in current_data for field in ['pinyin', 'meaning', 'composition', 'phrases']):
-                    batch_character_data[current_char] = current_data
-                    # Cache the character data
-                    if use_cache and current_data['pinyin'] != 'Unknown':
-                        cache_character(current_char, current_data, llm_provider="Google", llm_model_name=model_name)
-
-            # Update our main character_data dictionary
-            character_data.update(batch_character_data)
+                character_data[current_char] = current_data
 
             # Check if we got data for all characters
-            still_missing_chars = [char for char in missing_chars if char not in character_data]
+            missing_chars = [char for char in characters if char not in character_data]
 
-            if not still_missing_chars:
-                click.echo(f"Successfully retrieved data for all {len(missing_chars)} characters in batch mode")
+            if not missing_chars:
+                print(f"Successfully retrieved data for all {len(characters)} characters in batch mode")
                 return character_data
             else:
-                click.echo(f"Batch retrieval missing data for {len(still_missing_chars)} characters. Filling in...")
+                print(f"Batch retrieval missing data for {len(missing_chars)} characters. Filling in...")
                 # Continue to one-by-one approach for missing characters
-                missing_chars = still_missing_chars
 
         except Exception as batch_error:
-            click.echo(f"Batch retrieval failed: {batch_error}")
-            # Continue with individual processing
+            print(f"Batch retrieval failed: {batch_error}")
+            missing_chars = characters
+    else:
+        missing_chars = characters
 
     # APPROACH 2: Process remaining characters one by one
-    if missing_chars:
-        click.echo(f"Retrieving data for {len(missing_chars)} characters individually...")
-        
-        # Create a progress bar for individual character processing
-        with tqdm(total=len(missing_chars), desc="Processing characters", disable=len(missing_chars) < 3) as pbar:
-            for char in missing_chars:
-                try:
-                    # Prompt for a single character
-                    prompt = f"""
-                    Provide information about the Chinese character '{char}' in this EXACT format:
+    print(f"Retrieving data for {len(missing_chars)} characters individually...")
 
-                    pinyin: [pronunciation with tone marks]
-                    meaning: [main English meanings]
-                    composition: [explanation of character components]
-                    phrases: [five common phrases with pinyin and English translation separated by <br>]
+    # If we already have some character data from the batch approach, use it
+    try:
+        character_data
+    except NameError:
+        character_data = {}
 
-                    ONLY return the format above with no other text.
-                    """
+    for char in missing_chars:
+        try:
+            # Prompt for a single character
+            prompt = f"""
+            Provide information about the Chinese character '{char}' in this EXACT format:
 
-                    response = model.generate_content(
-                        prompt,
-                        generation_config=generation_config
-                    )
+            pinyin: [pronunciation with tone marks]
+            meaning: [main English meanings]
+            composition: [explanation of character components]
+            phrases: [five common phrases with pinyin and English translation separated by <br>]
 
-                    response_text = response.text.strip()
+            ONLY return the format above with no other text.
+            """
 
-                    # Simple line-by-line parsing
-                    char_data = {}
-                    current_field = None
+            response = model.generate_content(
+                prompt,
+                generation_config=generation_config
+            )
 
-                    for line in response_text.split('\n'):
-                        line = line.strip()
-                        if not line:
-                            continue
+            response_text = response.text.strip()
 
-                        if ':' in line:
-                            parts = line.split(':', 1)
-                            field_name = parts[0].strip().lower()
-                            field_value = parts[1].strip()
+            # Simple line-by-line parsing
+            char_data = {}
+            current_field = None
 
-                            if field_name in ['pinyin', 'meaning', 'composition', 'phrases']:
-                                char_data[field_name] = field_value
-                                current_field = field_name
-                        else:
-                            # Continuation of previous field
-                            if current_field:
-                                char_data[current_field] += ' ' + line
+            for line in response_text.split('\n'):
+                line = line.strip()
+                if not line:
+                    continue
 
-                    # Check if we got all the fields
-                    if all(field in char_data for field in ['pinyin', 'meaning', 'composition', 'phrases']):
-                        character_data[char] = char_data
-                        # Cache the character data only if it's not placeholder data
-                        if use_cache and char_data['pinyin'] != 'Unknown':
-                            cache_character(char, char_data, llm_provider="Google", llm_model_name=model_name)
-                    else:
-                        click.echo(f"Missing some fields for character {char}. Using placeholder data.")
-                        character_data[char] = generate_placeholder_data(char)
-                        # Note: We don't cache placeholder data anymore
+                if ':' in line:
+                    parts = line.split(':', 1)
+                    field_name = parts[0].strip().lower()
+                    field_value = parts[1].strip()
 
-                except Exception as e:
-                    click.echo(f"Error generating data for character {char}: {e}")
-                    character_data[char] = generate_placeholder_data(char)
-                    # Note: We don't cache placeholder data anymore
-                
-                # Update progress bar
-                pbar.update(1)
+                    if field_name in ['pinyin', 'meaning', 'composition', 'phrases']:
+                        char_data[field_name] = field_value
+                        current_field = field_name
+                else:
+                    # Continuation of previous field
+                    if current_field:
+                        char_data[current_field] += ' ' + line
+
+            # Check if we got all the fields
+            if all(field in char_data for field in ['pinyin', 'meaning', 'composition', 'phrases']):
+                character_data[char] = char_data
+            else:
+                print(f"Missing some fields for character {char}. Using placeholder data.")
+                character_data[char] = generate_placeholder_data(char)
+
+        except Exception as e:
+            print(f"Error generating data for character {char}: {e}")
+            character_data[char] = generate_placeholder_data(char)
 
     # Ensure we have data for all requested characters
     for char in characters:
         if char not in character_data:
             character_data[char] = generate_placeholder_data(char)
-            # Note: We don't cache placeholder data
 
     return character_data
-
 
 def generate_placeholder_data(character):
     """
@@ -858,9 +746,9 @@ def generate_html(tree_data, character_data, title="ZiNets Visualization"):
                 {root_phrases}
             </div>
         </div>
-        <br><br>
+        
         <div class="footer">
-            Provided by ZiNets on {generation_date}
+            Generated by ZiNets on {generation_date}
         </div>
     </div>
 
@@ -1007,14 +895,11 @@ def process_semantic_network(markdown_text, output_file="zi_vis.html", use_gemin
 
     # Get character data from Gemini API or generate placeholder data
     if use_gemini:
-        ts_start = time.time()
         character_data = get_character_data_from_gemini(
             characters, 
             debug=debug, 
             use_cache=use_cache
         )
-        ts_end = time.time()
-        click.echo(f"Gemini API call took {ts_end - ts_start:.2f} seconds.")
     else:
         # When not using Gemini, we still use cache if enabled
         if use_cache:
@@ -1057,7 +942,7 @@ def process_semantic_network(markdown_text, output_file="zi_vis.html", use_gemin
               help='Whether to use Gemini API for character data (default: True)')
 @click.option('--use-cache/--no-cache', default=True,
               help='Whether to use SQLite cache for character data (default: True)')
-@click.option('--debug/--no-debug', default=True,
+@click.option('--debug/--no-debug', default=False,
               help='Enable debug mode to save API responses (default: False)')
 @click.option('--cache-stats', is_flag=True, default=False,
               help='Display cache statistics and exit')

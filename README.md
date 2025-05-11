@@ -127,6 +127,13 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
+## Development
+### HTML app using ECharts
+- The HTML app uses ECharts for visualization and Google Gemini API for character data enrichment.
+
+see the [ECharts documentation](https://echarts.apache.org/en/index.html) for more details on how to customize the visualizations.
+
+see `http://github.com/digital-duck/zinetsapp/dev/zinets-POC/echart/gemini/zinets_vis.py`
 
 ## Contributing
 

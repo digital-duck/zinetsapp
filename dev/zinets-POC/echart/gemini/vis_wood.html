@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZiNets Visualization</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+        #chart-container {
+            width: 60%;
+            height: 100%;
+        }
+        #info-panel {
+            width: 40%;
+            padding: 20px;
+            background-color: #f5f5f5;
+            overflow-y: auto;
+            border-left: 1px solid #ddd;
+        }
+        .node-tooltip {
+            position: absolute;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            pointer-events: none;
+            font-size: 14px;
+            display: none;
+        }
+        .character {
+            font-size: 72px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .pinyin {
+            font-size: 18px;
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section h3 {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            color: #333;
+        }
+        .composition {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .phrases {
+            line-height: 1.6;
+        }
+        .meaning {
+            line-height: 1.6;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="chart-container"></div>
+    <div id="info-panel">
+        <div class="character" id="selected-char">木</div>
+        <div class="pinyin" id="selected-pinyin">mù</div>
+
+        <div class="section">
+            <h3>Meaning</h3>
+            <div class="meaning" id="selected-meaning">
+                tree; wood
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Composition</h3>
+            <div class="composition" id="selected-composition">
+                A simple pictograph representing a tree.
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Related Phrases</h3>
+            <div class="phrases" id="selected-phrases">
+                木头 (mù tou) - wood; log; blockhead<br>木材 (mù cái) - timber; lumber<br>木星 (mù xīng) - Jupiter<br>木耳 (mù ěr) - wood ear fungus<br>木匠 (mù jiàng) - carpenter
+            </div>
+        </div>
+        <br><br>
+        <div class="footer">
+            Provided by ZiNets on 2025-05-10 21:09:56
+        </div>
+    </div>
+
+    <script>
+        // Character data repository
+        const characterData = {
+    "矗": {
+        "pinyin": "chù",
+        "meaning": "upright, erect, towering",
+        "composition": "直 (zhí, straight) + 直 (zhí, straight) + 直 (zhí, straight) - Three straight lines stacked together, emphasizing uprightness.",
+        "phrases": "矗立 (chùlì) - to stand tall, to tower<br>矗峙 (chùzhì) - to stand tall and firm<br>高楼矗立 (gāolóuchùlì) - tall buildings standing tall<br>山峰矗立 (shānfēngchùlì) - mountain peaks standing tall<br>巍然矗立 (wēiránchùlì) - to stand majestically"
+    },
+    "宋": {
+        "pinyin": "sòng",
+        "meaning": "Song dynasty, a surname",
+        "composition": "宀 (mián, roof) + 木 (mù, tree) - A tree under a roof.",
+        "phrases": "宋朝 (Sòngcháo) - Song Dynasty<br>宋体 (Sòngtǐ) - Song typeface (a common Chinese font)<br>姓宋 (xìng Sòng) - surname Song<br>宋词 (Sòngcí) - Song Dynasty poetry<br>宋江 (Sòng Jiāng) - Song Jiang (a character in Water Margin)"
+    },
+    "干": {
+        "pinyin": "gān",
+        "meaning": "dry, to do, manage, trunk",
+        "composition": "Originally a pictograph of a forked stick used for hunting.",
+        "phrases": "干净 (gānjìng) - clean<br>干燥 (gānzào) - dry<br>饼干 (bǐnggān) - biscuit, cracker<br>干杯 (gānbēi) - cheers, bottoms up<br>干活 (gànhuó) - to work"
+    },
+    "笨": {
+        "pinyin": "bèn",
+        "meaning": "stupid, foolish, clumsy",
+        "composition": "竹 (zhú, bamboo) + 本 (běn, root) - Originally referred to the inner layer of bamboo, implying something inflexible and therefore clumsy.",
+        "phrases": "笨蛋 (bèndàn) - idiot, fool<br>笨重 (bènzhòng) - heavy, cumbersome<br>笨拙 (bènzhuō) - clumsy, awkward<br>笨手笨脚 (bènshǒubènjiǎo) - clumsy, all thumbs<br>装笨 (zhuāngbèn) - to play dumb"
+    },
+    "体": {
+        "pinyin": "tǐ",
+        "meaning": "body, form, style, system",
+        "composition": "亻 (rén, person) + 本 (běn, root, origin) - A person's root or foundation is their body.",
+        "phrases": "身体 (shēntǐ) - body, health<br>体操 (tǐcāo) - gymnastics<br>体验 (tǐyàn) - to experience<br>具体 (jùtǐ) - concrete, specific<br>体力 (tǐlì) - physical strength"
+    },
+    "杆": {
+        "pinyin": "gān",
+        "meaning": "pole, rod, stick",
+        "composition": "木 (mù, wood) + 干 (gān, dry) - A dry piece of wood used as a pole.",
+        "phrases": "旗杆 (qígān) - flagpole<br>栏杆 (lángān) - railing, banister<br>杆子 (gānzi) - pole, stick<br>秤杆 (chènggǎn) - balance beam of a scale<br>电线杆 (diànxiàngān) - telephone pole"
+    },
+    "木": {
+        "pinyin": "mù",
+        "meaning": "tree; wood",
+        "composition": "A simple pictograph representing a tree.",
+        "phrases": "木头 (mù tou) - wood; log; blockhead<br>木材 (mù cái) - timber; lumber<br>木星 (mù xīng) - Jupiter<br>木耳 (mù ěr) - wood ear fungus<br>木匠 (mù jiàng) - carpenter"
+    },
+    "肝": {
+        "pinyin": "gān",
+        "meaning": "liver; courage; gall",
+        "composition": "Radical 月 (yuè - moon, flesh) + component 干 (gān - dry, to concern)",
+        "phrases": "肝脏 (gānzàng) - liver<br>肝炎 (gānyán) - hepatitis<br>肝胆 (gāndǎn) - liver and gallbladder; innermost thoughts; courage<br>肝火 (gānhuǒ) - liver fire (traditional Chinese medicine concept)<br>伤肝 (shāng gān) - to harm the liver"
+    },
+    "植": {
+        "pinyin": "zhí",
+        "meaning": "to plant; vegetation; to grow",
+        "composition": "Radical 木 (mù - tree, wood) + component 直 (zhí - straight, upright)",
+        "phrases": "植物 (zhíwù) - plant<br>种植 (zhòngzhí) - to plant; to grow<br>植树 (zhíshù) - to plant trees<br>植被 (zhíbèi) - vegetation<br>移植 (yízhí) - to transplant"
+    },
+    "竿": {
+        "pinyin": "gān",
+        "meaning": "pole; rod; shaft",
+        "composition": "Radical 竹 (zhú - bamboo) + component 干 (gān - dry, to concern)",
+        "phrases": "竹竿 (zhúgān) - bamboo pole<br>钓竿 (diàogān) - fishing rod<br>百尺竿头 (bǎichǐ gāntóu) - a hundred-foot pole (idiom: to make further progress)<br>旗竿 (qígān) - flagpole<br>撑竿跳 (chēnggān tiào) - pole vault"
+    },
+    "汗": {
+        "pinyin": "hàn",
+        "meaning": "sweat; perspiration",
+        "composition": "Radical 氵 (shuǐ - water) + component 干 (gān - dry, to concern)",
+        "phrases": "汗水 (hànshuǐ) - sweat<br>流汗 (liú hàn) - to sweat<br>汗衫 (hànshān) - undershirt; T-shirt<br>汗毛 (hànmáo) - body hair<br>汗流浃背 (hànliújiābèi) - drenched in sweat (idiom)"
+    },
+    "直": {
+        "pinyin": "zhí",
+        "meaning": "straight; upright; vertical; frank; directly",
+        "composition": "Component 十 (shí - ten) + component 目 (mù - eye)",
+        "phrases": "直接 (zhíjiē) - direct<br>一直 (yīzhí) - always; continuously<br>正直 (zhèngzhí) - upright; honest<br>直线 (zhíxiàn) - straight line<br>简直 (jiǎnzhí) - simply; virtually"
+    },
+    "奸": {
+        "pinyin": "jiān",
+        "meaning": "treacherous; traitor; adultery",
+        "composition": "Radical 女 (nǚ - woman) + component 干 (gān - dry, to concern)",
+        "phrases": "奸诈 (jiānzhà) - treacherous; deceitful<br>奸臣 (jiānchén) - treacherous court official<br>通奸 (tōngjiān) - adultery<br>奸细 (jiānxì) - spy<br>卖国求奸 (màiguó qiújiān) - to betray one's country for personal gain"
+    },
+    "旱": {
+        "pinyin": "hàn",
+        "meaning": "drought; dry",
+        "composition": "Radical 日 (rì - sun) + component 干 (gān - dry, to concern)",
+        "phrases": "旱灾 (hànzāi) - drought<br>干旱 (gānhàn) - drought; arid<br>旱冰 (hànbīng) - roller skating<br>旱季 (hànjì) - dry season<br>防旱 (fánghàn) - drought prevention"
+    },
+    "本": {
+        "pinyin": "běn",
+        "meaning": "root; origin; basis; this; book",
+        "composition": "Radical 木 (mù - tree, wood) + a horizontal line indicating the root",
+        "phrases": "本来 (běnlái) - originally<br>基本 (jīběn) - basic; fundamental<br>书本 (shūběn) - book<br>本人 (běnrén) - oneself<br>成本 (chéngběn) - cost"
+    },
+    "罕": {
+        "pinyin": "hǎn",
+        "meaning": "rare; seldom",
+        "composition": "Component ⺳ (variant of 网 wǎng - net) + component 干 (gān - dry, to concern)",
+        "phrases": "罕见 (hǎnjiàn) - rare; seldom seen<br>罕有 (hǎnyǒu) - rare; uncommon<br>人迹罕至 (rénjì hǎnzhì) - rarely visited; desolate<br>罕为人知 (hǎnwéirénzhī) - little known<br>罕言寡语 (hǎnyánguǎyǔ) - taciturn; reticent"
+    }
+};
+
+        // Initialize ECharts
+        const chartContainer = document.getElementById('chart-container');
+        const chart = echarts.init(chartContainer);
+
+        // Define the tree structure based on your data
+        const treeData = {
+    "name": "木",
+    "children": [
+        {
+            "name": "本",
+            "symbolSize": 25,
+            "children": [
+                {
+                    "name": "笨",
+                    "symbolSize": 25,
+                    "children": [],
+                    "decomposition": "⺮ + 本"
+                },
+                {
+                    "name": "体",
+                    "symbolSize": 25,
+                    "children": [],
+                    "decomposition": "亻 + 本"
+                }
+            ],
+            "decomposition": "木 + 一"
+        },
+        {
+            "name": "宋",
+            "symbolSize": 25,
+            "children": [],
+            "decomposition": "宀 + 木"
+        },
+        {
+            "name": "杆",
+            "symbolSize": 25,
+            "children": [
+                {
+                    "name": "干",
+                    "symbolSize": 25,
+                    "children": [
+                        {
+                            "name": "竿",
+                            "symbolSize": 25,
+                            "children": [],
+                            "decomposition": "⺮ + 干"
+                        },
+                        {
+                            "name": "肝",
+                            "symbolSize": 25,
+                            "children": [],
+                            "decomposition": "月 + 干 "
+                        },
+                        {
+                            "name": "罕",
+                            "symbolSize": 25,
+                            "children": [],
+                            "decomposition": "㓁 + 干"
+                        },
+                        {
+                            "name": "旱",
+                            "symbolSize": 25,
+                            "children": [],
+                            "decomposition": "日 + 干"
+                        },
+                        {
+                            "name": "汗",
+                            "symbolSize": 25,
+                            "children": [],
+                            "decomposition": "氵 + 干"
+                        },
+                        {
+                            "name": "奸",
+                            "symbolSize": 25,
+                            "children": [],
+                            "decomposition": "女 + 干"
+                        }
+                    ]
+                }
+            ],
+            "decomposition": "木 + 干"
+        },
+        {
+            "name": "植",
+            "symbolSize": 25,
+            "children": [
+                {
+                    "name": "直",
+                    "symbolSize": 25,
+                    "children": [
+                        {
+                            "name": "矗",
+                            "symbolSize": 25,
+                            "children": [],
+                            "decomposition": "直 + 直 + 直"
+                        }
+                    ]
+                }
+            ],
+            "decomposition": "木 + 直"
+        }
+    ]
+};
+
+        // Set the option
+        const option = {
+            tooltip: {
+                trigger: 'item',
+                formatter: function(params) {
+                    if (params.data.decomposition) {
+                        return `<div style="font-size:18px; font-weight:bold; margin-bottom:5px;">${params.data.name}</div>
+                                <div>${params.data.decomposition}</div>`;
+                    } else {
+                        return params.data.name;
+                    }
+                },
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                borderColor: '#ccc',
+                borderWidth: 1,
+                padding: 10,
+                textStyle: {
+                    color: '#333',
+                    fontSize: 16
+                }
+            },
+            series: [
+                {
+                    type: 'tree',
+                    data: [treeData],
+                    top: '5%',
+                    left: '10%',
+                    bottom: '5%',
+                    right: '20%',
+                    symbolSize: 25,
+                    orient: 'TB',
+                    symbol: 'circle',
+                    label: {
+                        position: 'right',
+                        distance: 0,
+                        fontSize: 35,
+                        fontWeight: 'bold'
+                    },
+                    leaves: {
+                        label: {
+                            position: 'right',
+                            verticalAlign: 'middle',
+                            align: 'center'
+                        }
+                    },
+                    emphasis: {
+                        focus: 'descendant'
+                    },
+                    expandAndCollapse: false,
+                    animationDuration: 550,
+                    animationDurationUpdate: 750
+                }
+            ]
+        };
+
+        // Set the initial option and render
+        chart.setOption(option);
+
+        // Handle node click event
+        chart.on('click', function(params) {
+            const zi = params.data.name;
+            if (zi) {
+                const charData = characterData[zi];
+                if (charData) {
+                    // Update info panel
+                    document.getElementById('selected-char').textContent = zi;
+                    document.getElementById('selected-pinyin').textContent = charData.pinyin;
+                    document.getElementById('selected-meaning').textContent = charData.meaning;
+                    document.getElementById('selected-composition').textContent = charData.composition;
+                    document.getElementById('selected-phrases').innerHTML = charData.phrases;
+                }
+            }
+        });
+
+        // Make chart responsive
+        window.addEventListener('resize', function() {
+            chart.resize();
+        });
+    </script>
+</body>
+</html>

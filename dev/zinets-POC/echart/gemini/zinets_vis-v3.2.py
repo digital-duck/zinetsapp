@@ -1,19 +1,3 @@
-"""
-    This script generates a visualization of Chinese characters and their meanings using ECharts.
-    It fetches data from the Google Gemini API and caches it in a SQLite database.
-
-Usages:
-1. To visualize default network:
-    $ python zinets_vis.py
-
-2. To visualize a specific character network:
-    $ python zinets_vis.py -i in_water.md -o vis_water.html
-
-3. show cache statistics:
-    $ python zinets_vis.py --cache-stats
-
-"""
-
 import json
 import os
 import re
@@ -433,69 +417,37 @@ def extract_all_characters(tree_data):
     dfs(tree_data)
     return list(characters)
 
-def get_character_data_from_gemini(characters, debug=DEBUG_FLAG, use_cache=True):
+def get_character_data_from_gemini(characters, use_cache=True, debug=DEBUG_FLAG):
     """
     Use Google Gemini API to generate character data using the official Python library.
-    With caching support to reduce API calls.
-    
+    This implementation combines the best of both approaches:
+    1. It tries to get all characters at once for efficiency
+    2. If that fails, it falls back to one-by-one processing
+
     Args:
         characters: A list of Chinese characters
-        debug: Whether to save debug information
-        use_cache: Whether to use cached data
 
     Returns:
         A dictionary with character data
     """
-    # Set up cache database if using cache
+    # Set up cache database if using cache and it doesn't exist
     if use_cache:
         if not os.path.exists(CACHE_DB):
             setup_cache_db()
-    
+
     # Initialize result dictionary
     character_data = {}
-    
-    # Check cache first if enabled
-    if use_cache:
-        # Create a progress bar for cache lookup
-        with tqdm(total=len(characters), desc="Checking cache", disable=len(characters) < 5) as pbar:
-            for char in characters:
-                cached_data = get_cached_character(char)
-                if cached_data:
-                    character_data[char] = cached_data
-                pbar.update(1)
-    
-    if cached_chars := len(character_data):
-        click.echo(f"Found {cached_chars} characters in cache: {list(character_data.keys())} ! ")
 
-    # Determine which characters we need to fetch from Gemini
-    missing_chars = [char for char in characters if char not in character_data]
-    
-    # If all characters are in cache, return early
-    if not missing_chars:
-        click.echo("All characters found in cache.")
-        return character_data
-        
-    
-    click.echo(f"Fetching data for {len(missing_chars)} characters not in cache...")
-    
     try:
         import google.generativeai as genai
     except ImportError:
-        click.echo("Google Generative AI library not found. Install with 'pip install google-generativeai'")
-        # Generate placeholder data for missing characters
-        for char in missing_chars:
-            character_data[char] = generate_placeholder_data(char)
-            # Note: We don't cache placeholder data anymore
-        return character_data
+        print("Google Generative AI library not found. Install with 'pip install google-generativeai'")
+        return {char: generate_placeholder_data(char) for char in characters}
 
     api_key = os.environ.get('GEMINI_API_KEY')
     if not api_key:
-        click.echo("[ERROR] GEMINI_API_KEY not found in environment variables. Using placeholder data.")
-        # Generate placeholder data for missing characters
-        for char in missing_chars:
-            character_data[char] = generate_placeholder_data(char)
-            # Note: We don't cache placeholder data anymore
-        return character_data
+        print("[ERROR] GEMINI_API_KEY not found in environment variables. Using placeholder data.")
+        return {char: generate_placeholder_data(char) for char in characters}
 
     # Configure the Google Generative AI library with your API key
     genai.configure(api_key=api_key)
@@ -503,6 +455,7 @@ def get_character_data_from_gemini(characters, debug=DEBUG_FLAG, use_cache=True)
     # Use the correct model
     try:
         # Try to use the best available model, falling back to others if needed
+        # https://ai.google.dev/gemini-api/docs/models
         models_to_try = [
             "gemini-2.0-flash",
             'gemini-1.5-flash', 
@@ -511,27 +464,21 @@ def get_character_data_from_gemini(characters, debug=DEBUG_FLAG, use_cache=True)
         ]
 
         model = None
-        model_name = None
-        for name in models_to_try:
+        for model_name in models_to_try:
             try:
-                model = genai.GenerativeModel(name)
-                model_name = name
-                click.echo(f"Using Gemini model: {model_name}")
+                model = genai.GenerativeModel(model_name)
+                print(f"Using Gemini model: {model_name}")
                 break
             except Exception as model_error:
-                click.echo(f"Could not use model {name}: {model_error}")
+                print(f"Could not use model {model_name}: {model_error}")
                 continue
 
         if model is None:
             raise Exception("No Gemini models are available")
 
     except Exception as e:
-        click.echo(f"Error initializing Gemini model: {e}")
-        # Generate placeholder data for missing characters
-        for char in missing_chars:
-            character_data[char] = generate_placeholder_data(char)
-            # Note: We don't cache placeholder data anymore
-        return character_data
+        print(f"Error initializing Gemini model: {e}")
+        return {char: generate_placeholder_data(char) for char in characters}
 
     # Generation config for better output
     generation_config = {
@@ -542,11 +489,11 @@ def get_character_data_from_gemini(characters, debug=DEBUG_FLAG, use_cache=True)
     }
 
     # APPROACH 1: Try to get all characters at once first for efficiency
-    if len(missing_chars) > 1:
+    if len(characters) > 1:
         try:
-            click.echo(f"Attempting to get data for all {len(missing_chars)} characters at once...")
+            print(f"Attempting to get data for all {len(characters)} characters at once...")
 
-            chars_str = ', '.join([f"'{char}'" for char in missing_chars])
+            chars_str = ', '.join([f"'{char}'" for char in characters])
             batch_prompt = f"""
             Generate information about these Chinese characters: {chars_str}
 
@@ -577,17 +524,17 @@ def get_character_data_from_gemini(characters, debug=DEBUG_FLAG, use_cache=True)
 
             # Save response for debugging
             if debug:
-                LINE_MARKER = "===" * 80
-                log_header = f"\n\nGemini Model: {model_name}\nDatetime: {time.strftime('%Y-%m-%d %H:%M:%S')}\n{LINE_MARKER}\n"
+                log_header = f"\n\nGemini Model: {model_name}\nDatetime: {time.strftime('%Y-%m-%d %H:%M:%S')}\n\n"
                 # Save the raw response for debugging
                 file_raw = "gemini_response_batch.txt"
                 with open(file_raw, "a", encoding="utf-8") as f:
                     f.write(log_header)
                     f.write(response_text)
-                click.echo(f"Gemini API response saved to {file_raw}")
+                print(f"Gemini API response saved to {file_raw}")
+
 
             # Parse the non-JSON response format
-            batch_character_data = {}
+            character_data = {}
             lines = response_text.split('\n')
 
             current_char = None
@@ -603,11 +550,7 @@ def get_character_data_from_gemini(characters, debug=DEBUG_FLAG, use_cache=True)
                 if line.startswith('Character:'):
                     # Save previous character if we were processing one
                     if current_char and current_data:
-                        if all(field in current_data for field in ['pinyin', 'meaning', 'composition', 'phrases']):
-                            batch_character_data[current_char] = current_data
-                            # Cache the character data
-                            if use_cache and current_data['pinyin'] != 'Unknown':
-                                cache_character(current_char, current_data, llm_provider="Google", llm_model_name=model_name)
+                        character_data[current_char] = current_data
 
                     # Start new character
                     char_parts = line.split(':', 1)
@@ -615,7 +558,7 @@ def get_character_data_from_gemini(characters, debug=DEBUG_FLAG, use_cache=True)
                         potential_char = char_parts[1].strip()
                         # Handle cases where the character might have extra text
                         for c in potential_char:
-                            if c in missing_chars:
+                            if c in characters:
                                 current_char = c
                                 break
                         else:
@@ -641,106 +584,93 @@ def get_character_data_from_gemini(characters, debug=DEBUG_FLAG, use_cache=True)
 
             # Add the last character
             if current_char and current_data:
-                if all(field in current_data for field in ['pinyin', 'meaning', 'composition', 'phrases']):
-                    batch_character_data[current_char] = current_data
-                    # Cache the character data
-                    if use_cache and current_data['pinyin'] != 'Unknown':
-                        cache_character(current_char, current_data, llm_provider="Google", llm_model_name=model_name)
-
-            # Update our main character_data dictionary
-            character_data.update(batch_character_data)
+                character_data[current_char] = current_data
 
             # Check if we got data for all characters
-            still_missing_chars = [char for char in missing_chars if char not in character_data]
+            missing_chars = [char for char in characters if char not in character_data]
 
-            if not still_missing_chars:
-                click.echo(f"Successfully retrieved data for all {len(missing_chars)} characters in batch mode")
+            if not missing_chars:
+                print(f"Successfully retrieved data for all {len(characters)} characters in batch mode")
                 return character_data
             else:
-                click.echo(f"Batch retrieval missing data for {len(still_missing_chars)} characters. Filling in...")
+                print(f"Batch retrieval missing data for {len(missing_chars)} characters. Filling in...")
                 # Continue to one-by-one approach for missing characters
-                missing_chars = still_missing_chars
 
         except Exception as batch_error:
-            click.echo(f"Batch retrieval failed: {batch_error}")
-            # Continue with individual processing
+            print(f"Batch retrieval failed: {batch_error}")
+            missing_chars = characters
+    else:
+        missing_chars = characters
 
     # APPROACH 2: Process remaining characters one by one
-    if missing_chars:
-        click.echo(f"Retrieving data for {len(missing_chars)} characters individually...")
-        
-        # Create a progress bar for individual character processing
-        with tqdm(total=len(missing_chars), desc="Processing characters", disable=len(missing_chars) < 3) as pbar:
-            for char in missing_chars:
-                try:
-                    # Prompt for a single character
-                    prompt = f"""
-                    Provide information about the Chinese character '{char}' in this EXACT format:
+    print(f"Retrieving data for {len(missing_chars)} characters individually...")
 
-                    pinyin: [pronunciation with tone marks]
-                    meaning: [main English meanings]
-                    composition: [explanation of character components]
-                    phrases: [five common phrases with pinyin and English translation separated by <br>]
+    # If we already have some character data from the batch approach, use it
+    try:
+        character_data
+    except NameError:
+        character_data = {}
 
-                    ONLY return the format above with no other text.
-                    """
+    for char in missing_chars:
+        try:
+            # Prompt for a single character
+            prompt = f"""
+            Provide information about the Chinese character '{char}' in this EXACT format:
 
-                    response = model.generate_content(
-                        prompt,
-                        generation_config=generation_config
-                    )
+            pinyin: [pronunciation with tone marks]
+            meaning: [main English meanings]
+            composition: [explanation of character components]
+            phrases: [five common phrases with pinyin and English translation separated by <br>]
 
-                    response_text = response.text.strip()
+            ONLY return the format above with no other text.
+            """
 
-                    # Simple line-by-line parsing
-                    char_data = {}
-                    current_field = None
+            response = model.generate_content(
+                prompt,
+                generation_config=generation_config
+            )
 
-                    for line in response_text.split('\n'):
-                        line = line.strip()
-                        if not line:
-                            continue
+            response_text = response.text.strip()
 
-                        if ':' in line:
-                            parts = line.split(':', 1)
-                            field_name = parts[0].strip().lower()
-                            field_value = parts[1].strip()
+            # Simple line-by-line parsing
+            char_data = {}
+            current_field = None
 
-                            if field_name in ['pinyin', 'meaning', 'composition', 'phrases']:
-                                char_data[field_name] = field_value
-                                current_field = field_name
-                        else:
-                            # Continuation of previous field
-                            if current_field:
-                                char_data[current_field] += ' ' + line
+            for line in response_text.split('\n'):
+                line = line.strip()
+                if not line:
+                    continue
 
-                    # Check if we got all the fields
-                    if all(field in char_data for field in ['pinyin', 'meaning', 'composition', 'phrases']):
-                        character_data[char] = char_data
-                        # Cache the character data only if it's not placeholder data
-                        if use_cache and char_data['pinyin'] != 'Unknown':
-                            cache_character(char, char_data, llm_provider="Google", llm_model_name=model_name)
-                    else:
-                        click.echo(f"Missing some fields for character {char}. Using placeholder data.")
-                        character_data[char] = generate_placeholder_data(char)
-                        # Note: We don't cache placeholder data anymore
+                if ':' in line:
+                    parts = line.split(':', 1)
+                    field_name = parts[0].strip().lower()
+                    field_value = parts[1].strip()
 
-                except Exception as e:
-                    click.echo(f"Error generating data for character {char}: {e}")
-                    character_data[char] = generate_placeholder_data(char)
-                    # Note: We don't cache placeholder data anymore
-                
-                # Update progress bar
-                pbar.update(1)
+                    if field_name in ['pinyin', 'meaning', 'composition', 'phrases']:
+                        char_data[field_name] = field_value
+                        current_field = field_name
+                else:
+                    # Continuation of previous field
+                    if current_field:
+                        char_data[current_field] += ' ' + line
+
+            # Check if we got all the fields
+            if all(field in char_data for field in ['pinyin', 'meaning', 'composition', 'phrases']):
+                character_data[char] = char_data
+            else:
+                print(f"Missing some fields for character {char}. Using placeholder data.")
+                character_data[char] = generate_placeholder_data(char)
+
+        except Exception as e:
+            print(f"Error generating data for character {char}: {e}")
+            character_data[char] = generate_placeholder_data(char)
 
     # Ensure we have data for all requested characters
     for char in characters:
         if char not in character_data:
             character_data[char] = generate_placeholder_data(char)
-            # Note: We don't cache placeholder data
 
     return character_data
-
 
 def generate_placeholder_data(character):
     """
@@ -858,9 +788,9 @@ def generate_html(tree_data, character_data, title="ZiNets Visualization"):
                 {root_phrases}
             </div>
         </div>
-        <br><br>
+        
         <div class="footer">
-            Provided by ZiNets on {generation_date}
+            Generated by ZiNets on {generation_date}
         </div>
     </div>
 
@@ -1007,14 +937,11 @@ def process_semantic_network(markdown_text, output_file="zi_vis.html", use_gemin
 
     # Get character data from Gemini API or generate placeholder data
     if use_gemini:
-        ts_start = time.time()
         character_data = get_character_data_from_gemini(
             characters, 
             debug=debug, 
             use_cache=use_cache
         )
-        ts_end = time.time()
-        click.echo(f"Gemini API call took {ts_end - ts_start:.2f} seconds.")
     else:
         # When not using Gemini, we still use cache if enabled
         if use_cache:
