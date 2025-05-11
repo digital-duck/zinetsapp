@@ -133,7 +133,7 @@ streamlit run app.py
 
 see the [ECharts documentation](https://echarts.apache.org/en/index.html) for more details on how to customize the visualizations.
 
-see `http://github.com/digital-duck/zinetsapp/dev/zinets-POC/echart/gemini/zinets_vis.py`
+see [zinets_vis.py](https://github.com/digital-duck/zinetsapp/blob/main/dev/zinets-POC/echart/gemini/zinets_vis.py)
 
 ## Contributing
 
