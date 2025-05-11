@@ -889,39 +889,35 @@ def generate_html(tree_data, character_data, title="ZiNets Visualization"):
                 }},
                 backgroundColor: 'rgba(255, 255, 255, 0.9)',
                 borderColor: '#ccc',
-                borderWidth: 1,
-                padding: 10,
+                borderWidth: 0,
+                padding: 2,
                 textStyle: {{
                     color: '#333',
-                    fontSize: 16
+                    fontSize: 25
                 }}
             }},
             series: [
                 {{
                     type: 'tree',
                     data: [treeData],
-                    top: '5%',
-                    left: '10%',
-                    bottom: '5%',
-                    right: '20%',
-                    symbolSize: 25,
+                    symbolSize: 70,
                     orient: 'TB',
-                    symbol: 'circle',
+                    symbol: 'rect',
                     label: {{
-                        position: 'right',
-                        distance: 0,
-                        fontSize: 35,
-                        fontWeight: 'bold'
+                        "show": true,
+                        "color": "red",
+                        "fontSize": 25,
+                        "valueAnimation": false
                     }},
                     leaves: {{
-                        label: {{
-                            position: 'right',
-                            verticalAlign: 'middle',
-                            align: 'center'
-                        }}
                     }},
                     emphasis: {{
-                        focus: 'descendant'
+                        focus: 'relative',
+                        itemStyle: {{
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(70, 70, 70, 0.5)'
+                        }}
                     }},
                     expandAndCollapse: false,
                     animationDuration: 550,
