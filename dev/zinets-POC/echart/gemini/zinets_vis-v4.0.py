@@ -647,7 +647,6 @@ def get_character_data_from_gemini(characters, debug=DEBUG_FLAG, use_cache=True,
                                         cache_character(current_char, current_data, llm_provider="Google", llm_model_name=model_name)
                                     
                                     # Remove from still_missing_chars since we successfully processed it
-                                    # (This handles all characters except the last one in the response)
                                     if current_char in still_missing_chars:
                                         still_missing_chars.remove(current_char)
 
@@ -689,7 +688,7 @@ def get_character_data_from_gemini(characters, debug=DEBUG_FLAG, use_cache=True,
                             if use_cache and current_data['pinyin'] != 'Unknown':
                                 cache_character(current_char, current_data, llm_provider="Google", llm_model_name=model_name)
                             
-                            # Handle the last character in the response (which won't be caught by the Character: line check)
+                            # Remove from still_missing_chars since we successfully processed it
                             if current_char in still_missing_chars:
                                 still_missing_chars.remove(current_char)
 

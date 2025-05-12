@@ -1,47 +1,83 @@
 {
-    "name": "藻",
+    "name": "木",
     "children": [
         {
-            "name": "艹",
-            "children": []
-        },
-        {
-            "name": "澡",
+            "name": "本",
             "children": [
                 {
-                    "name": "氵",
-                    "children": []
+                    "name": "笨",
+                    "children": [],
+                    "decomposition": "⺮ + 本"
                 },
                 {
-                    "name": "喿",
-                    "children": [
-                        {
-                            "name": "品",
-                            "children": [
-                                {
-                                    "name": "口",
-                                    "children": []
-                                },
-                                {
-                                    "name": "口",
-                                    "children": []
-                                },
-                                {
-                                    "name": "口",
-                                    "children": []
-                                }
-                            ],
-                            "decomposition": "口+口+口"
-                        },
-                        {
-                            "name": "木",
-                            "children": []
-                        }
-                    ],
-                    "decomposition": "品+木"
+                    "name": "体",
+                    "children": [],
+                    "decomposition": "亻 + 本"
                 }
             ],
-            "decomposition": "氵+喿"
+            "decomposition": "木 + 一"
+        },
+        {
+            "name": "宋",
+            "children": [],
+            "decomposition": "宀 + 木"
+        },
+        {
+            "name": "杆",
+            "children": [
+                {
+                    "name": "干",
+                    "children": [
+                        {
+                            "name": "竿",
+                            "children": [],
+                            "decomposition": "⺮ + 干"
+                        },
+                        {
+                            "name": "肝",
+                            "children": [],
+                            "decomposition": "月 + 干 "
+                        },
+                        {
+                            "name": "罕",
+                            "children": [],
+                            "decomposition": "㓁 + 干"
+                        },
+                        {
+                            "name": "旱",
+                            "children": [],
+                            "decomposition": "日 + 干"
+                        },
+                        {
+                            "name": "汗",
+                            "children": [],
+                            "decomposition": "氵 + 干"
+                        },
+                        {
+                            "name": "奸",
+                            "children": [],
+                            "decomposition": "女 + 干"
+                        }
+                    ]
+                }
+            ],
+            "decomposition": "木 + 干"
+        },
+        {
+            "name": "植",
+            "children": [
+                {
+                    "name": "直",
+                    "children": [
+                        {
+                            "name": "矗",
+                            "children": [],
+                            "decomposition": "直 + 直 + 直"
+                        }
+                    ]
+                }
+            ],
+            "decomposition": "木 + 直"
         }
     ]
 }

@@ -458,7 +458,7 @@ def extract_all_characters(tree_data):
     dfs(tree_data)
     return list(characters)
 
-def get_character_data_from_gemini(characters, debug=DEBUG_FLAG, use_cache=True, chunk_size=10):
+def get_character_data_from_gemini(characters, debug=DEBUG_FLAG, use_cache=True):
     """
     Use Google Gemini API to generate character data using the official Python library.
     With caching support to reduce API calls.
@@ -467,7 +467,6 @@ def get_character_data_from_gemini(characters, debug=DEBUG_FLAG, use_cache=True,
         characters: A list of Chinese characters
         debug: Whether to save debug information
         use_cache: Whether to use cached data
-        chunk_size: Maximum number of characters to process in a single batch
 
     Returns:
         A dictionary with character data
@@ -567,162 +566,137 @@ def get_character_data_from_gemini(characters, debug=DEBUG_FLAG, use_cache=True,
         "max_output_tokens": 8192,
     }
 
-    # APPROACH 1: Process characters in chunks for better rate limit handling
-    # Initialize a list to track characters that need individual processing
-    still_missing_chars = missing_chars.copy()
-    
-    if missing_chars:
-        # Create chunks of characters to process in batches
-        char_chunks = [missing_chars[i:i + chunk_size] for i in range(0, len(missing_chars), chunk_size)]
-        
-        click.echo(f"Processing {len(missing_chars)} characters in {len(char_chunks)} chunks of max size {chunk_size}")
-        
-        # Process each chunk
-        for chunk_index, char_chunk in enumerate(char_chunks):
-            try:
-                if len(char_chunk) > 1:
-                    click.echo(f"Processing chunk {chunk_index+1}/{len(char_chunks)} with {len(char_chunk)} characters...")
-                    
-                    chars_str = ', '.join([f"'{char}'" for char in char_chunk])
-                    batch_prompt = f"""
-                    Generate information about these Chinese characters: {chars_str}
+    # APPROACH 1: Try to get all characters at once first for efficiency
+    if len(missing_chars) > 1:
+        try:
+            click.echo(f"Attempting to get data for all {len(missing_chars)} characters at once...")
 
-                    For each character, provide:
-                    - pinyin: the pronunciation with tone marks
-                    - meaning: main English meanings
-                    - composition: character component explanation
-                    - phrases: 5 common phrases with pinyin and meaning
+            chars_str = ', '.join([f"'{char}'" for char in missing_chars])
+            batch_prompt = f"""
+            Generate information about these Chinese characters: {chars_str}
 
-                    Format each character's information like this:
+            For each character, provide:
+            - pinyin: the pronunciation with tone marks
+            - meaning: main English meanings
+            - composition: character component explanation
+            - phrases: 5 common phrases with pinyin and meaning
 
-                    Character: [character]
-                    pinyin: [pronunciation]
-                    meaning: [meanings]
-                    composition: [explanation]
-                    phrases: [phrase1]<br>[phrase2]<br>[phrase3]<br>[phrase4]<br>[phrase5]
+            Format each character's information like this:
 
-                    Start each character with "Character:" on a new line.
-                    Do not include any other formatting, explanations, or markdown.
-                    """
+            Character: [character]
+            pinyin: [pronunciation]
+            meaning: [meanings]
+            composition: [explanation]
+            phrases: [phrase1]<br>[phrase2]<br>[phrase3]<br>[phrase4]<br>[phrase5]
 
-                    response = model.generate_content(
-                        batch_prompt,
-                        generation_config=generation_config
-                    )
+            Start each character with "Character:" on a new line.
+            Do not include any other formatting, explanations, or markdown.
+            """
 
-                    response_text = response.text
+            response = model.generate_content(
+                batch_prompt,
+                generation_config=generation_config
+            )
 
-                    # Save response for debugging
-                    if debug:
-                        LINE_MARKER = "===" * 80
-                        log_header = f"\n\nGemini Model: {model_name}\nChunk: {chunk_index+1}/{len(char_chunks)}\nDatetime: {time.strftime('%Y-%m-%d %H:%M:%S')}\n{LINE_MARKER}\n"
-                        # Save the raw response for debugging
-                        file_raw = "gemini_response_batch.txt"
-                        with open(file_raw, "a", encoding="utf-8") as f:
-                            f.write(log_header)
-                            f.write(response_text)
-                        click.echo(f"Gemini API response for chunk {chunk_index+1} saved to {file_raw}")
+            response_text = response.text
 
-                    # Parse the non-JSON response format
-                    batch_character_data = {}
-                    lines = response_text.split('\n')
+            # Save response for debugging
+            if debug:
+                LINE_MARKER = "===" * 80
+                log_header = f"\n\nGemini Model: {model_name}\nDatetime: {time.strftime('%Y-%m-%d %H:%M:%S')}\n{LINE_MARKER}\n"
+                # Save the raw response for debugging
+                file_raw = "gemini_response_batch.txt"
+                with open(file_raw, "a", encoding="utf-8") as f:
+                    f.write(log_header)
+                    f.write(response_text)
+                click.echo(f"Gemini API response saved to {file_raw}")
 
-                    current_char = None
-                    current_data = {}
-                    current_field = None
+            # Parse the non-JSON response format
+            batch_character_data = {}
+            lines = response_text.split('\n')
 
-                    for line in lines:
-                        line = line.strip()
-                        if not line:
-                            continue
+            current_char = None
+            current_data = {}
+            current_field = None
 
-                        # Check for new character section
-                        if line.startswith('Character:'):
-                            # Save previous character if we were processing one
-                            if current_char and current_data:
-                                if all(field in current_data for field in ['pinyin', 'meaning', 'composition', 'phrases']):
-                                    batch_character_data[current_char] = current_data
-                                    # Cache the character data
-                                    if use_cache and current_data['pinyin'] != 'Unknown':
-                                        cache_character(current_char, current_data, llm_provider="Google", llm_model_name=model_name)
-                                    
-                                    # Remove from still_missing_chars since we successfully processed it
-                                    # (This handles all characters except the last one in the response)
-                                    if current_char in still_missing_chars:
-                                        still_missing_chars.remove(current_char)
+            for line in lines:
+                line = line.strip()
+                if not line:
+                    continue
 
-                            # Start new character
-                            char_parts = line.split(':', 1)
-                            if len(char_parts) > 1:
-                                potential_char = char_parts[1].strip()
-                                # Handle cases where the character might have extra text
-                                for c in potential_char:
-                                    if c in char_chunk:
-                                        current_char = c
-                                        break
-                                else:
-                                    # If no known character found, use the first character
-                                    current_char = potential_char[0] if potential_char else None
-
-                            current_data = {}
-                            current_field = None
-
-                        # Check for field definitions
-                        elif ':' in line and not line.startswith('Character:'):
-                            field_parts = line.split(':', 1)
-                            field_name = field_parts[0].strip().lower()
-                            field_value = field_parts[1].strip()
-
-                            if field_name in ['pinyin', 'meaning', 'composition', 'phrases']:
-                                current_data[field_name] = field_value
-                                current_field = field_name
-
-                        # Continuation of previous field
-                        elif current_field:
-                            current_data[current_field] += ' ' + line
-
-                    # Add the last character
+                # Check for new character section
+                if line.startswith('Character:'):
+                    # Save previous character if we were processing one
                     if current_char and current_data:
                         if all(field in current_data for field in ['pinyin', 'meaning', 'composition', 'phrases']):
                             batch_character_data[current_char] = current_data
                             # Cache the character data
                             if use_cache and current_data['pinyin'] != 'Unknown':
                                 cache_character(current_char, current_data, llm_provider="Google", llm_model_name=model_name)
-                            
-                            # Handle the last character in the response (which won't be caught by the Character: line check)
-                            if current_char in still_missing_chars:
-                                still_missing_chars.remove(current_char)
 
-                    # Update our main character_data dictionary
-                    character_data.update(batch_character_data)
+                    # Start new character
+                    char_parts = line.split(':', 1)
+                    if len(char_parts) > 1:
+                        potential_char = char_parts[1].strip()
+                        # Handle cases where the character might have extra text
+                        for c in potential_char:
+                            if c in missing_chars:
+                                current_char = c
+                                break
+                        else:
+                            # If no known character found, use the first character
+                            current_char = potential_char[0] if potential_char else None
 
-                    # Report on processing success
-                    processed_chars = list(batch_character_data.keys())
-                    if len(processed_chars) == len(char_chunk):
-                        click.echo(f"Successfully processed all {len(char_chunk)} characters in chunk {chunk_index+1}")
-                    else:
-                        missing_count = len(char_chunk) - len(processed_chars)
-                        click.echo(f"Chunk {chunk_index+1} processing: got {len(processed_chars)}/{len(char_chunk)} characters. {missing_count} will be processed individually later.")
-                
-                # Add a small delay between chunks to avoid rate limiting
-                if chunk_index < len(char_chunks) - 1:
-                    delay_time = 1.0  # 1 second delay between chunks
-                    click.echo(f"Waiting {delay_time}s before next chunk to avoid rate limits...")
-                    time.sleep(delay_time)
-                    
-            except Exception as chunk_error:
-                click.echo(f"Error processing chunk {chunk_index+1}: {chunk_error}")
-                # Characters in this chunk will remain in still_missing_chars for individual processing
-    
-    # APPROACH 2: Process any remaining characters one by one
-    # We're using the still_missing_chars list that was updated during chunk processing
-    
-    if still_missing_chars:
-        click.echo(f"Retrieving data for {len(still_missing_chars)} remaining characters individually...")
+                    current_data = {}
+                    current_field = None
+
+                # Check for field definitions
+                elif ':' in line and not line.startswith('Character:'):
+                    field_parts = line.split(':', 1)
+                    field_name = field_parts[0].strip().lower()
+                    field_value = field_parts[1].strip()
+
+                    if field_name in ['pinyin', 'meaning', 'composition', 'phrases']:
+                        current_data[field_name] = field_value
+                        current_field = field_name
+
+                # Continuation of previous field
+                elif current_field:
+                    current_data[current_field] += ' ' + line
+
+            # Add the last character
+            if current_char and current_data:
+                if all(field in current_data for field in ['pinyin', 'meaning', 'composition', 'phrases']):
+                    batch_character_data[current_char] = current_data
+                    # Cache the character data
+                    if use_cache and current_data['pinyin'] != 'Unknown':
+                        cache_character(current_char, current_data, llm_provider="Google", llm_model_name=model_name)
+
+            # Update our main character_data dictionary
+            character_data.update(batch_character_data)
+
+            # Check if we got data for all characters
+            still_missing_chars = [char for char in missing_chars if char not in character_data]
+
+            if not still_missing_chars:
+                click.echo(f"Successfully retrieved data for all {len(missing_chars)} characters in batch mode")
+                return character_data
+            else:
+                click.echo(f"Batch retrieval missing data for {len(still_missing_chars)} characters. Filling in...")
+                # Continue to one-by-one approach for missing characters
+                missing_chars = still_missing_chars
+
+        except Exception as batch_error:
+            click.echo(f"Batch retrieval failed: {batch_error}")
+            # Continue with individual processing
+
+    # APPROACH 2: Process remaining characters one by one
+    if missing_chars:
+        click.echo(f"Retrieving data for {len(missing_chars)} characters individually...")
         
         # Create a progress bar for individual character processing
-        with tqdm(total=len(still_missing_chars), desc="Processing characters individually", disable=len(still_missing_chars) < 3) as pbar:
-            for char in still_missing_chars:
+        with tqdm(total=len(missing_chars), desc="Processing characters", disable=len(missing_chars) < 3) as pbar:
+            for char in missing_chars:
                 try:
                     # Prompt for a single character
                     prompt = f"""
@@ -783,22 +757,15 @@ def get_character_data_from_gemini(characters, debug=DEBUG_FLAG, use_cache=True,
                 
                 # Update progress bar
                 pbar.update(1)
-                
-                # Add a small delay between individual API calls
-                if char != still_missing_chars[-1]:  # Skip delay after the last character
-                    time.sleep(0.5)  # 0.5 second delay between individual characters
-    else:
-        click.echo("All characters were successfully processed in batch mode. No need for individual processing.")
 
     # Ensure we have data for all requested characters
-    missing_final = [char for char in characters if char not in character_data]
-    if missing_final:
-        click.echo(f"Adding placeholder data for {len(missing_final)} characters that couldn't be processed.")
-        for char in missing_final:
+    for char in characters:
+        if char not in character_data:
             character_data[char] = generate_placeholder_data(char)
             # Note: We don't cache placeholder data
 
     return character_data
+
 
 def generate_placeholder_data(character):
     """
@@ -1039,8 +1006,7 @@ def generate_html(tree_data, character_data, title="ZiNets Visualization"):
 
     return html
 
-def process_semantic_network(markdown_text, output_file="zi_vis.html", use_gemini=True, use_cache=True, 
-                      title="ZiNets Visualization", debug=DEBUG_FLAG, chunk_size=10):
+def process_semantic_network(markdown_text, output_file="zi_vis.html", use_gemini=True, use_cache=True, title="ZiNets Visualization", debug=DEBUG_FLAG):
     """
     Process semantic network data and generate HTML file.
 
@@ -1051,7 +1017,6 @@ def process_semantic_network(markdown_text, output_file="zi_vis.html", use_gemin
         use_cache: Whether to use character data caching
         title: Title for the visualization page
         debug: Whether to enable debug mode
-        chunk_size: Maximum number of characters to process in a single batch
     """
     # Parse markdown to tree data
     tree_data = parse_markdown_to_tree_data(markdown_text)
@@ -1073,8 +1038,7 @@ def process_semantic_network(markdown_text, output_file="zi_vis.html", use_gemin
         character_data = get_character_data_from_gemini(
             characters, 
             debug=debug, 
-            use_cache=use_cache,
-            chunk_size=chunk_size
+            use_cache=use_cache
         )
         ts_end = time.time()
         click.echo(f"Gemini API call took {ts_end - ts_start:.2f} seconds.")
@@ -1124,9 +1088,7 @@ def process_semantic_network(markdown_text, output_file="zi_vis.html", use_gemin
               help='Enable debug mode to save API responses (default: False)')
 @click.option('--cache-stats', is_flag=True, default=False,
               help='Display cache statistics and exit')
-@click.option('--chunk-size', default=10, type=int,
-              help='Maximum number of characters to process in a single batch (default: 10)')
-def main(input_file, output_file, title, use_gemini, use_cache, debug, cache_stats, chunk_size):
+def main(input_file, output_file, title, use_gemini, use_cache, debug, cache_stats):
     """
     ZiNets - Chinese Character Network Visualization Tool
     
@@ -1160,8 +1122,7 @@ def main(input_file, output_file, title, use_gemini, use_cache, debug, cache_sta
             use_gemini=use_gemini,
             use_cache=use_cache,
             title=title,
-            debug=debug,
-            chunk_size=chunk_size
+            debug=debug
         )
         click.echo(click.style(f"Success! Visualization saved to: {output_path}", fg='green'))
     except Exception as e:

@@ -76,85 +76,115 @@
 <body>
     <div id="chart-container"></div>
     <div id="info-panel">
-        <div class="character" id="selected-char">藻</div>
-        <div class="pinyin" id="selected-pinyin">zǎo</div>
+        <div class="character" id="selected-char">水</div>
+        <div class="pinyin" id="selected-pinyin">shuǐ</div>
 
         <div class="section">
             <h3>Meaning</h3>
             <div class="meaning" id="selected-meaning">
-                algae; seaweed
+                water
             </div>
         </div>
 
         <div class="section">
             <h3>Composition</h3>
             <div class="composition" id="selected-composition">
-                '艹' (grass radical) + '喿' (noise/chirping - phonetic component).
+                Pictographic - Represents flowing water.
             </div>
         </div>
 
         <div class="section">
             <h3>Related Phrases</h3>
             <div class="phrases" id="selected-phrases">
-                海藻 (hǎi zǎo) - seaweed<br>藻类 (zǎo lèi) - algae<br>绿藻 (lǜ zǎo) - green algae<br>藻饰 (zǎo shì) - embellishment; ornamentation (literary)<br>蓝藻 (lán zǎo) - blue algae
+                水果 (shuǐ guǒ) - fruit<br>喝水 (hē shuǐ) - to drink water<br>水平 (shuǐ píng) - level, standard<br>水龙头 (shuǐ lóng tóu) - faucet, tap<br>水灾 (shuǐ zāi) - flood
             </div>
         </div>
         <br><br>
         <div class="footer">
-            Provided by ZiNets on 2025-05-11 15:08:48
+            Provided by ZiNets on 2025-05-12 06:50:14
         </div>
     </div>
 
     <script>
         // Character data repository
         const characterData = {
-    "品": {
-        "pinyin": "pǐn",
-        "meaning": "product; commodity; grade; rank; to taste; to judge",
-        "composition": "Three '口' (mouth) characters stacked on top of each other.",
-        "phrases": "产品 (chǎn pǐn) - product<br>品质 (pǐn zhì) - quality<br>商品 (shāng pǐn) - commodity<br>品尝 (pǐn cháng) - to taste<br>人品 (rén pǐn) - moral character"
+    "淡": {
+        "pinyin": "dàn",
+        "meaning": "light, pale, thin, tasteless",
+        "composition": "氵(water radical) + 炎 (yán, flame, inflammation) - The 'flame' component contributes to the sound and potentially the idea of something being reduced or weakened.",
+        "phrases": "淡水 (dàn shuǐ) - fresh water<br>清淡 (qīng dàn) - light (in flavor), bland<br>淡季 (dàn jì) - off-season<br>平淡 (píng dàn) - ordinary, commonplace<br>淡忘 (dàn wàng) - to fade from memory"
     },
-    "木": {
-        "pinyin": "mù",
-        "meaning": "tree; wood",
-        "composition": "A simple pictograph representing a tree.",
-        "phrases": "木头 (mù tou) - wood; log; blockhead<br>木材 (mù cái) - timber; lumber<br>木星 (mù xīng) - Jupiter<br>木耳 (mù ěr) - wood ear fungus<br>木匠 (mù jiàng) - carpenter"
+    "漂": {
+        "pinyin": "piāo, piào, piǎo",
+        "meaning": "float, drift, bleach, elegant",
+        "composition": "氵(water radical) + 票 (piào, ticket) - The 'ticket' component contributes to the sound.",
+        "phrases": "漂亮 (piào liang) - beautiful, pretty<br>漂浮 (piāo fú) - to float<br>漂流 (piāo liú) - to drift, to float downstream<br>漂白 (piǎo bái) - to bleach<br>漂泊 (piāo bó) - to drift, to wander"
     },
-    "艹": {
-        "pinyin": "cǎo",
-        "meaning": "grass (radical)",
-        "composition": "Represents grass or plants.",
-        "phrases": "(This is a radical, not a standalone character with common phrases. It's used in many characters related to plants.)"
+    "清": {
+        "pinyin": "qīng",
+        "meaning": "clear, pure, clean",
+        "composition": "氵(water radical) + 青 (qīng, green, blue) - The 'green/blue' component contributes to the sound and the idea of clarity and purity.",
+        "phrases": "清楚 (qīng chǔ) - clear, distinct<br>清洁 (qīng jié) - clean, hygiene<br>清澈 (qīng chè) - clear, limpid<br>清淡 (qīng dàn) - light (in flavor), bland<br>清醒 (qīng xǐng) - sober, clear-headed"
     },
-    "喿": {
-        "pinyin": "zào",
-        "meaning": "noisy; chirping of birds",
-        "composition": "Four '口' (mouth) characters, suggesting many mouths making noise.",
-        "phrases": "喧喿 (xuān zào) - noisy<br>喿杂 (zào zá) - clamorous; disorderly<br>无喿 (wú zào) - quiet; silent<br>喿鸣 (zào míng) - chirping (of birds)<br> (rarely used in modern common phrases)"
+    "湖": {
+        "pinyin": "hú",
+        "meaning": "lake",
+        "composition": "氵(water radical) + 胡 (hú, beard, recklessly) - The 'beard' component likely contributes to the sound.",
+        "phrases": "湖泊 (hú pō) - lake<br>西湖 (Xī Hú) - West Lake (in Hangzhou)<br>湖水 (hú shuǐ) - lake water<br>湖边 (hú biān) - lakeside<br>五大湖 (wǔ dà hú) - Great Lakes"
     },
-    "口": {
-        "pinyin": "kǒu",
-        "meaning": "mouth; entrance; measure word (for people, wells, etc.)",
-        "composition": "A simple pictograph representing a mouth.",
-        "phrases": "人口 (rén kǒu) - population<br>门口 (mén kǒu) - doorway; entrance<br>口味 (kǒu wèi) - taste; flavor<br>开口 (kāi kǒu) - to open one's mouth; to start to speak<br>口水 (kǒu shuǐ) - saliva"
+    "海": {
+        "pinyin": "hǎi",
+        "meaning": "sea, ocean",
+        "composition": "氵(water radical) + 每 (měi, every) - The 'every' component likely contributes to the sound and potentially the vastness of the sea.",
+        "phrases": "海洋 (hǎi yáng) - ocean<br>大海 (dà hǎi) - sea, ocean<br>上海 (Shàng hǎi) - Shanghai<br>海边 (hǎi biān) - seaside, coast<br>海外 (hǎi wài) - overseas"
     },
-    "澡": {
-        "pinyin": "zǎo",
-        "meaning": "to bathe; to wash",
-        "composition": "'氵' (water radical) + '喿' (noise/chirping - phonetic component).",
-        "phrases": "洗澡 (xǐ zǎo) - to take a bath/shower<br>澡堂 (zǎo táng) - bathhouse<br>澡盆 (zǎo pén) - bathtub<br>淋浴澡 (lín yù zǎo) - shower<br>泡澡 (pào zǎo) - to soak in a bath"
+    "凉": {
+        "pinyin": "liáng",
+        "meaning": "cool, cold",
+        "composition": "冫(ice radical) + 京 (jīng, capital) - The 'capital' component contributes to the sound.",
+        "phrases": "凉快 (liáng kuai) - cool, pleasantly cool<br>凉水 (liáng shuǐ) - cold water<br>凉风 (liáng fēng) - cool breeze<br>凉拌 (liáng bàn) - cold tossed (salad)<br>着凉 (zháo liáng) - to catch a cold"
     },
-    "氵": {
+    "河": {
+        "pinyin": "hé",
+        "meaning": "river",
+        "composition": "氵(water radical) + 可 (kě, can, may) - The 'can' component likely contributes to the sound.",
+        "phrases": "河流 (hé liú) - river, stream<br>黄河 (Huáng Hé) - Yellow River<br>河流 (hé liú) - river<br>河边 (hé biān) - riverside<br>银河 (yín hé) - Milky Way"
+    },
+    "洋": {
+        "pinyin": "yáng",
+        "meaning": "ocean, foreign, western",
+        "composition": "氵(water radical) + 羊 (yáng, sheep) - The 'sheep' component likely contributes to the sound.",
+        "phrases": "海洋 (hǎi yáng) - ocean<br>太平洋 (Tài píng yáng) - Pacific Ocean<br>西洋 (xī yáng) - the West, Western countries<br>洋人 (yáng rén) - foreigner (dated)<br>洋气 (yáng qì) - stylish, fashionable (influenced by Western styles)"
+    },
+    "浪": {
+        "pinyin": "làng",
+        "meaning": "wave, surge, billow, unrestrained, dissolute",
+        "composition": "氵(water radical) + 良 (liáng, good) - The 'good' component here likely contributes to the sound and potentially the idea of a 'good' or 'large' wave.",
+        "phrases": "浪花 (làng huā) - wave, spray<br>浪费 (làng fèi) - to waste, to squander<br>海浪 (hǎi làng) - sea wave<br>风浪 (fēng làng) - wind and waves, storm<br>浪漫 (làng màn) - romantic"
+    },
+    "冰": {
+        "pinyin": "bīng",
+        "meaning": "ice",
+        "composition": "Pictographic - Represents frozen water.",
+        "phrases": "冰淇淋 (bīng qí lín) - ice cream<br>冰冷 (bīng lěng) - ice-cold<br>冰山 (bīng shān) - iceberg<br>冰块 (bīng kuài) - ice cube<br>冰川 (bīng chuān) - glacier"
+    },
+    "江": {
+        "pinyin": "jiāng",
+        "meaning": "river (large), the Yangtze River",
+        "composition": "氵(water radical) + 工 (gōng, work, labor) - The 'work' component may relate to the river's role in transportation or irrigation.",
+        "phrases": "江河 (jiāng hé) - rivers<br>长江 (Cháng Jiāng) - Yangtze River<br>江南 (Jiāng nán) - south of the Yangtze River<br>江山 (jiāng shān) - landscape, country<br>江水 (jiāng shuǐ) - river water"
+    },
+    "水": {
         "pinyin": "shuǐ",
-        "meaning": "water (radical)",
-        "composition": "A simplified form of the character '水' (water).",
-        "phrases": "(This is a radical, not a standalone character with common phrases. It's used in many characters related to water.)"
+        "meaning": "water",
+        "composition": "Pictographic - Represents flowing water.",
+        "phrases": "水果 (shuǐ guǒ) - fruit<br>喝水 (hē shuǐ) - to drink water<br>水平 (shuǐ píng) - level, standard<br>水龙头 (shuǐ lóng tóu) - faucet, tap<br>水灾 (shuǐ zāi) - flood"
     },
-    "藻": {
-        "pinyin": "zǎo",
-        "meaning": "algae; seaweed",
-        "composition": "'艹' (grass radical) + '喿' (noise/chirping - phonetic component).",
-        "phrases": "海藻 (hǎi zǎo) - seaweed<br>藻类 (zǎo lèi) - algae<br>绿藻 (lǜ zǎo) - green algae<br>藻饰 (zǎo shì) - embellishment; ornamentation (literary)<br>蓝藻 (lán zǎo) - blue algae"
+    "冻": {
+        "pinyin": "dòng",
+        "meaning": "freeze, frozen",
+        "composition": "冫(ice radical) + 东 (dōng, east) - The 'east' component contributes to the sound.",
+        "phrases": "冻结 (dòng jié) - to freeze, to congeal<br>冷冻 (lěng dòng) - to freeze, to refrigerate<br>冻伤 (dòng shāng) - frostbite<br>果冻 (guǒ dòng) - jelly, gelatin<br>冻死 (dòng sǐ) - to freeze to death"
     }
 };
 
@@ -164,49 +194,71 @@
 
         // Define the tree structure based on your data
         const treeData = {
-    "name": "藻",
+    "name": "水",
     "children": [
         {
-            "name": "艹",
-            "children": []
-        },
-        {
-            "name": "澡",
+            "name": "冰",
             "children": [
                 {
-                    "name": "氵",
-                    "children": []
+                    "name": "凉",
+                    "children": [],
+                    "decomposition": "ice + good"
                 },
                 {
-                    "name": "喿",
-                    "children": [
-                        {
-                            "name": "品",
-                            "children": [
-                                {
-                                    "name": "口",
-                                    "children": []
-                                },
-                                {
-                                    "name": "口",
-                                    "children": []
-                                },
-                                {
-                                    "name": "口",
-                                    "children": []
-                                }
-                            ],
-                            "decomposition": "口+口+口"
-                        },
-                        {
-                            "name": "木",
-                            "children": []
-                        }
-                    ],
-                    "decomposition": "品+木"
+                    "name": "冻",
+                    "children": [],
+                    "decomposition": "ice + east"
                 }
             ],
-            "decomposition": "氵+喿"
+            "decomposition": "water + ice"
+        },
+        {
+            "name": "江",
+            "children": [
+                {
+                    "name": "河",
+                    "children": [],
+                    "decomposition": "water + possible"
+                },
+                {
+                    "name": "湖",
+                    "children": [],
+                    "decomposition": "water + tiger"
+                }
+            ],
+            "decomposition": "water + work"
+        },
+        {
+            "name": "海",
+            "children": [
+                {
+                    "name": "洋",
+                    "children": [],
+                    "decomposition": "water + sheep"
+                },
+                {
+                    "name": "浪",
+                    "children": [],
+                    "decomposition": "water + good"
+                }
+            ],
+            "decomposition": "water + mother"
+        },
+        {
+            "name": "淡",
+            "children": [
+                {
+                    "name": "清",
+                    "children": [],
+                    "decomposition": "water + blue"
+                },
+                {
+                    "name": "漂",
+                    "children": [],
+                    "decomposition": "water + surface"
+                }
+            ],
+            "decomposition": "water + thin"
         }
     ]
 };

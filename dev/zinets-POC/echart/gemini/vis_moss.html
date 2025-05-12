@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZiNets Visualization</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+        #chart-container {
+            width: 60%;
+            height: 100%;
+        }
+        #info-panel {
+            width: 40%;
+            padding: 20px;
+            background-color: #f5f5f5;
+            overflow-y: auto;
+            border-left: 1px solid #ddd;
+        }
+        .node-tooltip {
+            position: absolute;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            pointer-events: none;
+            font-size: 14px;
+            display: none;
+        }
+        .character {
+            font-size: 72px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .pinyin {
+            font-size: 18px;
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section h3 {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            color: #333;
+        }
+        .composition {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .phrases {
+            line-height: 1.6;
+        }
+        .meaning {
+            line-height: 1.6;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="chart-container"></div>
+    <div id="info-panel">
+        <div class="character" id="selected-char">藻</div>
+        <div class="pinyin" id="selected-pinyin">zǎo</div>
+
+        <div class="section">
+            <h3>Meaning</h3>
+            <div class="meaning" id="selected-meaning">
+                algae; seaweed
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Composition</h3>
+            <div class="composition" id="selected-composition">
+                '艹' (grass radical) + '喿' (noise/chirping - phonetic component).
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Related Phrases</h3>
+            <div class="phrases" id="selected-phrases">
+                海藻 (hǎi zǎo) - seaweed<br>藻类 (zǎo lèi) - algae<br>绿藻 (lǜ zǎo) - green algae<br>藻饰 (zǎo shì) - embellishment; ornamentation (literary)<br>蓝藻 (lán zǎo) - blue algae
+            </div>
+        </div>
+        <br><br>
+        <div class="footer">
+            Provided by ZiNets on 2025-05-12 06:58:36
+        </div>
+    </div>
+
+    <script>
+        // Character data repository
+        const characterData = {
+    "品": {
+        "pinyin": "pǐn",
+        "meaning": "product; commodity; grade; rank; to taste; to judge",
+        "composition": "Three '口' (mouth) characters stacked on top of each other.",
+        "phrases": "产品 (chǎn pǐn) - product<br>品质 (pǐn zhì) - quality<br>商品 (shāng pǐn) - commodity<br>品尝 (pǐn cháng) - to taste<br>人品 (rén pǐn) - moral character"
+    },
+    "澡": {
+        "pinyin": "zǎo",
+        "meaning": "to bathe; to wash",
+        "composition": "'氵' (water radical) + '喿' (noise/chirping - phonetic component).",
+        "phrases": "洗澡 (xǐ zǎo) - to take a bath/shower<br>澡堂 (zǎo táng) - bathhouse<br>澡盆 (zǎo pén) - bathtub<br>淋浴澡 (lín yù zǎo) - shower<br>泡澡 (pào zǎo) - to soak in a bath"
+    },
+    "喿": {
+        "pinyin": "zào",
+        "meaning": "noisy; chirping of birds",
+        "composition": "Four '口' (mouth) characters, suggesting many mouths making noise.",
+        "phrases": "喧喿 (xuān zào) - noisy<br>喿杂 (zào zá) - clamorous; disorderly<br>无喿 (wú zào) - quiet; silent<br>喿鸣 (zào míng) - chirping (of birds)<br> (rarely used in modern common phrases)"
+    },
+    "口": {
+        "pinyin": "kǒu",
+        "meaning": "mouth; entrance; measure word (for people, wells, etc.)",
+        "composition": "A simple pictograph representing a mouth.",
+        "phrases": "人口 (rén kǒu) - population<br>门口 (mén kǒu) - doorway; entrance<br>口味 (kǒu wèi) - taste; flavor<br>开口 (kāi kǒu) - to open one's mouth; to start to speak<br>口水 (kǒu shuǐ) - saliva"
+    },
+    "氵": {
+        "pinyin": "shuǐ",
+        "meaning": "water (radical)",
+        "composition": "A simplified form of the character '水' (water).",
+        "phrases": "(This is a radical, not a standalone character with common phrases. It's used in many characters related to water.)"
+    },
+    "藻": {
+        "pinyin": "zǎo",
+        "meaning": "algae; seaweed",
+        "composition": "'艹' (grass radical) + '喿' (noise/chirping - phonetic component).",
+        "phrases": "海藻 (hǎi zǎo) - seaweed<br>藻类 (zǎo lèi) - algae<br>绿藻 (lǜ zǎo) - green algae<br>藻饰 (zǎo shì) - embellishment; ornamentation (literary)<br>蓝藻 (lán zǎo) - blue algae"
+    },
+    "木": {
+        "pinyin": "mù",
+        "meaning": "tree; wood",
+        "composition": "A simple pictograph representing a tree.",
+        "phrases": "木头 (mù tou) - wood; log; blockhead<br>木材 (mù cái) - timber; lumber<br>木星 (mù xīng) - Jupiter<br>木耳 (mù ěr) - wood ear fungus<br>木匠 (mù jiàng) - carpenter"
+    },
+    "艹": {
+        "pinyin": "cǎo",
+        "meaning": "grass (radical)",
+        "composition": "Represents grass or plants.",
+        "phrases": "(This is a radical, not a standalone character with common phrases. It's used in many characters related to plants.)"
+    }
+};
+
+        // Initialize ECharts
+        const chartContainer = document.getElementById('chart-container');
+        const chart = echarts.init(chartContainer);
+
+        // Define the tree structure based on your data
+        const treeData = {
+    "name": "藻",
+    "children": [
+        {
+            "name": "艹",
+            "children": []
+        },
+        {
+            "name": "澡",
+            "children": [
+                {
+                    "name": "氵",
+                    "children": []
+                },
+                {
+                    "name": "喿",
+                    "children": [
+                        {
+                            "name": "品",
+                            "children": [
+                                {
+                                    "name": "口",
+                                    "children": []
+                                },
+                                {
+                                    "name": "口",
+                                    "children": []
+                                },
+                                {
+                                    "name": "口",
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "name": "木",
+                            "children": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+};
+
+        // Set the option
+        const option = {
+            tooltip: {
+                trigger: 'item',
+                formatter: function(params) {
+                    if (params.data.decomposition) {
+                        return `<div style="font-size:18px; font-weight:bold; margin-bottom:5px;">${params.data.name}</div>
+                                <div>${params.data.decomposition}</div>`;
+                    } else {
+                        return params.data.name;
+                    }
+                },
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                borderColor: '#ccc',
+                borderWidth: 0,
+                padding: 2,
+                textStyle: {
+                    color: '#333',
+                    fontSize: 25
+                }
+            },
+            series: [
+                {
+                    type: 'tree',
+                    data: [treeData],
+                    symbolSize: 40,
+                    orient: 'TB',
+                    symbol: 'rect',
+                    label: {
+                        "show": true,
+                        "color": "red",
+                        "fontSize": 25,
+                        "valueAnimation": false
+                    },
+                    leaves: {
+                    },
+                    emphasis: {
+                        focus: 'relative',
+                        itemStyle: {
+                            shadowBlur: 40,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(10, 10, 10, 0.75)'
+                        }
+                    },
+                    expandAndCollapse: false,
+                    animationDuration: 550,
+                    animationDurationUpdate: 750
+                }
+            ]
+        };
+
+        // Set the initial option and render
+        chart.setOption(option);
+
+        // Handle node click event
+        chart.on('click', function(params) {
+            const zi = params.data.name;
+            if (zi) {
+                const charData = characterData[zi];
+                if (charData) {
+                    // Update info panel
+                    document.getElementById('selected-char').textContent = zi;
+                    document.getElementById('selected-pinyin').textContent = charData.pinyin;
+                    document.getElementById('selected-meaning').textContent = charData.meaning;
+                    document.getElementById('selected-composition').textContent = charData.composition;
+                    document.getElementById('selected-phrases').innerHTML = charData.phrases;
+                }
+            }
+        });
+
+        // Make chart responsive
+        window.addEventListener('resize', function() {
+            chart.resize();
+        });
+    </script>
+</body>
+</html>
