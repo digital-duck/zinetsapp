@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZiNets Visualization</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+        #chart-container {
+            width: 60%;
+            height: 100%;
+        }
+        #info-panel {
+            width: 40%;
+            padding: 20px;
+            background-color: #f5f5f5;
+            overflow-y: auto;
+            border-left: 1px solid #ddd;
+        }
+        .node-tooltip {
+            position: absolute;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            pointer-events: none;
+            font-size: 14px;
+            display: none;
+        }
+        .character {
+            font-size: 72px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .pinyin {
+            font-size: 18px;
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section h3 {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            color: #333;
+        }
+        .composition {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .phrases {
+            line-height: 1.6;
+        }
+        .meaning {
+            line-height: 1.6;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="chart-container"></div>
+    <div id="info-panel">
+        <div class="character" id="selected-char">心</div>
+        <div class="pinyin" id="selected-pinyin">xīn</div>
+
+        <div class="section">
+            <h3>Meaning</h3>
+            <div class="meaning" id="selected-meaning">
+                corazón, mente, intención, centro
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Composition</h3>
+            <div class="composition" id="selected-composition">
+                Es un pictograma que representa la forma del corazón.
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Related Phrases</h3>
+            <div class="phrases" id="selected-phrases">
+                心情 (xīn qíng) - estado de ánimo, humor<br>中心 (zhōng xīn) - centro<br>小心 (xiǎo xīn) - tener cuidado, ser cauteloso<br>心理 (xīn lǐ) - psicología, mentalidad<br>心爱 (xīn ài) - amado, querido
+            </div>
+        </div>
+        <br><br>
+        <div class="footer">
+            Provided by ZiNets on 2025-05-14 08:31:59
+        </div>
+    </div>
+
+    <script>
+        // Character data repository
+        const characterData = {
+    "志": {
+        "pinyin": "zhì",
+        "meaning": "voluntad, ambición, aspiración, propósito, marca, registro",
+        "composition": "Compuesto de 士 (shì, erudito, hombre) arriba y 心 (xīn, corazón) abajo.  Representa la ambición o voluntad que reside en el corazón.",
+        "phrases": "志愿 (zhì yuàn) - voluntad, aspiración, deseo<br>同志 (tóng zhì) - camarada, compañero (originalmente con connotación política, ahora más general)<br>志气 (zhì qì) - ambición, aspiración, espíritu<br>墓志铭 (mù zhì míng) - epitafio<br>有志者事竟成 (yǒu zhì zhě shì jìng chéng) - donde hay voluntad, hay un camino"
+    },
+    "愿": {
+        "pinyin": "yuàn",
+        "meaning": "desear, querer, estar dispuesto a, voto, deseo, esperanza",
+        "composition": "Compuesto de 原 (yuán, origen, llanura) arriba y 心 (xīn, corazón) abajo.  Originalmente significaba \"considerar cuidadosamente\" o \"reflexionar sobre\" en el corazón, luego evolucionó a \"desear\".",
+        "phrases": "愿意 (yuàn yì) - estar dispuesto a, querer<br>愿望 (yuàn wàng) - deseo, aspiración<br>祝愿 (zhù yuàn) - desear, bendecir<br>心愿 (xīn yuàn) - deseo del corazón, anhelo<br>但愿 (dàn yuàn) - ojalá, esperemos que"
+    },
+    "意": {
+        "pinyin": "yì",
+        "meaning": "significado, idea, intención, opinión, deseo, sorpresa",
+        "composition": "Compuesto de 音 (yīn, sonido) arriba y 心 (xīn, corazón) abajo.  Originalmente significaba \"sonido del corazón\" o \"pensamiento\", luego se extendió a \"significado\" e \"intención\".",
+        "phrases": "意思 (yì si) - significado, sentido, interés<br>意义 (yì yì) - significado, importancia<br>意见 (yì jiàn) - opinión, sugerencia<br>意外 (yì wài) - inesperado, accidente<br>故意 (gù yì) - a propósito, intencionalmente"
+    },
+    "情": {
+        "pinyin": "qíng",
+        "meaning": "sentimiento, emoción, afecto, amor, situación, condición",
+        "composition": "Compuesto de 忄(xīn, corazón, forma radical) a la izquierda y 青 (qīng, azul/verde) a la derecha.  青 (qīng) aquí actúa como un componente fonético.",
+        "phrases": "感情 (gǎn qíng) - sentimiento, afecto, amor<br>心情 (xīn qíng) - estado de ánimo, humor<br>爱情 (ài qíng) - amor<br>情况 (qíng kuàng) - situación, condición<br>情绪 (qíng xù) - emoción, sentimiento"
+    },
+    "思": {
+        "pinyin": "sī",
+        "meaning": "pensar, reflexionar, considerar, extrañar",
+        "composition": "Compuesto de 田 (tián, campo) arriba y 心 (xīn, corazón) abajo.  Originalmente significaba \"pensar en el campo\" o \"pensar en el sustento\", luego se generalizó a \"pensar\".",
+        "phrases": "思考 (sī kǎo) - pensar, reflexionar<br>思想 (sī xiǎng) - pensamiento, ideología<br>思念 (sī niàn) - extrañar, añorar<br>意思 (sī si) - significado, sentido (igual que 意思 yì si)<br>沉思 (chén sī) - contemplar, meditar"
+    },
+    "忘": {
+        "pinyin": "wàng",
+        "meaning": "olvidar, descuidar",
+        "composition": "Compuesto de 亡 (wáng, perder, morir) arriba y 心 (xīn, corazón) abajo.  Significa \"perder algo del corazón\" o \"sacar algo de la mente\".",
+        "phrases": "忘记 (wàng jì) - olvidar<br>忘掉 (wàng diào) - olvidar<br>难忘 (nán wàng) - inolvidable<br>忘我 (wàng wǒ) - desinteresado, altruista<br>忘年交 (wàng nián jiāo) - amistad entre personas de diferentes edades"
+    },
+    "心": {
+        "pinyin": "xīn",
+        "meaning": "corazón, mente, intención, centro",
+        "composition": "Es un pictograma que representa la forma del corazón.",
+        "phrases": "心情 (xīn qíng) - estado de ánimo, humor<br>中心 (zhōng xīn) - centro<br>小心 (xiǎo xīn) - tener cuidado, ser cauteloso<br>心理 (xīn lǐ) - psicología, mentalidad<br>心爱 (xīn ài) - amado, querido"
+    },
+    "悔": {
+        "pinyin": "huǐ",
+        "meaning": "arrepentirse, lamentar",
+        "composition": "Compuesto de 忄(xīn, corazón, forma radical) a la izquierda y 每 (měi, cada) a la derecha.  每 (měi) aquí actúa como un componente fonético y también sugiere la idea de \"cada vez\" o \"constantemente\" sintiendo arrepentimiento.",
+        "phrases": "后悔 (hòu huǐ) - arrepentirse<br>悔恨 (huǐ hèn) - remordimiento, arrepentimiento amargo<br>悔改 (huǐ gǎi) - arrepentirse y reformarse<br>悔过 (huǐ guò) - confesar y arrepentirse de los errores<br>追悔莫及 (zhuī huǐ mò jí) - demasiado tarde para arrepentirse"
+    },
+    "惟": {
+        "pinyin": "wéi",
+        "meaning": "solo, solamente, pensar, considerar",
+        "composition": "Compuesto de 忄(xīn, corazón, forma radical) a la izquierda y 隹 (zhuī, pájaro de cola corta) a la derecha.  Originalmente significaba \"pensar\" o \"reflexionar\", luego se extendió a \"solo\" o \"solamente\".",
+        "phrases": "惟有 (wéi yǒu) - solo hay, solo existe<br>惟独 (wéi dú) - solo, únicamente<br>惟妙惟肖 (wéi miào wéi xiào) - realista, vívido<br>惟恐 (wéi kǒng) - temer que, por miedo a que<br>思惟 (sī wéi) - pensar, reflexionar (más formal que 思考)"
+    },
+    "想": {
+        "pinyin": "xiǎng",
+        "meaning": "pensar, querer, extrañar, creer, suponer",
+        "composition": "Compuesto de 相 (xiāng, mutuamente, apariencia) arriba y 心 (xīn, corazón) abajo.  Originalmente significaba \"pensar en la apariencia\" o \"imaginar\", luego se generalizó a \"pensar\".",
+        "phrases": "想法 (xiǎng fǎ) - idea, pensamiento, opinión<br>想念 (xiǎng niàn) - extrañar, añorar<br>想象 (xiǎng xiàng) - imaginar, fantasía<br>理想 (lǐ xiǎng) - ideal<br>不想 (bù xiǎng) - no querer"
+    },
+    "恋": {
+        "pinyin": "liàn",
+        "meaning": "amar, estar enamorado, añorar, aferrarse a",
+        "composition": "Compuesto de 亦 (yì, también) arriba y 心 (xīn, corazón) abajo. Representa el sentimiento de añoranza y apego que reside en el corazón.",
+        "phrases": "恋爱 (liàn'ài) - amor, estar enamorado<br>留恋 (liúliàn) - dudar en separarse de, añorar<br>迷恋 (míliàn) - estar fascinado por, obsesionado con<br>依恋 (yīliàn) - depender de, aferrarse a<br>眷恋 (juànliàn) - añorar, amar profundamente"
+    },
+    "愛": {
+        "pinyin": "ài",
+        "meaning": "amor, amar, querer, cariño, afecto",
+        "composition": "Originalmente compuesto de 旡 (jì, una persona arrodillada) sobre 心 (xīn, corazón) y 夊 (suī, ir lentamente) abajo. Representa el sentimiento de amor y cuidado que emana del corazón. La forma simplificada 爱 reemplaza la parte superior con 爫 (zhuǎ, garra) y 友 (yǒu, amigo).",
+        "phrases": "爱情 (àiqíng) - amor<br>爱好 (àihào) - hobby, interés<br>热爱 (rè'ài) - amar apasionadamente<br>爱护 (àihù) - cuidar, proteger<br>可爱 (kě'ài) - adorable, lindo"
+    },
+    "怯": {
+        "pinyin": "qiè",
+        "meaning": "tímido, cobarde, apocado, miedoso",
+        "composition": "Compuesto de 心 (xīn, corazón) a la izquierda y 去 (qù, ir) a la derecha. Representa el sentimiento de querer \"ir\" o alejarse debido al miedo que reside en el corazón.",
+        "phrases": "胆怯 (dǎnqiè) - tímido, cobarde<br>怯场 (qièchǎng) - tener miedo escénico<br>退怯 (tuìqiè) - retroceder por miedo<br>畏怯 (wèiqiè) - temer, tener miedo<br>怯弱 (qièruò) - débil, cobarde"
+    }
+};
+
+        // Initialize ECharts
+        const chartContainer = document.getElementById('chart-container');
+        const chart = echarts.init(chartContainer);
+
+        // Define the tree structure based on your data
+        const treeData = {
+    "name": "心",
+    "children": [
+        {
+            "name": "想",
+            "children": [
+                {
+                    "name": "愿",
+                    "children": [],
+                    "decomposition": "heart + original"
+                },
+                {
+                    "name": "惟",
+                    "children": [],
+                    "decomposition": "heart + only"
+                }
+            ],
+            "decomposition": "heart + image"
+        },
+        {
+            "name": "情",
+            "children": [
+                {
+                    "name": "愛",
+                    "children": [],
+                    "decomposition": "heart + receive"
+                },
+                {
+                    "name": "恋",
+                    "children": [],
+                    "decomposition": "heart + connect"
+                }
+            ],
+            "decomposition": "heart + blue"
+        },
+        {
+            "name": "忘",
+            "children": [
+                {
+                    "name": "怯",
+                    "children": [],
+                    "decomposition": "heart + lack"
+                },
+                {
+                    "name": "悔",
+                    "children": [],
+                    "decomposition": "heart + each"
+                }
+            ],
+            "decomposition": "heart + perish"
+        },
+        {
+            "name": "志",
+            "children": [
+                {
+                    "name": "意",
+                    "children": [],
+                    "decomposition": "heart + sound"
+                },
+                {
+                    "name": "思",
+                    "children": [],
+                    "decomposition": "heart + field"
+                }
+            ],
+            "decomposition": "heart + sign"
+        }
+    ]
+};
+
+        // Set the option
+        const option = {
+            tooltip: {
+                trigger: 'item',
+                formatter: function(params) {
+                    if (params.data.decomposition) {
+                        return `<div style="font-size:18px; font-weight:bold; margin-bottom:5px;">${params.data.name}</div>
+                                <div>${params.data.decomposition}</div>`;
+                    } else {
+                        return params.data.name;
+                    }
+                },
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                borderColor: '#ccc',
+                borderWidth: 0,
+                padding: 2,
+                textStyle: {
+                    color: '#333',
+                    fontSize: 25
+                }
+            },
+            series: [
+                {
+                    type: 'tree',
+                    data: [treeData],
+                    symbolSize: 40,
+                    orient: 'TB',
+                    symbol: 'rect',
+                    label: {
+                        "show": true,
+                        "color": "red",
+                        "fontSize": 25,
+                        "valueAnimation": false
+                    },
+                    leaves: {
+                    },
+                    emphasis: {
+                        focus: 'relative',
+                        itemStyle: {
+                            shadowBlur: 40,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(10, 10, 10, 0.75)'
+                        }
+                    },
+                    expandAndCollapse: false,
+                    animationDuration: 550,
+                    animationDurationUpdate: 750
+                }
+            ]
+        };
+
+        // Set the initial option and render
+        chart.setOption(option);
+
+        // Handle node click event
+        chart.on('click', function(params) {
+            const zi = params.data.name;
+            if (zi) {
+                const charData = characterData[zi];
+                if (charData) {
+                    // Update info panel
+                    document.getElementById('selected-char').textContent = zi;
+                    document.getElementById('selected-pinyin').textContent = charData.pinyin;
+                    document.getElementById('selected-meaning').textContent = charData.meaning;
+                    document.getElementById('selected-composition').textContent = charData.composition;
+                    document.getElementById('selected-phrases').innerHTML = charData.phrases;
+                }
+            }
+        });
+
+        // Make chart responsive
+        window.addEventListener('resize', function() {
+            chart.resize();
+        });
+    </script>
+</body>
+</html>

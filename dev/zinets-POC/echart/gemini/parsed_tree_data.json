@@ -1,83 +1,69 @@
 {
-    "name": "木",
+    "name": "心",
     "children": [
         {
-            "name": "本",
+            "name": "想",
             "children": [
                 {
-                    "name": "笨",
+                    "name": "愿",
                     "children": [],
-                    "decomposition": "⺮ + 本"
+                    "decomposition": "heart + original"
                 },
                 {
-                    "name": "体",
+                    "name": "惟",
                     "children": [],
-                    "decomposition": "亻 + 本"
+                    "decomposition": "heart + only"
                 }
             ],
-            "decomposition": "木 + 一"
+            "decomposition": "heart + image"
         },
         {
-            "name": "宋",
-            "children": [],
-            "decomposition": "宀 + 木"
-        },
-        {
-            "name": "杆",
+            "name": "情",
             "children": [
                 {
-                    "name": "干",
-                    "children": [
-                        {
-                            "name": "竿",
-                            "children": [],
-                            "decomposition": "⺮ + 干"
-                        },
-                        {
-                            "name": "肝",
-                            "children": [],
-                            "decomposition": "月 + 干 "
-                        },
-                        {
-                            "name": "罕",
-                            "children": [],
-                            "decomposition": "㓁 + 干"
-                        },
-                        {
-                            "name": "旱",
-                            "children": [],
-                            "decomposition": "日 + 干"
-                        },
-                        {
-                            "name": "汗",
-                            "children": [],
-                            "decomposition": "氵 + 干"
-                        },
-                        {
-                            "name": "奸",
-                            "children": [],
-                            "decomposition": "女 + 干"
-                        }
-                    ]
+                    "name": "愛",
+                    "children": [],
+                    "decomposition": "heart + receive"
+                },
+                {
+                    "name": "恋",
+                    "children": [],
+                    "decomposition": "heart + connect"
                 }
             ],
-            "decomposition": "木 + 干"
+            "decomposition": "heart + blue"
         },
         {
-            "name": "植",
+            "name": "忘",
             "children": [
                 {
-                    "name": "直",
-                    "children": [
-                        {
-                            "name": "矗",
-                            "children": [],
-                            "decomposition": "直 + 直 + 直"
-                        }
-                    ]
+                    "name": "怯",
+                    "children": [],
+                    "decomposition": "heart + lack"
+                },
+                {
+                    "name": "悔",
+                    "children": [],
+                    "decomposition": "heart + each"
                 }
             ],
-            "decomposition": "木 + 直"
+            "decomposition": "heart + perish"
+        },
+        {
+            "name": "志",
+            "children": [
+                {
+                    "name": "意",
+                    "children": [],
+                    "decomposition": "heart + sound"
+                },
+                {
+                    "name": "思",
+                    "children": [],
+                    "decomposition": "heart + field"
+                }
+            ],
+            "decomposition": "heart + sign"
         }
     ]
 }

@@ -636,3 +636,499 @@ pinyin: hǎn
 meaning: rare; seldom
 composition: Component ⺳ (variant of 网 wǎng - net) + component 干 (gān - dry, to concern)
 phrases: 罕见 (hǎnjiàn) - rare; seldom seen<br>罕有 (hǎnyǒu) - rare; uncommon<br>人迹罕至 (rénjì hǎnzhì) - rarely visited; desolate<br>罕为人知 (hǎnwéirénzhī) - little known<br>罕言寡语 (hǎnyánguǎyǔ) - taciturn; reticent
+
+
+AI Model: gemini-2.0-flash
+Chunk: 1/2
+Datetime: 2025-05-14 08:16:51
+================================================================================================================================================================================================================================================
+Character: 想
+pinyin: xiǎng
+meaning: to think, to want, to miss
+composition: Semantic-phonetic compound (形聲字) composed of 相 (xiāng, mutual) which indicates the sound and 心 (xīn, heart) which indicates the meaning.
+phrases: 想法 (xiǎngfǎ) - idea, opinion<br>想念 (xiǎngniàn) - to miss, to think of<br>想要 (xiǎngyào) - to want, would like to<br>想象 (xiǎngxiàng) - to imagine<br>理想 (lǐxiǎng) - ideal
+
+Character: 忘
+pinyin: wàng
+meaning: to forget
+composition: Semantic-phonetic compound (形聲字) composed of 亡 (wáng, to lose, disappear) which indicates the sound and 心 (xīn, heart) which indicates the meaning.
+phrases: 忘记 (wàngjì) - to forget<br>难忘 (nánwàng) - unforgettable<br>忘掉 (wàngdiào) - to forget, to leave behind<br>忘我 (wàngwǒ) - selfless, self-forgetful<br>忘年恋 (wàngniánliàn) - age-gap relationship
+
+Character: 怯
+pinyin: qiè
+meaning: timid, cowardly, shy
+composition: Semantic-phonetic compound (形聲字) composed of 心 (xīn, heart) which indicates the meaning and 去 (qù, to go) which indicates the sound.
+phrases: 胆怯 (dǎnqiè) - timid, cowardly<br>怯场 (qièchǎng) - stage fright<br>羞怯 (xiūqiè) - shy, bashful<br>怯弱 (qièruò) - weak, timid<br>退怯 (tuìqiè) - to shrink back, to flinch
+
+Character: 愿
+pinyin: yuàn
+meaning: to wish, desire, willing, wish, hope
+composition: Semantic-phonetic compound (形聲字) composed of 原 (yuán, origin) which indicates the sound and 心 (xīn, heart) which indicates the meaning.
+phrases: 愿意 (yuànyì) - to be willing<br>愿望 (yuànwàng) - wish, desire<br>心愿 (xīnyuàn) - wish, aspiration<br>但愿 (dàn yuàn) - if only, I wish<br>祝愿 (zhùyuàn) - to wish
+
+Character: 恋
+pinyin: liàn
+meaning: to love, to feel attached to, to long for
+composition: Semantic-phonetic compound (形聲字) composed of 亦 (yì, also) which indicates the sound and 䜌 (luán, to entangle) which indicates the meaning.
+phrases: 恋爱 (liàn'ài) - to be in love, love affair<br>留恋 (liúliàn) - to be reluctant to leave, to feel attached to<br>依恋 (yīliàn) - to feel attached to, to be fond of<br>迷恋 (míliàn) - to be infatuated with<br>眷恋 (juànliàn) - to be sentimentally attached to
+
+Character: 思
+pinyin: sī
+meaning: to think, to consider, thought, idea
+composition: Semantic-phonetic compound (形聲字) composed of 田 (tián, field) and 心 (xīn, heart). The heart is thinking about the field.
+phrases: 思考 (sīkǎo) - to think, to ponder<br>思想 (sīxiǎng) - thought, ideology<br>意思 (yìsi) - meaning, idea<br>思念 (sīniàn) - to miss, to think of<br>深思 (shēnsī) - to ponder deeply
+
+Character: 意
+pinyin: yì
+meaning: meaning, idea, intention, wish
+composition: Semantic-phonetic compound (形聲字) composed of 音 (yīn, sound) which indicates the sound and 心 (xīn, heart) which indicates the meaning.
+phrases: 意思 (yìsi) - meaning, idea<br>意义 (yìyì) - significance, meaning<br>愿意 (yuànyì) - to be willing<br>注意 (zhùyì) - to pay attention<br>意见 (yìjiàn) - opinion, suggestion
+
+Character: 志
+pinyin: zhì
+meaning: will, aspiration, ambition
+composition: Semantic-phonetic compound (形聲字) composed of 士 (shì, scholar, man) which indicates the sound and 心 (xīn, heart) which indicates the meaning.
+phrases: 志愿 (zhìyuàn) - aspiration, ambition, volunteer<br>意志 (yìzhì) - will, determination<br>志向 (zhìxiàng) - ambition, aspiration<br>同志 (tóngzhì) - comrade<br>立志 (lìzhì) - to resolve, to be determined
+
+Character: 愛
+pinyin: ài
+meaning: to love, love, affection
+composition: Phono-semantic compound (形聲字) composed of 爫 (zhuǎ, claw) on top, 冖 (mì, cover) in the middle, and 心 (xīn, heart) and 夊 (suī, walking slowly) at the bottom.
+phrases: 爱情 (àiqíng) - love<br>爱好 (àihào) - hobby, interest<br>热爱 (rè'ài) - to love ardently<br>爱人 (àiren) - spouse, lover<br>可爱 (kě'ài) - cute, lovely
+
+Character: 情
+pinyin: qíng
+meaning: feeling, emotion, situation
+composition: Semantic-phonetic compound (形聲字) composed of 心 (xīn, heart) which indicates the meaning and 青 (qīng, green/blue) which indicates the sound.
+phrases: 感情 (gǎnqíng) - feeling, emotion<br>爱情 (àiqíng) - love<br>心情 (xīnqíng) - mood, feeling<br>情况 (qíngkuàng) - situation, circumstance<br>友情 (yǒuqíng) - friendship
+
+
+AI Model: gemini-2.0-flash
+Chunk: 2/2
+Datetime: 2025-05-14 08:16:55
+================================================================================================================================================================================================================================================
+Character: 悔
+pinyin: huǐ
+meaning: arrepentirse, lamentar, remordimiento
+composition: Compuesto de dos partes: 忄(xīn, corazón) a la izquierda, que indica que el significado está relacionado con las emociones o el estado mental, y 每 (měi, cada) a la derecha, que proporciona el sonido y también contribuye al significado de "cada vez que uno piensa en ello, se arrepiente".
+phrases: 后悔 (hòuhuǐ) - arrepentirse<br>悔恨 (huǐhèn) - remordimiento, arrepentimiento amargo<br>悔改 (huǐgǎi) - arrepentirse y reformarse<br>追悔 (zhuīhuǐ) - arrepentirse retrospectivamente<br>百般悔恨 (bǎi bān huǐhèn) - estar lleno de remordimiento
+
+Character: 惟
+pinyin: wéi
+meaning: solamente, solo, pensar, considerar
+composition: Compuesto de dos partes: 忄(xīn, corazón) a la izquierda, que indica que el significado está relacionado con el pensamiento o la mente, y 隹 (zhuī, pájaro de cola corta) a la derecha, que proporciona el sonido y también contribuye al significado de "solo pensar en una cosa".
+phrases: 惟一 (wéiyī) - único<br>惟妙惟肖 (wéimiàowéixiào) - ser extraordinariamente realista, vívido<br>惟恐 (wéikǒng) - temer que, por miedo a que<br>惟独 (wéidú) - solamente, solo<br>思惟 (sīwéi) - pensar, reflexionar
+
+Character: 心
+pinyin: xīn
+meaning: corazón, mente, intención, centro
+composition: Es un carácter pictográfico que representa la forma del corazón humano.
+phrases: 心情 (xīnqíng) - estado de ánimo, humor<br>中心 (zhōngxīn) - centro<br>小心 (xiǎoxīn) - tener cuidado, ser cauteloso<br>关心 (guānxīn) - preocuparse por, mostrar interés por<br>心理 (xīnlǐ) - psicología, mentalidad
+
+
+AI Model: gemini-2.0-flash
+Chunk: 1/2
+Datetime: 2025-05-14 08:31:55
+================================================================================================================================================================================================================================================
+
+                    Generate information about these Chinese characters: '志', '愿', '意', '情', '思', '忘', '心', '悔', '惟', '想'
+
+                     
+    For each character, provide the following information in this format:
+    - pinyin: the pronunciation with tone marks
+    - meaning: main meanings
+    - composition: how character is structurally composed from radicals and parts
+    - phrases: 5 common phrases with pinyin and meaning
+
+    Ensure explanation texts are in the target language of 'Spanish'
+
+    Format character's information like this:
+
+    Character: [character]
+    pinyin: [pronunciation]
+    meaning: [meanings]
+    composition: [explanation]
+    phrases: [phrase1]<br>[phrase2]<br>[phrase3]<br>[phrase4]<br>[phrase5]
+
+    Start each character with "Character:" on a new line.
+    Do not include any other formatting, explanations, or markdown.
+
+
+                    Character: 志
+pinyin: zhì
+meaning: voluntad, ambición, aspiración, propósito, marca, registro
+composition: Compuesto de 士 (shì, erudito, hombre) arriba y 心 (xīn, corazón) abajo.  Representa la ambición o voluntad que reside en el corazón.
+phrases: 志愿 (zhì yuàn) - voluntad, aspiración, deseo<br>同志 (tóng zhì) - camarada, compañero (originalmente con connotación política, ahora más general)<br>志气 (zhì qì) - ambición, aspiración, espíritu<br>墓志铭 (mù zhì míng) - epitafio<br>有志者事竟成 (yǒu zhì zhě shì jìng chéng) - donde hay voluntad, hay un camino
+
+Character: 愿
+pinyin: yuàn
+meaning: desear, querer, estar dispuesto a, voto, deseo, esperanza
+composition: Compuesto de 原 (yuán, origen, llanura) arriba y 心 (xīn, corazón) abajo.  Originalmente significaba "considerar cuidadosamente" o "reflexionar sobre" en el corazón, luego evolucionó a "desear".
+phrases: 愿意 (yuàn yì) - estar dispuesto a, querer<br>愿望 (yuàn wàng) - deseo, aspiración<br>祝愿 (zhù yuàn) - desear, bendecir<br>心愿 (xīn yuàn) - deseo del corazón, anhelo<br>但愿 (dàn yuàn) - ojalá, esperemos que
+
+Character: 意
+pinyin: yì
+meaning: significado, idea, intención, opinión, deseo, sorpresa
+composition: Compuesto de 音 (yīn, sonido) arriba y 心 (xīn, corazón) abajo.  Originalmente significaba "sonido del corazón" o "pensamiento", luego se extendió a "significado" e "intención".
+phrases: 意思 (yì si) - significado, sentido, interés<br>意义 (yì yì) - significado, importancia<br>意见 (yì jiàn) - opinión, sugerencia<br>意外 (yì wài) - inesperado, accidente<br>故意 (gù yì) - a propósito, intencionalmente
+
+Character: 情
+pinyin: qíng
+meaning: sentimiento, emoción, afecto, amor, situación, condición
+composition: Compuesto de 忄(xīn, corazón, forma radical) a la izquierda y 青 (qīng, azul/verde) a la derecha.  青 (qīng) aquí actúa como un componente fonético.
+phrases: 感情 (gǎn qíng) - sentimiento, afecto, amor<br>心情 (xīn qíng) - estado de ánimo, humor<br>爱情 (ài qíng) - amor<br>情况 (qíng kuàng) - situación, condición<br>情绪 (qíng xù) - emoción, sentimiento
+
+Character: 思
+pinyin: sī
+meaning: pensar, reflexionar, considerar, extrañar
+composition: Compuesto de 田 (tián, campo) arriba y 心 (xīn, corazón) abajo.  Originalmente significaba "pensar en el campo" o "pensar en el sustento", luego se generalizó a "pensar".
+phrases: 思考 (sī kǎo) - pensar, reflexionar<br>思想 (sī xiǎng) - pensamiento, ideología<br>思念 (sī niàn) - extrañar, añorar<br>意思 (sī si) - significado, sentido (igual que 意思 yì si)<br>沉思 (chén sī) - contemplar, meditar
+
+Character: 忘
+pinyin: wàng
+meaning: olvidar, descuidar
+composition: Compuesto de 亡 (wáng, perder, morir) arriba y 心 (xīn, corazón) abajo.  Significa "perder algo del corazón" o "sacar algo de la mente".
+phrases: 忘记 (wàng jì) - olvidar<br>忘掉 (wàng diào) - olvidar<br>难忘 (nán wàng) - inolvidable<br>忘我 (wàng wǒ) - desinteresado, altruista<br>忘年交 (wàng nián jiāo) - amistad entre personas de diferentes edades
+
+Character: 心
+pinyin: xīn
+meaning: corazón, mente, intención, centro
+composition: Es un pictograma que representa la forma del corazón.
+phrases: 心情 (xīn qíng) - estado de ánimo, humor<br>中心 (zhōng xīn) - centro<br>小心 (xiǎo xīn) - tener cuidado, ser cauteloso<br>心理 (xīn lǐ) - psicología, mentalidad<br>心爱 (xīn ài) - amado, querido
+
+Character: 悔
+pinyin: huǐ
+meaning: arrepentirse, lamentar
+composition: Compuesto de 忄(xīn, corazón, forma radical) a la izquierda y 每 (měi, cada) a la derecha.  每 (měi) aquí actúa como un componente fonético y también sugiere la idea de "cada vez" o "constantemente" sintiendo arrepentimiento.
+phrases: 后悔 (hòu huǐ) - arrepentirse<br>悔恨 (huǐ hèn) - remordimiento, arrepentimiento amargo<br>悔改 (huǐ gǎi) - arrepentirse y reformarse<br>悔过 (huǐ guò) - confesar y arrepentirse de los errores<br>追悔莫及 (zhuī huǐ mò jí) - demasiado tarde para arrepentirse
+
+Character: 惟
+pinyin: wéi
+meaning: solo, solamente, pensar, considerar
+composition: Compuesto de 忄(xīn, corazón, forma radical) a la izquierda y 隹 (zhuī, pájaro de cola corta) a la derecha.  Originalmente significaba "pensar" o "reflexionar", luego se extendió a "solo" o "solamente".
+phrases: 惟有 (wéi yǒu) - solo hay, solo existe<br>惟独 (wéi dú) - solo, únicamente<br>惟妙惟肖 (wéi miào wéi xiào) - realista, vívido<br>惟恐 (wéi kǒng) - temer que, por miedo a que<br>思惟 (sī wéi) - pensar, reflexionar (más formal que 思考)
+
+Character: 想
+pinyin: xiǎng
+meaning: pensar, querer, extrañar, creer, suponer
+composition: Compuesto de 相 (xiāng, mutuamente, apariencia) arriba y 心 (xīn, corazón) abajo.  Originalmente significaba "pensar en la apariencia" o "imaginar", luego se generalizó a "pensar".
+phrases: 想法 (xiǎng fǎ) - idea, pensamiento, opinión<br>想念 (xiǎng niàn) - extrañar, añorar<br>想象 (xiǎng xiàng) - imaginar, fantasía<br>理想 (lǐ xiǎng) - ideal<br>不想 (bù xiǎng) - no querer
+
+
+AI Model: gemini-2.0-flash
+Chunk: 2/2
+Datetime: 2025-05-14 08:31:59
+================================================================================================================================================================================================================================================
+
+                    Generate information about these Chinese characters: '恋', '愛', '怯'
+
+                     
+    For each character, provide the following information in this format:
+    - pinyin: the pronunciation with tone marks
+    - meaning: main meanings
+    - composition: how character is structurally composed from radicals and parts
+    - phrases: 5 common phrases with pinyin and meaning
+
+    Ensure explanation texts are in the target language of 'Spanish'
+
+    Format character's information like this:
+
+    Character: [character]
+    pinyin: [pronunciation]
+    meaning: [meanings]
+    composition: [explanation]
+    phrases: [phrase1]<br>[phrase2]<br>[phrase3]<br>[phrase4]<br>[phrase5]
+
+    Start each character with "Character:" on a new line.
+    Do not include any other formatting, explanations, or markdown.
+
+
+                    Character: 恋
+pinyin: liàn
+meaning: amar, estar enamorado, añorar, aferrarse a
+composition: Compuesto de 亦 (yì, también) arriba y 心 (xīn, corazón) abajo. Representa el sentimiento de añoranza y apego que reside en el corazón.
+phrases: 恋爱 (liàn'ài) - amor, estar enamorado<br>留恋 (liúliàn) - dudar en separarse de, añorar<br>迷恋 (míliàn) - estar fascinado por, obsesionado con<br>依恋 (yīliàn) - depender de, aferrarse a<br>眷恋 (juànliàn) - añorar, amar profundamente
+
+Character: 愛
+pinyin: ài
+meaning: amor, amar, querer, cariño, afecto
+composition: Originalmente compuesto de 旡 (jì, una persona arrodillada) sobre 心 (xīn, corazón) y 夊 (suī, ir lentamente) abajo. Representa el sentimiento de amor y cuidado que emana del corazón. La forma simplificada 爱 reemplaza la parte superior con 爫 (zhuǎ, garra) y 友 (yǒu, amigo).
+phrases: 爱情 (àiqíng) - amor<br>爱好 (àihào) - hobby, interés<br>热爱 (rè'ài) - amar apasionadamente<br>爱护 (àihù) - cuidar, proteger<br>可爱 (kě'ài) - adorable, lindo
+
+Character: 怯
+pinyin: qiè
+meaning: tímido, cobarde, apocado, miedoso
+composition: Compuesto de 心 (xīn, corazón) a la izquierda y 去 (qù, ir) a la derecha. Representa el sentimiento de querer "ir" o alejarse debido al miedo que reside en el corazón.
+phrases: 胆怯 (dǎnqiè) - tímido, cobarde<br>怯场 (qièchǎng) - tener miedo escénico<br>退怯 (tuìqiè) - retroceder por miedo<br>畏怯 (wèiqiè) - temer, tener miedo<br>怯弱 (qièruò) - débil, cobarde
+
+
+AI Model: gemini-2.0-flash
+Chunk: 1/2
+Datetime: 2025-05-14 08:35:07
+================================================================================================================================================================================================================================================
+
+                    Generate information about these Chinese characters: '怯', '愛', '忘', '恋', '愿', '惟', '想', '情', '志', '悔'
+
+                     
+    For each character, provide the following information in this format:
+    - pinyin: the pronunciation with tone marks
+    - meaning: main meanings
+    - composition: how character is structurally composed from radicals and parts
+    - phrases: 5 common phrases with pinyin and meaning
+
+    Ensure explanation texts are in the target language of 'Chinese'
+
+    Format character's information like this:
+
+    Character: [character]
+    pinyin: [pronunciation]
+    meaning: [meanings]
+    composition: [explanation]
+    phrases: [phrase1]<br>[phrase2]<br>[phrase3]<br>[phrase4]<br>[phrase5]
+
+    Start each character with "Character:" on a new line.
+    Do not include any other formatting, explanations, or markdown.
+
+
+                    Character: 怯
+pinyin: qiè
+meaning: 胆怯，害怕，畏惧
+composition: 形声字。从心（忄）表示与心理活动有关，去声表音。
+phrases: 怯场 (qiè chǎng) - 怯场<br>胆怯 (dǎn qiè) - 胆怯<br>羞怯 (xiū qiè) - 羞怯<br>怯弱 (qiè ruò) - 怯弱<br>临阵退怯 (lín zhèn tuì qiè) - 临阵退怯
+
+Character: 愛
+pinyin: ài
+meaning: 爱，喜爱，爱护，爱情
+composition: 会意字。繁体字“愛”从心，表示心中有情意。简化字“爱”保留了“爫”和“友”，表示关爱和友谊。
+phrases: 爱情 (ài qíng) - 爱情<br>爱护 (ài hù) - 爱护<br>爱好 (ài hào) - 爱好<br>热爱 (rè ài) - 热爱<br>友爱 (yǒu ài) - 友爱
+
+Character: 忘
+pinyin: wàng
+meaning: 忘记，遗忘，忽略
+composition: 形声字。从心（忄）表示与心理活动有关，亡声表音。
+phrases: 忘记 (wàng jì) - 忘记<br>忘却 (wàng què) - 忘却<br>忘本 (wàng běn) - 忘本<br>忘恩负义 (wàng ēn fù yì) - 忘恩负义<br>过目不忘 (guò mù bù wàng) - 过目不忘
+
+Character: 恋
+pinyin: liàn
+meaning: 恋爱，依恋，迷恋，怀念
+composition: 会意字。从亦，从心，表示心中思念，依恋不舍。
+phrases: 恋爱 (liàn ài) - 恋爱<br>留恋 (liú liàn) - 留恋<br>迷恋 (mí liàn) - 迷恋<br>眷恋 (juàn liàn) - 眷恋<br>依恋 (yī liàn) - 依恋
+
+Character: 愿
+pinyin: yuàn
+meaning: 愿望，希望，愿意，祝愿
+composition: 形声字。从页，原声。页表示与头部、思想有关。
+phrases: 愿望 (yuàn wàng) - 愿望<br>愿意 (yuàn yì) - 愿意<br>祝愿 (zhù yuàn) - 祝愿<br>心愿 (xīn yuàn) - 心愿<br>但愿 (dàn yuàn) - 但愿
+
+Character: 惟
+pinyin: wéi
+meaning: 只有，仅仅，思考，是
+composition: 形声字。从心（忄）表示与心理活动有关，隹声表音。
+phrases: 惟独 (wéi dú) - 惟独<br>惟妙惟肖 (wéi miào wéi xiào) - 惟妙惟肖<br>惟恐 (wéi kǒng) - 惟恐<br>惟一 (wéi yī) - 唯一<br>思惟 (sī wéi) - 思惟
+
+Character: 想
+pinyin: xiǎng
+meaning: 想，思考，想念，打算
+composition: 形声字。从心（忄）表示与心理活动有关，相声表音。
+phrases: 想法 (xiǎng fǎ) - 想法<br>思想 (sī xiǎng) - 思想<br>想念 (xiǎng niàn) - 想念<br>想象 (xiǎng xiàng) - 想象<br>理想 (lǐ xiǎng) - 理想
+
+Character: 情
+pinyin: qíng
+meaning: 感情，情绪，情况，情爱
+composition: 形声字。从心（忄）表示与心理活动有关，青声表音。
+phrases: 感情 (gǎn qíng) - 感情<br>情绪 (qíng xù) - 情绪<br>情况 (qíng kuàng) - 情况<br>爱情 (ài qíng) - 爱情<br>友情 (yǒu qíng) - 友情
+
+Character: 志
+pinyin: zhì
+meaning: 志向，意志，记，记载
+composition: 会意字。从心，士声。表示心有所向，有目标和追求。
+phrases: 志愿 (zhì yuàn) - 志愿<br>意志 (yì zhì) - 意志<br>志气 (zhì qì) - 志气<br>同志 (tóng zhì) - 同志<br>杂志 (zá zhì) - 杂志
+
+Character: 悔
+pinyin: huǐ
+meaning: 后悔，懊悔
+composition: 形声字。从心（忄）表示与心理活动有关，每声表音。
+phrases: 后悔 (hòu huǐ) - 后悔<br>懊悔 (ào huǐ) - 懊悔<br>悔恨 (huǐ hèn) - 悔恨<br>悔改 (huǐ gǎi) - 悔改<br>追悔莫及 (zhuī huǐ mò jí) - 追悔莫及
+
+
+AI Model: gemini-2.0-flash
+Chunk: 2/2
+Datetime: 2025-05-14 08:35:11
+================================================================================================================================================================================================================================================
+
+                    Generate information about these Chinese characters: '意', '心', '思'
+
+                     
+    For each character, provide the following information in this format:
+    - pinyin: the pronunciation with tone marks
+    - meaning: main meanings
+    - composition: how character is structurally composed from radicals and parts
+    - phrases: 5 common phrases with pinyin and meaning
+
+    Ensure explanation texts are in the target language of 'Chinese'
+
+    Format character's information like this:
+
+    Character: [character]
+    pinyin: [pronunciation]
+    meaning: [meanings]
+    composition: [explanation]
+    phrases: [phrase1]<br>[phrase2]<br>[phrase3]<br>[phrase4]<br>[phrase5]
+
+    Start each character with "Character:" on a new line.
+    Do not include any other formatting, explanations, or markdown.
+
+
+                    Character: 意
+pinyin: yì
+meaning: 意思, 意愿, 意料, 意义, 心意
+composition: 上部为“音”，下部为“心”。“音”表音，也暗示了想法、声音与内心相关。“心”表示思想、情感的根源。
+phrases: 意思 (yìsi) - 意义, 想法<br>愿意 (yuànyì) - 愿意, 乐意<br>意外 (yìwài) - 意外, 意想不到<br>意义 (yìyì) - 意义, 重要性<br>心意 (xīnyì) - 心意, 感情
+
+Character: 心
+pinyin: xīn
+meaning: 心脏, 心情, 思想, 中心
+composition: 象形字。像心脏的形状。
+phrases: 心脏 (xīnzàng) - 心脏<br>心情 (xīnqíng) - 心情<br>小心 (xiǎoxīn) - 小心, 注意<br>中心 (zhōngxīn) - 中心<br>关心 (guānxīn) - 关心
+
+Character: 思
+pinyin: sī
+meaning: 思考, 想念, 想法
+composition: 上部为“田”，下部为“心”。“田”表示大脑，也暗示了思考的内容。“心”表示思想的根源。
+phrases: 思考 (sīkǎo) - 思考<br>思想 (sīxiǎng) - 思想<br>意思 (sīsi) - 意思, 想法<br>思念 (sīniàn) - 想念<br>深思 (shēnsī) - 深思
+
+
+AI Model: gemini-2.0-flash
+Chunk: 1/2
+Datetime: 2025-05-14 08:35:33
+================================================================================================================================================================================================================================================
+
+                    Generate information about these Chinese characters: '忘', '想', '情', '愛', '志', '愿', '恋', '悔', '心', '意'
+
+                     
+    For each character, provide the following information in this format:
+    - pinyin: the pronunciation with tone marks
+    - meaning: main meanings
+    - composition: how character is structurally composed from radicals and parts
+    - phrases: 5 common phrases with pinyin and meaning
+
+    Ensure explanation texts are in the target language of 'English'
+
+    Format character's information like this:
+
+    Character: [character]
+    pinyin: [pronunciation]
+    meaning: [meanings]
+    composition: [explanation]
+    phrases: [phrase1]<br>[phrase2]<br>[phrase3]<br>[phrase4]<br>[phrase5]
+
+    Start each character with "Character:" on a new line.
+    Do not include any other formatting, explanations, or markdown.
+
+
+                    Character: 忘
+pinyin: wàng
+meaning: to forget, to neglect, to overlook
+composition: Composed of 亡 (wáng, death, loss) on top and 心 (xīn, heart) on the bottom. It suggests that something is lost from the heart, hence forgetting.
+phrases: 忘记 (wàngjì) - to forget<br>难忘 (nánwàng) - unforgettable<br>忘掉 (wàngdiào) - to forget, to dismiss from one's mind<br>忘我 (wàngwǒ) - selfless, self-forgetful<br>忘年恋 (wàngniánliàn) - age-gap relationship
+
+Character: 想
+pinyin: xiǎng
+meaning: to think, to want, to miss
+composition: Composed of 相 (xiāng, mutually, each other) on top and 心 (xīn, heart) on the bottom. It suggests thinking about something in one's heart.
+phrases: 想法 (xiǎngfǎ) - idea, opinion<br>想念 (xiǎngniàn) - to miss, to think of<br>想象 (xiǎngxiàng) - to imagine<br>理想 (lǐxiǎng) - ideal, aspiration<br>想起来 (xiǎng qǐlai) - to remember, to recall
+
+Character: 情
+pinyin: qíng
+meaning: feeling, emotion, affection, situation
+composition: Composed of 忄(xīn, heart radical) on the left and 青 (qīng, blue/green) on the right. The heart radical indicates emotion, and 青 contributes to the sound.
+phrases: 感情 (gǎnqíng) - feeling, emotion, affection<br>爱情 (àiqíng) - love<br>心情 (xīnqíng) - mood, feeling<br>情况 (qíngkuàng) - situation, circumstance<br>友情 (yǒuqíng) - friendship
+
+Character: 愛
+pinyin: ài
+meaning: to love, affection, to be fond of
+composition: Traditional form is composed of 爫 (zhuǎ, claw/hand), 冖 (mì, cover), 心 (xīn, heart), and 夊 (suī, walking slowly). The simplified form 爱 removes the heart in the middle.
+phrases: 爱情 (àiqíng) - love<br>爱好 (àihào) - hobby, interest<br>爱人 (àiren) - lover, spouse<br>热爱 (rè'ài) - to love ardently<br>爱护 (àihù) - to cherish, to take good care of
+
+Character: 志
+pinyin: zhì
+meaning: will, aspiration, ambition, record
+composition: Composed of 士 (shì, scholar, man) on top and 心 (xīn, heart) on the bottom. It suggests the will or ambition of a scholar or man.
+phrases: 志愿 (zhìyuàn) - aspiration, ambition, volunteer<br>意志 (yìzhì) - will, willpower<br>志向 (zhìxiàng) - ambition, aspiration<br>同志 (tóngzhì) - comrade<br>墓志铭 (mùzhìmíng) - epitaph
+
+Character: 愿
+pinyin: yuàn
+meaning: to wish, to desire, willing, ready
+composition: Composed of 原 (yuán, source, origin) on top and 心 (xīn, heart) on the bottom. It suggests a desire originating from the heart.
+phrases: 愿望 (yuànwàng) - wish, desire<br>愿意 (yuànyì) - to be willing, to want to<br>心愿 (xīnyuàn) - wish, aspiration<br>但愿 (dànyuàn) - if only, I wish<br>祝愿 (zhùyuàn) - to wish
+
+Character: 恋
+pinyin: liàn
+meaning: to love, to long for, to be attached to
+composition: Composed of 亦 (yì, also) on top and 心 (xīn, heart) on the bottom. It suggests a lingering feeling or attachment in the heart.
+phrases: 恋爱 (liàn'ài) - to be in love, love affair<br>留恋 (liúliàn) - to be reluctant to leave, to miss<br>依恋 (yīliàn) - to be attached to, to feel dependent on<br>眷恋 (juànliàn) - to be sentimentally attached to<br>爱恋 (àiliàn) - to be in love with
+
+Character: 悔
+pinyin: huǐ
+meaning: to regret, to repent
+composition: Composed of 忄(xīn, heart radical) on the left and 每 (měi, every) on the right. The heart radical indicates emotion, and 每 contributes to the sound and suggests repeated thoughts.
+phrases: 后悔 (hòuhuǐ) - to regret<br>后悔药 (hòuhuǐyào) - cure for regret (figurative)<br>悔改 (huǐgǎi) - to repent, to reform<br>悔恨 (huǐhèn) - remorse, regret<br>反悔 (fǎnhuǐ) - to go back on one's word
+
+Character: 心
+pinyin: xīn
+meaning: heart, mind, intention, center
+composition: A pictographic character representing the shape of a heart.
+phrases: 心情 (xīnqíng) - mood, feeling<br>中心 (zhōngxīn) - center<br>小心 (xiǎoxīn) - to be careful<br>心理 (xīnlǐ) - psychology, mentality<br>心爱 (xīn'ài) - beloved, treasured
+
+Character: 意
+pinyin: yì
+meaning: meaning, idea, intention, wish
+composition: Composed of 立 (lì, to stand) on top and 心 (xīn, heart) on the bottom. It suggests an idea or intention that stands in one's heart.
+phrases: 意思 (yìsi) - meaning, idea<br>意义 (yìyì) - significance, meaning<br>愿意 (yuànyì) - to be willing, to want to<br>注意 (zhùyì) - to pay attention<br>意见 (yìjiàn) - opinion, suggestion
+
+
+AI Model: gemini-2.0-flash
+Chunk: 2/2
+Datetime: 2025-05-14 08:35:37
+================================================================================================================================================================================================================================================
+
+                    Generate information about these Chinese characters: '思', '惟', '怯'
+
+                     
+    For each character, provide the following information in this format:
+    - pinyin: the pronunciation with tone marks
+    - meaning: main meanings
+    - composition: how character is structurally composed from radicals and parts
+    - phrases: 5 common phrases with pinyin and meaning
+
+    Ensure explanation texts are in the target language of 'English'
+
+    Format character's information like this:
+
+    Character: [character]
+    pinyin: [pronunciation]
+    meaning: [meanings]
+    composition: [explanation]
+    phrases: [phrase1]<br>[phrase2]<br>[phrase3]<br>[phrase4]<br>[phrase5]
+
+    Start each character with "Character:" on a new line.
+    Do not include any other formatting, explanations, or markdown.
+
+
+                    Character: 思
+pinyin: sī
+meaning: think, consider, ponder, idea, thought, longing, yearning
+composition: Composed of 田 (tián, field) on top and 心 (xīn, heart) on the bottom. The heart in the field suggests thinking about things deeply.
+phrases: 思考 (sī kǎo) - to think, to ponder<br>思想 (sī xiǎng) - thought, ideology<br>意思 (yì si) - meaning, idea, interest<br>思念 (sī niàn) - to miss, to long for<br>深思 (shēn sī) - to think deeply, to contemplate
+
+Character: 惟
+pinyin: wéi
+meaning: only, alone, but, however, think, ponder
+composition: Composed of the radical 口 (kǒu, mouth) on the left and 隹 (zhuī, short-tailed bird) on the right.
+phrases: 惟一 (wéi yī) - only, unique<br>惟妙惟肖 (wéi miào wéi xiào) - lifelike, true to life<br>思维 (sī wéi) - thought, thinking<br>惟恐 (wéi kǒng) - for fear that, lest<br>实事求是 (shí shì qiú shì) - seek truth from facts (sometimes written as 唯实求是)
+
+Character: 怯
+pinyin: qiè
+meaning: timid, cowardly, shy
+composition: Composed of the radical 忄(xīn, heart) on the left and 去 (qù, to go) on the right. The heart wanting to go away suggests fear or timidity.
+phrases: 胆怯 (dǎn qiè) - timid, cowardly<br>怯场 (qiè chǎng) - stage fright<br>羞怯 (xiū qiè) - shy, bashful<br>退怯 (tuì qiè) - to shrink back, to flinch<br>临阵退怯 (lín zhèn tuì qiè) - to desert one's post before the battle

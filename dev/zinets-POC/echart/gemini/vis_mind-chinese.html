@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZiNets Visualization</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+        #chart-container {
+            width: 60%;
+            height: 100%;
+        }
+        #info-panel {
+            width: 40%;
+            padding: 20px;
+            background-color: #f5f5f5;
+            overflow-y: auto;
+            border-left: 1px solid #ddd;
+        }
+        .node-tooltip {
+            position: absolute;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            pointer-events: none;
+            font-size: 14px;
+            display: none;
+        }
+        .character {
+            font-size: 72px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .pinyin {
+            font-size: 18px;
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section h3 {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            color: #333;
+        }
+        .composition {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .phrases {
+            line-height: 1.6;
+        }
+        .meaning {
+            line-height: 1.6;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="chart-container"></div>
+    <div id="info-panel">
+        <div class="character" id="selected-char">心</div>
+        <div class="pinyin" id="selected-pinyin">xīn</div>
+
+        <div class="section">
+            <h3>Meaning</h3>
+            <div class="meaning" id="selected-meaning">
+                心脏, 心情, 思想, 中心
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Composition</h3>
+            <div class="composition" id="selected-composition">
+                象形字。像心脏的形状。
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Related Phrases</h3>
+            <div class="phrases" id="selected-phrases">
+                心脏 (xīnzàng) - 心脏<br>心情 (xīnqíng) - 心情<br>小心 (xiǎoxīn) - 小心, 注意<br>中心 (zhōngxīn) - 中心<br>关心 (guānxīn) - 关心
+            </div>
+        </div>
+        <br><br>
+        <div class="footer">
+            Provided by ZiNets on 2025-05-14 08:35:11
+        </div>
+    </div>
+
+    <script>
+        // Character data repository
+        const characterData = {
+    "怯": {
+        "pinyin": "qiè",
+        "meaning": "胆怯，害怕，畏惧",
+        "composition": "形声字。从心（忄）表示与心理活动有关，去声表音。",
+        "phrases": "怯场 (qiè chǎng) - 怯场<br>胆怯 (dǎn qiè) - 胆怯<br>羞怯 (xiū qiè) - 羞怯<br>怯弱 (qiè ruò) - 怯弱<br>临阵退怯 (lín zhèn tuì qiè) - 临阵退怯"
+    },
+    "愛": {
+        "pinyin": "ài",
+        "meaning": "爱，喜爱，爱护，爱情",
+        "composition": "会意字。繁体字“愛”从心，表示心中有情意。简化字“爱”保留了“爫”和“友”，表示关爱和友谊。",
+        "phrases": "爱情 (ài qíng) - 爱情<br>爱护 (ài hù) - 爱护<br>爱好 (ài hào) - 爱好<br>热爱 (rè ài) - 热爱<br>友爱 (yǒu ài) - 友爱"
+    },
+    "忘": {
+        "pinyin": "wàng",
+        "meaning": "忘记，遗忘，忽略",
+        "composition": "形声字。从心（忄）表示与心理活动有关，亡声表音。",
+        "phrases": "忘记 (wàng jì) - 忘记<br>忘却 (wàng què) - 忘却<br>忘本 (wàng běn) - 忘本<br>忘恩负义 (wàng ēn fù yì) - 忘恩负义<br>过目不忘 (guò mù bù wàng) - 过目不忘"
+    },
+    "恋": {
+        "pinyin": "liàn",
+        "meaning": "恋爱，依恋，迷恋，怀念",
+        "composition": "会意字。从亦，从心，表示心中思念，依恋不舍。",
+        "phrases": "恋爱 (liàn ài) - 恋爱<br>留恋 (liú liàn) - 留恋<br>迷恋 (mí liàn) - 迷恋<br>眷恋 (juàn liàn) - 眷恋<br>依恋 (yī liàn) - 依恋"
+    },
+    "愿": {
+        "pinyin": "yuàn",
+        "meaning": "愿望，希望，愿意，祝愿",
+        "composition": "形声字。从页，原声。页表示与头部、思想有关。",
+        "phrases": "愿望 (yuàn wàng) - 愿望<br>愿意 (yuàn yì) - 愿意<br>祝愿 (zhù yuàn) - 祝愿<br>心愿 (xīn yuàn) - 心愿<br>但愿 (dàn yuàn) - 但愿"
+    },
+    "惟": {
+        "pinyin": "wéi",
+        "meaning": "只有，仅仅，思考，是",
+        "composition": "形声字。从心（忄）表示与心理活动有关，隹声表音。",
+        "phrases": "惟独 (wéi dú) - 惟独<br>惟妙惟肖 (wéi miào wéi xiào) - 惟妙惟肖<br>惟恐 (wéi kǒng) - 惟恐<br>惟一 (wéi yī) - 唯一<br>思惟 (sī wéi) - 思惟"
+    },
+    "想": {
+        "pinyin": "xiǎng",
+        "meaning": "想，思考，想念，打算",
+        "composition": "形声字。从心（忄）表示与心理活动有关，相声表音。",
+        "phrases": "想法 (xiǎng fǎ) - 想法<br>思想 (sī xiǎng) - 思想<br>想念 (xiǎng niàn) - 想念<br>想象 (xiǎng xiàng) - 想象<br>理想 (lǐ xiǎng) - 理想"
+    },
+    "情": {
+        "pinyin": "qíng",
+        "meaning": "感情，情绪，情况，情爱",
+        "composition": "形声字。从心（忄）表示与心理活动有关，青声表音。",
+        "phrases": "感情 (gǎn qíng) - 感情<br>情绪 (qíng xù) - 情绪<br>情况 (qíng kuàng) - 情况<br>爱情 (ài qíng) - 爱情<br>友情 (yǒu qíng) - 友情"
+    },
+    "志": {
+        "pinyin": "zhì",
+        "meaning": "志向，意志，记，记载",
+        "composition": "会意字。从心，士声。表示心有所向，有目标和追求。",
+        "phrases": "志愿 (zhì yuàn) - 志愿<br>意志 (yì zhì) - 意志<br>志气 (zhì qì) - 志气<br>同志 (tóng zhì) - 同志<br>杂志 (zá zhì) - 杂志"
+    },
+    "悔": {
+        "pinyin": "huǐ",
+        "meaning": "后悔，懊悔",
+        "composition": "形声字。从心（忄）表示与心理活动有关，每声表音。",
+        "phrases": "后悔 (hòu huǐ) - 后悔<br>懊悔 (ào huǐ) - 懊悔<br>悔恨 (huǐ hèn) - 悔恨<br>悔改 (huǐ gǎi) - 悔改<br>追悔莫及 (zhuī huǐ mò jí) - 追悔莫及"
+    },
+    "意": {
+        "pinyin": "yì",
+        "meaning": "意思, 意愿, 意料, 意义, 心意",
+        "composition": "上部为“音”，下部为“心”。“音”表音，也暗示了想法、声音与内心相关。“心”表示思想、情感的根源。",
+        "phrases": "意思 (yìsi) - 意义, 想法<br>愿意 (yuànyì) - 愿意, 乐意<br>意外 (yìwài) - 意外, 意想不到<br>意义 (yìyì) - 意义, 重要性<br>心意 (xīnyì) - 心意, 感情"
+    },
+    "心": {
+        "pinyin": "xīn",
+        "meaning": "心脏, 心情, 思想, 中心",
+        "composition": "象形字。像心脏的形状。",
+        "phrases": "心脏 (xīnzàng) - 心脏<br>心情 (xīnqíng) - 心情<br>小心 (xiǎoxīn) - 小心, 注意<br>中心 (zhōngxīn) - 中心<br>关心 (guānxīn) - 关心"
+    },
+    "思": {
+        "pinyin": "sī",
+        "meaning": "思考, 想念, 想法",
+        "composition": "上部为“田”，下部为“心”。“田”表示大脑，也暗示了思考的内容。“心”表示思想的根源。",
+        "phrases": "思考 (sīkǎo) - 思考<br>思想 (sīxiǎng) - 思想<br>意思 (sīsi) - 意思, 想法<br>思念 (sīniàn) - 想念<br>深思 (shēnsī) - 深思"
+    }
+};
+
+        // Initialize ECharts
+        const chartContainer = document.getElementById('chart-container');
+        const chart = echarts.init(chartContainer);
+
+        // Define the tree structure based on your data
+        const treeData = {
+    "name": "心",
+    "children": [
+        {
+            "name": "想",
+            "children": [
+                {
+                    "name": "愿",
+                    "children": [],
+                    "decomposition": "heart + original"
+                },
+                {
+                    "name": "惟",
+                    "children": [],
+                    "decomposition": "heart + only"
+                }
+            ],
+            "decomposition": "heart + image"
+        },
+        {
+            "name": "情",
+            "children": [
+                {
+                    "name": "愛",
+                    "children": [],
+                    "decomposition": "heart + receive"
+                },
+                {
+                    "name": "恋",
+                    "children": [],
+                    "decomposition": "heart + connect"
+                }
+            ],
+            "decomposition": "heart + blue"
+        },
+        {
+            "name": "忘",
+            "children": [
+                {
+                    "name": "怯",
+                    "children": [],
+                    "decomposition": "heart + lack"
+                },
+                {
+                    "name": "悔",
+                    "children": [],
+                    "decomposition": "heart + each"
+                }
+            ],
+            "decomposition": "heart + perish"
+        },
+        {
+            "name": "志",
+            "children": [
+                {
+                    "name": "意",
+                    "children": [],
+                    "decomposition": "heart + sound"
+                },
+                {
+                    "name": "思",
+                    "children": [],
+                    "decomposition": "heart + field"
+                }
+            ],
+            "decomposition": "heart + sign"
+        }
+    ]
+};
+
+        // Set the option
+        const option = {
+            tooltip: {
+                trigger: 'item',
+                formatter: function(params) {
+                    if (params.data.decomposition) {
+                        return `<div style="font-size:18px; font-weight:bold; margin-bottom:5px;">${params.data.name}</div>
+                                <div>${params.data.decomposition}</div>`;
+                    } else {
+                        return params.data.name;
+                    }
+                },
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                borderColor: '#ccc',
+                borderWidth: 0,
+                padding: 2,
+                textStyle: {
+                    color: '#333',
+                    fontSize: 25
+                }
+            },
+            series: [
+                {
+                    type: 'tree',
+                    data: [treeData],
+                    symbolSize: 40,
+                    orient: 'TB',
+                    symbol: 'rect',
+                    label: {
+                        "show": true,
+                        "color": "red",
+                        "fontSize": 25,
+                        "valueAnimation": false
+                    },
+                    leaves: {
+                    },
+                    emphasis: {
+                        focus: 'relative',
+                        itemStyle: {
+                            shadowBlur: 40,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(10, 10, 10, 0.75)'
+                        }
+                    },
+                    expandAndCollapse: false,
+                    animationDuration: 550,
+                    animationDurationUpdate: 750
+                }
+            ]
+        };
+
+        // Set the initial option and render
+        chart.setOption(option);
+
+        // Handle node click event
+        chart.on('click', function(params) {
+            const zi = params.data.name;
+            if (zi) {
+                const charData = characterData[zi];
+                if (charData) {
+                    // Update info panel
+                    document.getElementById('selected-char').textContent = zi;
+                    document.getElementById('selected-pinyin').textContent = charData.pinyin;
+                    document.getElementById('selected-meaning').textContent = charData.meaning;
+                    document.getElementById('selected-composition').textContent = charData.composition;
+                    document.getElementById('selected-phrases').innerHTML = charData.phrases;
+                }
+            }
+        });
+
+        // Make chart responsive
+        window.addEventListener('resize', function() {
+            chart.resize();
+        });
+    </script>
+</body>
+</html>
