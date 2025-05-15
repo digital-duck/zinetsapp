@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZiNets Visualization</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+        #chart-container {
+            width: 60%;
+            height: 100%;
+        }
+        #info-panel {
+            width: 40%;
+            padding: 20px;
+            background-color: #f5f5f5;
+            overflow-y: auto;
+            border-left: 1px solid #ddd;
+        }
+        .node-tooltip {
+            position: absolute;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            pointer-events: none;
+            font-size: 14px;
+            display: none;
+        }
+        .character {
+            font-size: 72px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .pinyin {
+            font-size: 18px;
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        /* Tab navigation styling */
+        .tab-nav {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        .tab-btn {
+            padding: 8px 15px;
+            background-color: #f1f1f1;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 16px;
+            font-weight: 500;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+        .tab-btn:hover {
+            background-color: #e0e0e0;
+        }
+        .tab-btn.active {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-bottom: 1px solid #fff;
+            margin-bottom: -1px;
+        }
+        /* Tab content styling */
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section h3 {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            color: #333;
+        }
+        .composition {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .phrases {
+            line-height: 1.6;
+        }
+        .meaning {
+            line-height: 1.6;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+        /* Character list styling */
+        .character-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .character-item {
+            display: inline-block;
+            width: 60px;
+            height: 60px;
+            line-height: 60px;
+            text-align: center;
+            font-size: 28px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .character-item:hover {
+            background-color: #f0f0f0;
+            transform: scale(1.05);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .character-item.selected {
+            background-color: #e6f7ff;
+            border-color: #1890ff;
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        }
+        /* Search options styling */
+        .search-options {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .search-options h4 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .search-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .search-btn {
+            padding: 8px 12px;
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            color: #333;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .search-btn:hover {
+            background-color: #e6f7ff;
+            border-color: #1890ff;
+        }
+        .search-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .selected-char-display {
+            font-size: 36px;
+            margin-right: 15px;
+            vertical-align: middle;
+        }
+        .selected-char-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .no-selection-message {
+            color: #999;
+            font-style: italic;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="chart-container"></div>
+    <div id="info-panel">
+        <!-- Character and Pinyin (displayed on all tabs) -->
+        <div class="character" id="selected-char">心</div>
+        <div class="pinyin" id="selected-pinyin">xīn</div>
+
+        <!-- Tab Navigation -->
+        <div class="tab-nav">
+            <button class="tab-btn active" data-tab="overview">Overview</button>
+            <button class="tab-btn" data-tab="phrases">Phrases</button>
+            <button class="tab-btn" data-tab="search">Search</button>
+        </div>
+
+        <!-- Overview Tab -->
+        <div id="overview-tab" class="tab-content active">
+            <div class="section">
+                <h3>Meaning</h3>
+                <div class="meaning" id="selected-meaning">
+                    heart, mind, intention, center
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Composition</h3>
+                <div class="composition" id="selected-composition">
+                    A pictographic character representing the shape of a heart.
+                </div>
+            </div>
+        </div>
+
+        <!-- Phrases Tab -->
+        <div id="phrases-tab" class="tab-content">
+            <div class="section">
+                <h3>Related Phrases</h3>
+                <div class="phrases" id="selected-phrases">
+                    心情 (xīnqíng) - mood, feeling<br>中心 (zhōngxīn) - center<br>小心 (xiǎoxīn) - to be careful<br>心理 (xīnlǐ) - psychology, mentality<br>心爱 (xīn'ài) - beloved, treasured
+                </div>
+            </div>
+        </div>
+        
+        <!-- Search Tab -->
+        <div id="search-tab" class="tab-content">
+            <div class="section">
+                <h3>Character Search</h3>
+                <p>Step 1: Select a character from the grid</p>
+                <div class="character-list" id="character-search-list">
+                    <!-- This will be populated with character buttons -->
+                </div>
+                
+                <div class="search-options" id="search-options">
+                    <div class="selected-char-info">
+                        <span class="selected-char-display" id="search-selected-char">？</span>
+                        <span id="search-selected-info">No character selected</span>
+                    </div>
+                    
+                    <p class="no-selection-message" id="no-selection-message">Please select a character first to enable search options</p>
+                    
+                    <h4>Step 2: Choose a dictionary or resource</h4>
+                    <div class="search-buttons">
+                        <a href="#" class="search-btn disabled" id="baidu-search" target="_blank">Baidu (Google Search)</a>
+                        <a href="#" class="search-btn disabled" id="zdic-search" target="_blank">汉典 (zdic.net)</a>
+                        <a href="#" class="search-btn disabled" id="qianp-search" target="_blank">千篇汉语字典</a>
+                        <a href="#" class="search-btn disabled" id="hwxnet-search" target="_blank">汉字屋</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <br><br>
+        <div class="footer">
+            Provided by ZiNets on 2025-05-15
+        </div>
+    </div>
+
+    <script>
+        // Character data repository
+        const characterData = {
+    "忘": {
+        "pinyin": "wàng",
+        "meaning": "to forget, to neglect, to overlook",
+        "composition": "Composed of 亡 (wáng, death, loss) on top and 心 (xīn, heart) on the bottom. It suggests that something is lost from the heart, hence forgetting.",
+        "phrases": "忘记 (wàngjì) - to forget<br>难忘 (nánwàng) - unforgettable<br>忘掉 (wàngdiào) - to forget, to dismiss from one's mind<br>忘我 (wàngwǒ) - selfless, self-forgetful<br>忘年恋 (wàngniánliàn) - age-gap relationship"
+    },
+    "想": {
+        "pinyin": "xiǎng",
+        "meaning": "to think, to want, to miss",
+        "composition": "Composed of 相 (xiāng, mutually, each other) on top and 心 (xīn, heart) on the bottom. It suggests thinking about something in one's heart.",
+        "phrases": "想法 (xiǎngfǎ) - idea, opinion<br>想念 (xiǎngniàn) - to miss, to think of<br>想象 (xiǎngxiàng) - to imagine<br>理想 (lǐxiǎng) - ideal, aspiration<br>想起来 (xiǎng qǐlai) - to remember, to recall"
+    },
+    "情": {
+        "pinyin": "qíng",
+        "meaning": "feeling, emotion, affection, situation",
+        "composition": "Composed of 忄(xīn, heart radical) on the left and 青 (qīng, blue/green) on the right. The heart radical indicates emotion, and 青 contributes to the sound.",
+        "phrases": "感情 (gǎnqíng) - feeling, emotion, affection<br>爱情 (àiqíng) - love<br>心情 (xīnqíng) - mood, feeling<br>情况 (qíngkuàng) - situation, circumstance<br>友情 (yǒuqíng) - friendship"
+    },
+    "愛": {
+        "pinyin": "ài",
+        "meaning": "to love, affection, to be fond of",
+        "composition": "Traditional form is composed of 爫 (zhuǎ, claw/hand), 冖 (mì, cover), 心 (xīn, heart), and 夊 (suī, walking slowly). The simplified form 爱 removes the heart in the middle.",
+        "phrases": "爱情 (àiqíng) - love<br>爱好 (àihào) - hobby, interest<br>爱人 (àiren) - lover, spouse<br>热爱 (rè'ài) - to love ardently<br>爱护 (àihù) - to cherish, to take good care of"
+    },
+    "志": {
+        "pinyin": "zhì",
+        "meaning": "will, aspiration, ambition, record",
+        "composition": "Composed of 士 (shì, scholar, man) on top and 心 (xīn, heart) on the bottom. It suggests the will or ambition of a scholar or man.",
+        "phrases": "志愿 (zhìyuàn) - aspiration, ambition, volunteer<br>意志 (yìzhì) - will, willpower<br>志向 (zhìxiàng) - ambition, aspiration<br>同志 (tóngzhì) - comrade<br>墓志铭 (mùzhìmíng) - epitaph"
+    },
+    "愿": {
+        "pinyin": "yuàn",
+        "meaning": "to wish, to desire, willing, ready",
+        "composition": "Composed of 原 (yuán, source, origin) on top and 心 (xīn, heart) on the bottom. It suggests a desire originating from the heart.",
+        "phrases": "愿望 (yuànwàng) - wish, desire<br>愿意 (yuànyì) - to be willing, to want to<br>心愿 (xīnyuàn) - wish, aspiration<br>但愿 (dànyuàn) - if only, I wish<br>祝愿 (zhùyuàn) - to wish"
+    },
+    "恋": {
+        "pinyin": "liàn",
+        "meaning": "to love, to long for, to be attached to",
+        "composition": "Composed of 亦 (yì, also) on top and 心 (xīn, heart) on the bottom. It suggests a lingering feeling or attachment in the heart.",
+        "phrases": "恋爱 (liàn'ài) - to be in love, love affair<br>留恋 (liúliàn) - to be reluctant to leave, to miss<br>依恋 (yīliàn) - to be attached to, to feel dependent on<br>眷恋 (juànliàn) - to be sentimentally attached to<br>爱恋 (àiliàn) - to be in love with"
+    },
+    "悔": {
+        "pinyin": "huǐ",
+        "meaning": "to regret, to repent",
+        "composition": "Composed of 忄(xīn, heart radical) on the left and 每 (měi, every) on the right. The heart radical indicates emotion, and 每 contributes to the sound and suggests repeated thoughts.",
+        "phrases": "后悔 (hòuhuǐ) - to regret<br>后悔药 (hòuhuǐyào) - cure for regret (figurative)<br>悔改 (huǐgǎi) - to repent, to reform<br>悔恨 (huǐhèn) - remorse, regret<br>反悔 (fǎnhuǐ) - to go back on one's word"
+    },
+    "心": {
+        "pinyin": "xīn",
+        "meaning": "heart, mind, intention, center",
+        "composition": "A pictographic character representing the shape of a heart.",
+        "phrases": "心情 (xīnqíng) - mood, feeling<br>中心 (zhōngxīn) - center<br>小心 (xiǎoxīn) - to be careful<br>心理 (xīnlǐ) - psychology, mentality<br>心爱 (xīn'ài) - beloved, treasured"
+    },
+    "意": {
+        "pinyin": "yì",
+        "meaning": "meaning, idea, intention, wish",
+        "composition": "Composed of 立 (lì, to stand) on top and 心 (xīn, heart) on the bottom. It suggests an idea or intention that stands in one's heart.",
+        "phrases": "意思 (yìsi) - meaning, idea<br>意义 (yìyì) - significance, meaning<br>愿意 (yuànyì) - to be willing, to want to<br>注意 (zhùyì) - to pay attention<br>意见 (yìjiàn) - opinion, suggestion"
+    },
+    "思": {
+        "pinyin": "sī",
+        "meaning": "think, consider, ponder, idea, thought, longing, yearning",
+        "composition": "Composed of 田 (tián, field) on top and 心 (xīn, heart) on the bottom. The heart in the field suggests thinking about things deeply.",
+        "phrases": "思考 (sī kǎo) - to think, to ponder<br>思想 (sī xiǎng) - thought, ideology<br>意思 (yì si) - meaning, idea, interest<br>思念 (sī niàn) - to miss, to long for<br>深思 (shēn sī) - to think deeply, to contemplate"
+    },
+    "惟": {
+        "pinyin": "wéi",
+        "meaning": "only, alone, but, however, think, ponder",
+        "composition": "Composed of the radical 口 (kǒu, mouth) on the left and 隹 (zhuī, short-tailed bird) on the right.",
+        "phrases": "惟一 (wéi yī) - only, unique<br>惟妙惟肖 (wéi miào wéi xiào) - lifelike, true to life<br>思维 (sī wéi) - thought, thinking<br>惟恐 (wéi kǒng) - for fear that, lest<br>实事求是 (shí shì qiú shì) - seek truth from facts (sometimes written as 唯实求是)"
+    },
+    "怯": {
+        "pinyin": "qiè",
+        "meaning": "timid, cowardly, shy",
+        "composition": "Composed of the radical 忄(xīn, heart) on the left and 去 (qù, to go) on the right. The heart wanting to go away suggests fear or timidity.",
+        "phrases": "胆怯 (dǎn qiè) - timid, cowardly<br>怯场 (qiè chǎng) - stage fright<br>羞怯 (xiū qiè) - shy, bashful<br>退怯 (tuì qiè) - to shrink back, to flinch<br>临阵退怯 (lín zhèn tuì qiè) - to desert one's post before the battle"
+    }
+};
+
+        // Initialize ECharts
+        const chartContainer = document.getElementById('chart-container');
+        const chart = echarts.init(chartContainer);
+
+        // Define the tree structure based on your data
+        const treeData = {
+    "name": "心",
+    "children": [
+        {
+            "name": "想",
+            "children": [
+                {
+                    "name": "愿",
+                    "children": [],
+                    "decomposition": "heart + original"
+                },
+                {
+                    "name": "惟",
+                    "children": [],
+                    "decomposition": "heart + only"
+                }
+            ],
+            "decomposition": "heart + image"
+        },
+        {
+            "name": "情",
+            "children": [
+                {
+                    "name": "愛",
+                    "children": [],
+                    "decomposition": "heart + receive"
+                },
+                {
+                    "name": "恋",
+                    "children": [],
+                    "decomposition": "heart + connect"
+                }
+            ],
+            "decomposition": "heart + blue"
+        },
+        {
+            "name": "忘",
+            "children": [
+                {
+                    "name": "怯",
+                    "children": [],
+                    "decomposition": "heart + lack"
+                },
+                {
+                    "name": "悔",
+                    "children": [],
+                    "decomposition": "heart + each"
+                }
+            ],
+            "decomposition": "heart + perish"
+        },
+        {
+            "name": "志",
+            "children": [
+                {
+                    "name": "意",
+                    "children": [],
+                    "decomposition": "heart + sound"
+                },
+                {
+                    "name": "思",
+                    "children": [],
+                    "decomposition": "heart + field"
+                }
+            ],
+            "decomposition": "heart + sign"
+        }
+    ]
+};
+
+        // Set the option
+        const option = {
+            tooltip: {
+                trigger: 'item',
+                formatter: function(params) {
+                    if (params.data.decomposition) {
+                        return `<div style="font-size:18px; font-weight:bold; margin-bottom:5px;">${params.data.name}</div>
+                                <div>${params.data.decomposition}</div>`;
+                    } else {
+                        return params.data.name;
+                    }
+                },
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                borderColor: '#ccc',
+                borderWidth: 0,
+                padding: 2,
+                textStyle: {
+                    color: '#333',
+                    fontSize: 25
+                }
+            },
+            series: [
+                {
+                    type: 'tree',
+                    data: [treeData],
+                    symbolSize: 40,
+                    orient: 'TB',
+                    symbol: 'rect',
+                    label: {
+                        "show": true,
+                        "color": "red",
+                        "fontSize": 25,
+                        "valueAnimation": false
+                    },
+                    leaves: {
+                    },
+                    emphasis: {
+                        focus: 'relative',
+                        itemStyle: {
+                            shadowBlur: 40,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(10, 10, 10, 0.75)'
+                        }
+                    },
+                    expandAndCollapse: false,
+                    animationDuration: 550,
+                    animationDurationUpdate: 750
+                }
+            ]
+        };
+
+        // Set the initial option and render
+        chart.setOption(option);
+
+        // Variable to track currently selected character in the search tab
+        let selectedSearchCharacter = null;
+
+        // Generate character buttons for the search tab
+        function generateCharacterButtons() {
+            const characterList = document.getElementById('character-search-list');
+            characterList.innerHTML = '';
+            
+            // Get all unique characters from the characterData dictionary
+            const characters = Object.keys(characterData);
+            
+            // Sort characters for better user experience
+            characters.sort();
+            
+            // Create buttons for each character
+            for (const char of characters) {
+                // Create character button element
+                const button = document.createElement('div');
+                button.className = 'character-item';
+                button.textContent = char;
+                button.title = `${char} (${characterData[char].pinyin}) - ${characterData[char].meaning}`;
+                
+                // Add click handler
+                button.addEventListener('click', function() {
+                    // Remove selected class from all buttons
+                    document.querySelectorAll('.character-item').forEach(item => {
+                        item.classList.remove('selected');
+                    });
+                    
+                    // Add selected class to this button
+                    this.classList.add('selected');
+                    
+                    // Update selected character
+                    selectedSearchCharacter = char;
+                    
+                    // Update displayed character and info
+                    document.getElementById('search-selected-char').textContent = char;
+                    document.getElementById('search-selected-info').textContent = 
+                        `${characterData[char].pinyin} - ${characterData[char].meaning}`;
+                    
+                    // Hide no selection message
+                    document.getElementById('no-selection-message').style.display = 'none';
+                    
+                    // Update search buttons
+                    updateSearchButtons(char);
+                });
+                
+                // Add to list
+                characterList.appendChild(button);
+            }
+        }
+
+        // Update search buttons with correct URLs for the selected character
+        function updateSearchButtons(character) {
+            const encodedChar = encodeURIComponent(character);
+            
+            // Baidu (via Google search)
+            const baiduSearchBtn = document.getElementById('baidu-search');
+            baiduSearchBtn.href = `https://www.google.com/search?q=baidu+${encodedChar}`;
+            baiduSearchBtn.classList.remove('disabled');
+            
+            // ZDIC
+            const zdicSearchBtn = document.getElementById('zdic-search');
+            zdicSearchBtn.href = `https://www.zdic.net/hans/${encodedChar}`;
+            zdicSearchBtn.classList.remove('disabled');
+            
+            // Qianp
+            const qianpSearchBtn = document.getElementById('qianp-search');
+            qianpSearchBtn.href = `https://zidian.qianp.com/zi/${encodedChar}`;
+            qianpSearchBtn.classList.remove('disabled');
+            
+            // Hwxnet
+            const hwxnetSearchBtn = document.getElementById('hwxnet-search');
+            hwxnetSearchBtn.href = `https://zd.hwxnet.com/search.do?keyword=${encodedChar}`;
+            hwxnetSearchBtn.classList.remove('disabled');
+        }
+
+        // Handle node click event
+        chart.on('click', function(params) {
+            const zi = params.data.name;
+            if (zi) {
+                const charData = characterData[zi];
+                if (charData) {
+                    // Update info panel
+                    document.getElementById('selected-char').textContent = zi;
+                    document.getElementById('selected-pinyin').textContent = charData.pinyin;
+                    document.getElementById('selected-meaning').textContent = charData.meaning;
+                    document.getElementById('selected-composition').textContent = charData.composition;
+                    document.getElementById('selected-phrases').innerHTML = charData.phrases;
+                }
+            }
+        });
+
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons and content
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // Add active class to clicked button and corresponding content
+                this.classList.add('active');
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(tabId + '-tab').classList.add('active');
+                
+                // Generate character buttons if switching to search tab
+                if (tabId === 'search') {
+                    generateCharacterButtons();
+                    
+                    // If there was a previously selected character, re-select it
+                    if (selectedSearchCharacter) {
+                        const characterItems = document.querySelectorAll('.character-item');
+                        for (const item of characterItems) {
+                            if (item.textContent === selectedSearchCharacter) {
+                                item.classList.add('selected');
+                                break;
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        // Make chart responsive
+        window.addEventListener('resize', function() {
+            chart.resize();
+        });
+        
+        // Initialize the character buttons if the search tab is active initially
+        if (document.querySelector('.tab-btn[data-tab="search"]').classList.contains('active')) {
+            generateCharacterButtons();
+        }
+    </script>
+</body>
+</html>
