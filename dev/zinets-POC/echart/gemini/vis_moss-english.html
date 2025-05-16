@@ -115,14 +115,14 @@
         }
         .character-item {
             display: inline-block;
-            width: 60px;
-            height: 60px;
-            line-height: 60px;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
             text-align: center;
-            font-size: 28px;
+            font-size: 20px;
             background-color: white;
             border: 1px solid #ddd;
-            border-radius: 4px;
+            border-radius: 2px;
             text-decoration: none;
             color: #333;
             transition: all 0.3s;
@@ -199,8 +199,8 @@
     <div id="chart-container"></div>
     <div id="info-panel">
         <!-- Character and Pinyin (displayed on all tabs) -->
-        <div class="character" id="selected-char">心</div>
-        <div class="pinyin" id="selected-pinyin">xīn</div>
+        <div class="character" id="selected-char">藻</div>
+        <div class="pinyin" id="selected-pinyin">zǎo</div>
 
         <!-- Tab Navigation -->
         <div class="tab-nav">
@@ -214,14 +214,14 @@
             <div class="section">
                 <h3>Meaning</h3>
                 <div class="meaning" id="selected-meaning">
-                    heart, mind, intention, center
+                    algae, seaweed, elegant (writing)
                 </div>
             </div>
 
             <div class="section">
                 <h3>Composition</h3>
                 <div class="composition" id="selected-composition">
-                    A pictographic character representing the human heart.
+                    艹 (cǎo, grass radical) on top and 喿 (zào, noisy) on the bottom.
                 </div>
             </div>
         </div>
@@ -231,7 +231,7 @@
             <div class="section">
                 <h3>Related Phrases</h3>
                 <div class="phrases" id="selected-phrases">
-                    心情 (xīnqíng) - mood, feeling<br>中心 (zhōngxīn) - center, heart<br>小心 (xiǎoxīn) - to be careful, cautious<br>心理 (xīnlǐ) - psychology, mentality<br>关心 (guānxīn) - to care for, to be concerned about
+                    海藻 (hǎi zǎo) <br>藻类 (zǎo lèi) <br>绿藻 (lǜ zǎo) <br>藻饰 (zǎo shì) <br>蓝藻 (lán zǎo)
                 </div>
             </div>
         </div>
@@ -269,90 +269,60 @@
         
         <br><br>
         <div class="footer">
-            Provided by ZiNets on 2025-05-15 20:15:50
+            Provided by ZiNets on 2025-05-15 20:28:25
         </div>
     </div>
 
     <script>
         // Character data repository
         const characterData = {
-    "恋": {
-        "pinyin": "liàn",
-        "meaning": "to love, to long for, to be reluctant to part with, to feel attached to",
-        "composition": "Composed of 亦 (yì, also) on top and 心 (xīn, heart) below. It suggests the heart is drawn to something or someone.",
-        "phrases": "恋爱 (liàn'ài) - romantic love<br>留恋 (liúliàn) - to be reluctant to leave, to recall fondly<br>恋人 (liànrén) - lover<br>依恋 (yīliàn) - to feel attached to, to be reluctant to leave<br>眷恋 (juànliàn) - to be sentimentally attached to"
+    "品": {
+        "pinyin": "pǐn",
+        "meaning": "product, commodity, article, grade, rank, to taste, to judge, to assess",
+        "composition": "Three 口 (kǒu, mouth) radicals stacked vertically. Represents many mouths tasting or judging something.",
+        "phrases": "产品 (chǎn pǐn) <br>商品 (shāng pǐn) <br>品质 (pǐn zhì) <br>品尝 (pǐn cháng) <br>人品 (rén pǐn)"
     },
-    "志": {
-        "pinyin": "zhì",
-        "meaning": "will, aspiration, ambition, purpose",
-        "composition": "Composed of 士 (shì, scholar, man) on top and 心 (xīn, heart) below. It represents the will or ambition of a scholar or person.",
-        "phrases": "志愿 (zhìyuàn) - aspiration, ambition, volunteer<br>意志 (yìzhì) - will, willpower<br>志气 (zhìqì) - ambition, aspiration<br>同志 (tóngzhì) - comrade, same aspiration<br>立志 (lìzhì) - to set a goal, to resolve"
+    "藻": {
+        "pinyin": "zǎo",
+        "meaning": "algae, seaweed, elegant (writing)",
+        "composition": "艹 (cǎo, grass radical) on top and 喿 (zào, noisy) on the bottom.",
+        "phrases": "海藻 (hǎi zǎo) <br>藻类 (zǎo lèi) <br>绿藻 (lǜ zǎo) <br>藻饰 (zǎo shì) <br>蓝藻 (lán zǎo)"
     },
-    "想": {
-        "pinyin": "xiǎng",
-        "meaning": "to think, to want, to suppose, to miss",
-        "composition": "Composed of 相 (xiāng, mutually, each other) on top and 心 (xīn, heart) below. It suggests thinking about something or someone.",
-        "phrases": "想法 (xiǎngfǎ) - idea, opinion<br>思想 (sīxiǎng) - thought, ideology<br>想象 (xiǎngxiàng) - to imagine, imagination<br>想念 (xiǎngniàn) - to miss, to think of<br>理想 (lǐxiǎng) - ideal"
+    "喿": {
+        "pinyin": "zào",
+        "meaning": "noisy, chirping of birds",
+        "composition": "Four 口 (kǒu, mouth) radicals arranged in a square. Represents many mouths making noise.",
+        "phrases": "(This character is rarely used alone in modern Chinese. It's mostly found as a component in other characters like 澡 and 藻.)<br> (No common phrases using this character alone.)<br> (N/A)<br> (N/A)<br> (N/A)"
     },
-    "思": {
-        "pinyin": "sī",
-        "meaning": "to think, to consider, to ponder, thought, thinking",
-        "composition": "Composed of 田 (tián, field) on top and 心 (xīn, heart) below. It suggests thinking about something concrete or practical.",
-        "phrases": "思考 (sīkǎo) - to think deeply, to ponder<br>思想 (sīxiǎng) - thought, ideology<br>思念 (sīniàn) - to miss, to think of<br>意思 (yìsi) - meaning, idea<br>沉思 (chénsī) - to contemplate, to meditate"
+    "艹": {
+        "pinyin": "cǎo",
+        "meaning": "grass radical (Kangxi radical 140)",
+        "composition": "Represents two blades of grass.",
+        "phrases": "花草 (huā cǎo) <br>草地 (cǎo dì) <br>草原 (cǎo yuán) <br>草药 (cǎo yào) <br>杂草 (zá cǎo)"
     },
-    "愛": {
-        "pinyin": "ài",
-        "meaning": "to love, affection, to be fond of",
-        "composition": "Traditional form of 爱. Composed of 爫 (zhuǎ, claw) on top, 冖 (mì, cover) in the middle, and 心 (xīn, heart) and 夊 (suī, go slowly) below. It suggests covering the heart with care and cherishing it. Simplified to 爱.",
-        "phrases": "爱情 (àiqíng) - love, romance<br>爱好 (àihào) - hobby, interest<br>爱护 (àihù) - to cherish, to take good care of<br>热爱 (rè'ài) - to love ardently, to have deep love for<br>可爱 (kě'ài) - cute, lovely"
+    "口": {
+        "pinyin": "kǒu",
+        "meaning": "mouth, opening, entrance, measure word for people and some animals",
+        "composition": "A simple pictograph representing an open mouth.",
+        "phrases": "人口 (rén kǒu) <br>门口 (mén kǒu) <br>口水 (kǒu shuǐ) <br>口味 (kǒu wèi) <br>开口 (kāi kǒu)"
     },
-    "情": {
-        "pinyin": "qíng",
-        "meaning": "feeling, emotion, sentiment, situation",
-        "composition": "Composed of 忄(xīn, heart radical) on the left and 青 (qīng, blue/green) on the right. The 青 part suggests clarity or purity of feeling.",
-        "phrases": "感情 (gǎnqíng) - feeling, emotion, affection<br>心情 (xīnqíng) - mood, feeling<br>情况 (qíngkuàng) - situation, circumstance<br>爱情 (àiqíng) - love, romance<br>友情 (yǒuqíng) - friendship"
+    "澡": {
+        "pinyin": "zǎo",
+        "meaning": "to bathe, to wash",
+        "composition": "氵 (shuǐ, water radical) on the left and 喿 (zào, noisy) on the right. The noisy sound of water.",
+        "phrases": "洗澡 (xǐ zǎo) <br>澡堂 (zǎo táng) <br>澡盆 (zǎo pén) <br>淋澡 (lín zǎo) <br>冲澡 (chōng zǎo)"
     },
-    "心": {
-        "pinyin": "xīn",
-        "meaning": "heart, mind, intention, center",
-        "composition": "A pictographic character representing the human heart.",
-        "phrases": "心情 (xīnqíng) - mood, feeling<br>中心 (zhōngxīn) - center, heart<br>小心 (xiǎoxīn) - to be careful, cautious<br>心理 (xīnlǐ) - psychology, mentality<br>关心 (guānxīn) - to care for, to be concerned about"
+    "木": {
+        "pinyin": "mù",
+        "meaning": "tree, wood",
+        "composition": "A simple pictograph representing a tree with branches and roots.",
+        "phrases": "木头 (mù tou) <br>木材 (mù cái) <br>木星 (mù xīng) <br>木耳 (mù ěr) <br>树木 (shù mù)"
     },
-    "惟": {
-        "pinyin": "wéi",
-        "meaning": "only, alone, but, however, think, ponder",
-        "composition": "Composed of 忄(xīn, heart radical) on the left and 隹 (zhuī, short-tailed bird) on the right. It suggests thinking carefully and deliberately.",
-        "phrases": "惟一 (wéiyī) - only, unique<br>思维 (sīwéi) - thinking, thought<br>惟恐 (wéikǒng) - for fear that, lest<br>惟妙惟肖 (wéimiàowéixiào) - lifelike, true to life<br>实事求是 (shí shì qiú shì) - seek truth from facts (often used with 惟)"
-    },
-    "忘": {
-        "pinyin": "wàng",
-        "meaning": "to forget, to neglect",
-        "composition": "Composed of 亡 (wáng, to lose, to die) on top and 心 (xīn, heart) below. It suggests losing something from the heart or mind.",
-        "phrases": "忘记 (wàngjì) - to forget<br>忘掉 (wàngdiào) - to forget<br>难忘 (nánwàng) - unforgettable<br>忘我 (wàngwǒ) - selfless, self-forgetful<br>忘本 (wàngběn) - to forget one's origins, to be ungrateful"
-    },
-    "意": {
-        "pinyin": "yì",
-        "meaning": "meaning, idea, intention, wish, sense",
-        "composition": "Composed of 立 (lì, to stand) on top and 心 (xīn, heart) below. It suggests the intention or idea that stands in the heart.",
-        "phrases": "意思 (yìsi) - meaning, idea<br>意义 (yìyì) - significance, meaning<br>愿意 (yuànyì) - to be willing, to wish<br>注意 (zhùyì) - to pay attention to, attention<br>意见 (yìjiàn) - opinion, suggestion"
-    },
-    "悔": {
-        "pinyin": "huǐ",
-        "meaning": "to regret, repent",
-        "composition": "Composed of the radical 忄 (xīn, heart) on the left and 每 (měi, every) on the right. The heart radical indicates it relates to emotions, and 每 provides the phonetic component.",
-        "phrases": "后悔 (hòuhuǐ) - to regret<br>悔恨 (huǐhèn) - remorse, regret<br>悔改 (huǐgǎi) - to repent, to reform<br>悔罪 (huǐzuì) - to confess one's crime, to repent<br>追悔莫及 (zhuīhuǐmòjí) - too late to regret"
-    },
-    "愿": {
-        "pinyin": "yuàn",
-        "meaning": "to wish, to want, desire, hope, willing",
-        "composition": "Composed of the radical 原 (yuán, origin, source) on top and 心 (xīn, heart) below. The heart at the bottom indicates it relates to desires and wishes originating from the heart.",
-        "phrases": "愿意 (yuànyì) - to be willing, to want to<br>愿望 (yuànwàng) - wish, desire<br>心愿 (xīnyuàn) - cherished desire, aspiration<br>但愿 (dàn yuàn) - if only, I wish<br>祝愿 (zhùyuàn) - to wish"
-    },
-    "怯": {
-        "pinyin": "qiè",
-        "meaning": "timid, cowardly, shy",
-        "composition": "Composed of the radical 忄 (xīn, heart) on the left and 去 (qù, to go) on the right. The heart radical indicates it relates to emotions, and 去 provides the phonetic component, suggesting a feeling of wanting to \"go away\" from a situation due to fear.",
-        "phrases": "胆怯 (dǎnqiè) - timid, cowardly<br>怯场 (qièchǎng) - stage fright<br>羞怯 (xiūqiè) - shy, bashful<br>退怯 (tuìqiè) - to shrink back, to flinch<br>怯懦 (qiènuò) - cowardly, timid"
+    "氵": {
+        "pinyin": "shuǐ",
+        "meaning": "water radical (Kangxi radical 85)",
+        "composition": "A simplified form of 水 (shuǐ, water), representing flowing water.",
+        "phrases": "河流 (hé liú) <br>海洋 (hǎi yáng) <br>湖泊 (hú pō) <br>液体 (yè tǐ) <br>水滴 (shuǐ dī)"
     }
 };
 
@@ -362,71 +332,46 @@
 
         // Define the tree structure based on your data
         const treeData = {
-    "name": "心",
+    "name": "藻",
     "children": [
         {
-            "name": "想",
-            "children": [
-                {
-                    "name": "愿",
-                    "children": [],
-                    "decomposition": "heart + original"
-                },
-                {
-                    "name": "惟",
-                    "children": [],
-                    "decomposition": "heart + only"
-                }
-            ],
-            "decomposition": "heart + image"
+            "name": "艹",
+            "children": []
         },
         {
-            "name": "情",
+            "name": "澡",
             "children": [
                 {
-                    "name": "愛",
-                    "children": [],
-                    "decomposition": "heart + receive"
+                    "name": "氵",
+                    "children": []
                 },
                 {
-                    "name": "恋",
-                    "children": [],
-                    "decomposition": "heart + connect"
+                    "name": "喿",
+                    "children": [
+                        {
+                            "name": "品",
+                            "children": [
+                                {
+                                    "name": "口",
+                                    "children": []
+                                },
+                                {
+                                    "name": "口",
+                                    "children": []
+                                },
+                                {
+                                    "name": "口",
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "name": "木",
+                            "children": []
+                        }
+                    ]
                 }
-            ],
-            "decomposition": "heart + blue"
-        },
-        {
-            "name": "忘",
-            "children": [
-                {
-                    "name": "怯",
-                    "children": [],
-                    "decomposition": "heart + lack"
-                },
-                {
-                    "name": "悔",
-                    "children": [],
-                    "decomposition": "heart + each"
-                }
-            ],
-            "decomposition": "heart + perish"
-        },
-        {
-            "name": "志",
-            "children": [
-                {
-                    "name": "意",
-                    "children": [],
-                    "decomposition": "heart + sound"
-                },
-                {
-                    "name": "思",
-                    "children": [],
-                    "decomposition": "heart + field"
-                }
-            ],
-            "decomposition": "heart + sign"
+            ]
         }
     ]
 };

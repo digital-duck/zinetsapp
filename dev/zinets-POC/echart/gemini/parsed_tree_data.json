@@ -1,69 +1,44 @@
 {
-    "name": "心",
+    "name": "藻",
     "children": [
         {
-            "name": "想",
-            "children": [
-                {
-                    "name": "愿",
-                    "children": [],
-                    "decomposition": "heart + original"
-                },
-                {
-                    "name": "惟",
-                    "children": [],
-                    "decomposition": "heart + only"
-                }
-            ],
-            "decomposition": "heart + image"
+            "name": "艹",
+            "children": []
         },
         {
-            "name": "情",
+            "name": "澡",
             "children": [
                 {
-                    "name": "愛",
-                    "children": [],
-                    "decomposition": "heart + receive"
+                    "name": "氵",
+                    "children": []
                 },
                 {
-                    "name": "恋",
-                    "children": [],
-                    "decomposition": "heart + connect"
+                    "name": "喿",
+                    "children": [
+                        {
+                            "name": "品",
+                            "children": [
+                                {
+                                    "name": "口",
+                                    "children": []
+                                },
+                                {
+                                    "name": "口",
+                                    "children": []
+                                },
+                                {
+                                    "name": "口",
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "name": "木",
+                            "children": []
+                        }
+                    ]
                 }
-            ],
-            "decomposition": "heart + blue"
-        },
-        {
-            "name": "忘",
-            "children": [
-                {
-                    "name": "怯",
-                    "children": [],
-                    "decomposition": "heart + lack"
-                },
-                {
-                    "name": "悔",
-                    "children": [],
-                    "decomposition": "heart + each"
-                }
-            ],
-            "decomposition": "heart + perish"
-        },
-        {
-            "name": "志",
-            "children": [
-                {
-                    "name": "意",
-                    "children": [],
-                    "decomposition": "heart + sound"
-                },
-                {
-                    "name": "思",
-                    "children": [],
-                    "decomposition": "heart + field"
-                }
-            ],
-            "decomposition": "heart + sign"
+            ]
         }
     ]
 }

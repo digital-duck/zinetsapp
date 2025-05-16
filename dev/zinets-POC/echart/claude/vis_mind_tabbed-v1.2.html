@@ -14,11 +14,11 @@
             height: 100vh;
         }
         #chart-container {
-            width: 60%;
+            width: 50%;
             height: 100%;
         }
         #info-panel {
-            width: 40%;
+            width: 50%;
             padding: 20px;
             background-color: #f5f5f5;
             overflow-y: auto;
@@ -114,14 +114,14 @@
         }
         .character-item {
             display: inline-block;
-            width: 60px;
-            height: 60px;
-            line-height: 60px;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
             text-align: center;
-            font-size: 28px;
+            font-size: 20px;
             background-color: white;
             border: 1px solid #ddd;
-            border-radius: 4px;
+            border-radius: 2px;
             text-decoration: none;
             color: #333;
             transition: all 0.3s;
@@ -246,18 +246,20 @@
                 
                 <div class="search-options" id="search-options">
                     <div class="selected-char-info">
-                        <span class="selected-char-display" id="search-selected-char">？</span>
+                        <span class="selected-char-display" id="search-selected-char">⚠️</span>
                         <span id="search-selected-info">No character selected</span>
                     </div>
                     
-                    <p class="no-selection-message" id="no-selection-message">Please select a character first to enable search options</p>
+                    <p class="no-selection-message" id="no-selection-message">Please select a character first from above list to enable search</p>
                     
                     <h4>Step 2: Choose a dictionary or resource</h4>
                     <div class="search-buttons">
-                        <a href="#" class="search-btn disabled" id="baidu-search" target="_blank">Baidu (Google Search)</a>
-                        <a href="#" class="search-btn disabled" id="zdic-search" target="_blank">汉典 (zdic.net)</a>
-                        <a href="#" class="search-btn disabled" id="qianp-search" target="_blank">千篇汉语字典</a>
-                        <a href="#" class="search-btn disabled" id="hwxnet-search" target="_blank">汉字屋</a>
+                        <a href="#" class="search-btn disabled" id="baidu-search" target="_blank">Baidu - Google Search</a>
+                        <a href="#" class="search-btn disabled" id="zdic-search" target="_blank">汉典</a>
+                        <a href="#" class="search-btn disabled" id="hwxnet-search" target="_blank">文学网</a>
+                        <a href="#" class="search-btn disabled" id="qianp-search" target="_blank">千篇字典</a>
+                        <a href="#" class="search-btn disabled" id="cuhk-search" target="_blank">多功能字庫</a>
+                        <a href="#" class="search-btn disabled" id="hanziyuan-search" target="_blank">字源</a>
                     </div>
                 </div>
             </div>
@@ -556,6 +558,17 @@
             const hwxnetSearchBtn = document.getElementById('hwxnet-search');
             hwxnetSearchBtn.href = `https://zd.hwxnet.com/search.do?keyword=${encodedChar}`;
             hwxnetSearchBtn.classList.remove('disabled');
+            
+            // Hanziyuan
+            const hanziyuanSearchBtn = document.getElementById('hanziyuan-search');
+            hanziyuanSearchBtn.href = `https://hanziyuan.net/#${encodedChar}`;
+            hanziyuanSearchBtn.classList.remove('disabled');
+
+            // CUHK Multi-Function Chinese Character Database
+            const cuhkSearchBtn = document.getElementById('cuhk-search');
+            cuhkSearchBtn.href = `https://humanum.arts.cuhk.edu.hk/Lexis/lexi-mf/search.php?word=${encodedChar}`;
+            cuhkSearchBtn.classList.remove('disabled');
+
         }
 
         // Handle node click event

@@ -50,3 +50,19 @@ Into realms where wisdom has always grown.
 Today we planted a small humble tree, 
 Tomorrow, a forest of deep knowledge will set us free.
 ```
+
+## customize echart tree 
+
+```
+label: {{
+                        position: 'right',
+                        distance: 0,
+                        color: 'red',
+                        fontSize: 35,
+                        fontWeight: 'bold'
+                    }},
+```
+
+```
+"symbol": "rect",
+```
