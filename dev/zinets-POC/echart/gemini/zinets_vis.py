@@ -17,7 +17,7 @@ Usages:
     $ python zinets_vis.py --no-cache -i in_mind.md -l Spanish
     $ python zinets_vis.py --no-cache -i in_mind.md -l Korean
     $ python zinets_vis.py --no-cache -i in_mind.md -l Latin
-    $ python zinets_vis.py --no-cache -i in_mind.md -l Arabic
+    $ python zinets_vis.py --no-cache -i in_moss.md -l Arabic
 
 4. show cache statistics:
     $ python zinets_vis.py --cache-stats
@@ -32,6 +32,10 @@ import click
 import sqlite3
 from datetime import datetime
 from tqdm import tqdm
+from typing import List
+
+import google.generativeai as genai 
+
 
 DEBUG_FLAG = True
 
@@ -71,6 +75,52 @@ BASE_PROMPT = """
 """
 # Database configuration
 CACHE_DB = "zinets_cache.sqlite"
+
+GEMINI_MODELS = [
+    "gemini-2.0-flash",
+    "gemini-2.5-flash",
+    'gemini-1.5-flash', 
+    "gemini-2.5-pro",
+]
+DEFAULT_GEMINI_MODEL = "gemini-2.0-flash"
+
+def list_gemini_models():
+    gemini_models = []
+    try:
+        genai.configure(api_key=os.environ.get('GEMINI_API_KEY'))
+        print("Attempting to list available Gemini models supporting generateContent:")
+
+        # Iterate through all available models
+        for model in genai.list_models():
+            # Check if the model supports the 'generateContent' method
+            if 'generateContent' in model.supported_generation_methods:
+                # print(f"- {model.name} (Display Name: {model.display_name})")
+                gemini_models.append(model.name)
+
+    except Exception as e:
+        print(f"Error listing models: {e}")
+    
+    return [i.split('/')[-1] for i in sorted(gemini_models)]
+
+def update_gemini_models(model_name: str, models: List[str]=GEMINI_MODELS) -> List[str]:
+    """
+    Updates the list of models by moving the specified model_name to the
+    front if found, or inserting it at the front if not found.
+
+    Args:
+        model_name: The name of the model to move or insert.
+        models: The list of model names to update.
+
+    Returns:
+        The updated list of model names.
+    """
+    if model_name in models:
+        # Remove the model from its current position
+        models.remove(model_name)
+    # Insert the model at the front of the list
+    models.insert(0, model_name)
+
+    return models
 
 def derive_output_filename(input_filename, language="English"):
     # Split the input filename into its root and extension
@@ -487,13 +537,16 @@ def extract_all_characters(tree_data):
     dfs(tree_data)
     return list(characters)
 
-def get_character_data_from_gemini(characters, debug=DEBUG_FLAG, use_cache=True, chunk_size=10, language='English'):
+def get_character_data_from_gemini(characters, model_name=DEFAULT_GEMINI_MODEL, debug=DEBUG_FLAG, use_cache=True, chunk_size=10, language='English'):
     """
     Use Google Gemini API to generate character data using the official Python library.
     With caching support to reduce API calls.
     
+    Gemini models: https://ai.google.dev/gemini-api/docs/models
+
     Args:
         characters: A list of Chinese characters
+        model_name: The name of the Gemini model to use
         debug: Whether to save debug information
         use_cache: Whether to use cached data
         chunk_size: Maximum number of characters to process in a single batch
@@ -558,12 +611,7 @@ def get_character_data_from_gemini(characters, debug=DEBUG_FLAG, use_cache=True,
     # Use the correct model
     try:
         # Try to use the best available model, falling back to others if needed
-        models_to_try = [
-            "gemini-2.0-flash",
-            'gemini-1.5-flash', 
-            # "gemini-2.0-flash-lite",
-            # 'gemini-1.5-pro', 
-        ]
+        models_to_try = update_gemini_models(model_name)
 
         model = None
         model_name = None
@@ -1359,8 +1407,11 @@ def generate_html(tree_data, character_data, title="ZiNets Visualization"):
 
     return html
 
-def process_semantic_network(markdown_text, output_file=DEFAULT_OUTPUT_HTML, use_gemini=True, use_cache=True, 
-                      title="ZiNets Visualization", debug=DEBUG_FLAG, chunk_size=10, language="English"):
+def process_semantic_network(markdown_text, output_file=DEFAULT_OUTPUT_HTML, 
+                    use_gemini=True, model_name=DEFAULT_GEMINI_MODEL,
+                    use_cache=True, 
+                    title="ZiNets Visualization", 
+                    debug=DEBUG_FLAG, chunk_size=10, language="English"):
     """
     Process semantic network data and generate HTML file.
 
@@ -1393,6 +1444,7 @@ def process_semantic_network(markdown_text, output_file=DEFAULT_OUTPUT_HTML, use
         ts_start = time.time()
         character_data = get_character_data_from_gemini(
             characters, 
+            model_name,
             debug=debug, 
             use_cache=use_cache,
             chunk_size=chunk_size,
@@ -1440,6 +1492,8 @@ def process_semantic_network(markdown_text, output_file=DEFAULT_OUTPUT_HTML, use
               help='Title for the visualization page')
 @click.option('--use-gemini/--no-gemini', default=True,
               help='Whether to use Gemini API for character data (default: True)')
+@click.option('--model-name', '-m', default=DEFAULT_GEMINI_MODEL,
+              help=f'Specific model (default: {DEFAULT_GEMINI_MODEL})')
 @click.option('--use-cache/--no-cache', default=True,
               help='Whether to use SQLite cache for character data (default: True)')
 @click.option('--debug/--no-debug', default=True,
@@ -1450,7 +1504,7 @@ def process_semantic_network(markdown_text, output_file=DEFAULT_OUTPUT_HTML, use
               help='Maximum number of characters to process in a single batch (default: 10)')
 @click.option('--language', '-l', default='English',
               help='Language for the output (default: English)')
-def main(input_file, output_file, title, use_gemini, use_cache, debug, cache_stats, chunk_size, language):
+def main(input_file, output_file, title, use_gemini, model_name, use_cache, debug, cache_stats, chunk_size, language):
     """
     ZiNets - Chinese Character Network Visualization Tool
     
@@ -1482,6 +1536,7 @@ def main(input_file, output_file, title, use_gemini, use_cache, debug, cache_sta
             markdown_text, 
             output_file=output_file, 
             use_gemini=use_gemini,
+            model_name=model_name,
             use_cache=use_cache,
             title=title,
             debug=debug,
