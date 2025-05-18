@@ -1,0 +1,195 @@
+/* Custom styles for the application */
+
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f5f7fa;
+}
+
+/* Application layout */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: white;
+  min-height: 100vh;
+}
+
+/* Header styles */
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+h2 {
+  color: #2c3e50;
+  font-weight: 500;
+  margin-bottom: 15px;
+}
+
+/* Search container */
+.search-container {
+  margin-bottom: 25px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.search-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.search-form .el-form-item {
+  margin-bottom: 10px;
+}
+
+/* Panel styles */
+.upper-panel {
+  margin-bottom: 25px;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.lower-panel {
+  padding: 25px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+/* Table styles */
+.el-table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.el-table .el-table__row:hover {
+  cursor: pointer;
+  background-color: #f5f7fa;
+}
+
+.el-table th {
+  background-color: #fafafa;
+  color: #606266;
+  font-weight: 600;
+}
+
+/* Form styles */
+.form-actions {
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid #e9ecef;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.el-form-item__label {
+  font-weight: 500;
+  color: #606266;
+}
+
+/* Button styles */
+.el-button {
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.el-button--primary {
+  background-color: #409eff;
+  border-color: #409eff;
+}
+
+.el-button--success {
+  background-color: #67c23a;
+  border-color: #67c23a;
+}
+
+.el-button--danger {
+  background-color: #f56c6c;
+  border-color: #f56c6c;
+}
+
+/* Pagination styles */
+.pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  padding: 15px 0;
+}
+
+/* Tag styles */
+.el-tag {
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+/* Loading styles */
+.el-loading-mask {
+  border-radius: 8px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+  
+  .search-form {
+    flex-direction: column;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .el-table {
+    font-size: 14px;
+  }
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Print styles */
+@media print {
+  .search-container,
+  .pagination,
+  .form-actions {
+    display: none;
+  }
+  
+  .container {
+    padding: 0;
+    background: white;
+  }
+}

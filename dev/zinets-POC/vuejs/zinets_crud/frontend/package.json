@@ -1,0 +1,36 @@
+
+{
+  "name": "zinets_crud",
+  "description": "A CRUD application for managing Chinese characters.",
+  "keywords": [
+    "vue",
+    "vite",
+    "element-plus",
+    "crud"
+  ],
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+    "format": "prettier --write src/"
+  },
+  "dependencies": {
+    "vue": "^3.3.11",
+    "axios": "^1.6.2",
+    "element-plus": "^2.4.4",
+    "@element-plus/icons-vue": "^2.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.5.2",
+    "vite": "^5.0.10",
+    "@rushstack/eslint-patch": "^1.6.0",
+    "@vue/eslint-config-prettier": "^8.0.0",
+    "eslint": "^8.56.0",
+    "eslint-plugin-vue": "^9.19.2",
+    "prettier": "^3.1.1"
+  }
+}
