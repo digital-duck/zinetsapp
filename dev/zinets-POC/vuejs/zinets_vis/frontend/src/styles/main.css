@@ -1,0 +1,417 @@
+/* styles/main.css - Global styles for ZiNets Visualization App */
+
+/* CSS Variables for theming */
+:root {
+  /* Primary colors */
+  --zinets-primary: #1890ff;
+  --zinets-primary-light: #40a9ff;
+  --zinets-primary-dark: #096dd9;
+  
+  /* Semantic colors */
+  --zinets-success: #52c41a;
+  --zinets-warning: #faad14;
+  --zinets-error: #ff4d4f;
+  --zinets-info: #13c2c2;
+  
+  /* Text colors */
+  --zinets-text-primary: #262626;
+  --zinets-text-secondary: #595959;
+  --zinets-text-tertiary: #8c8c8c;
+  --zinets-text-inverse: #ffffff;
+  
+  /* Background colors */
+  --zinets-bg-primary: #ffffff;
+  --zinets-bg-secondary: #fafafa;
+  --zinets-bg-tertiary: #f5f5f5;
+  --zinets-bg-dark: #001529;
+  
+  /* Border colors */
+  --zinets-border-light: #f0f0f0;
+  --zinets-border-base: #d9d9d9;
+  --zinets-border-dark: #434343;
+  
+  /* Shadows */
+  --zinets-shadow-light: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --zinets-shadow-base: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --zinets-shadow-dark: 0 8px 24px rgba(0, 0, 0, 0.15);
+  
+  /* Spacing */
+  --zinets-spacing-xs: 4px;
+  --zinets-spacing-sm: 8px;
+  --zinets-spacing-md: 16px;
+  --zinets-spacing-lg: 24px;
+  --zinets-spacing-xl: 32px;
+  --zinets-spacing-xxl: 48px;
+  
+  /* Border radius */
+  --zinets-radius-sm: 4px;
+  --zinets-radius-base: 6px;
+  --zinets-radius-lg: 8px;
+  --zinets-radius-xl: 12px;
+  
+  /* Font sizes */
+  --zinets-font-xs: 12px;
+  --zinets-font-sm: 14px;
+  --zinets-font-base: 16px;
+  --zinets-font-lg: 18px;
+  --zinets-font-xl: 20px;
+  --zinets-font-xxl: 24px;
+  
+  /* Animation durations */
+  --zinets-animation-fast: 0.15s;
+  --zinets-animation-base: 0.3s;
+  --zinets-animation-slow: 0.5s;
+}
+
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 
+              'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, 
+              Arial, sans-serif;
+  font-size: var(--zinets-font-base);
+  line-height: 1.6;
+  color: var(--zinets-text-primary);
+  background-color: var(--zinets-bg-primary);
+  overflow-x: hidden;
+  transition: color var(--zinets-animation-base), 
+            background-color var(--zinets-animation-base);
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  margin: 0 0 var(--zinets-spacing-md) 0;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--zinets-text-primary);
+}
+
+h1 { font-size: var(--zinets-font-xxl); }
+h2 { font-size: var(--zinets-font-xl); }
+h3 { font-size: var(--zinets-font-lg); }
+h4 { font-size: var(--zinets-font-base); }
+h5 { font-size: var(--zinets-font-sm); }
+h6 { font-size: var(--zinets-font-xs); }
+
+p {
+  margin: 0 0 var(--zinets-spacing-md) 0;
+  color: var(--zinets-text-secondary);
+}
+
+/* Links */
+a {
+  color: var(--zinets-primary);
+  text-decoration: none;
+  transition: color var(--zinets-animation-fast);
+}
+
+a:hover {
+  color: var(--zinets-primary-light);
+}
+
+/* Selection */
+::selection {
+  background-color: var(--zinets-primary);
+  color: var(--zinets-text-inverse);
+}
+
+/* Scrollbar customization */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--zinets-bg-tertiary);
+  border-radius: var(--zinets-radius-sm);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--zinets-border-base);
+  border-radius: var(--zinets-radius-sm);
+  transition: background var(--zinets-animation-fast);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--zinets-text-tertiary);
+}
+
+/* Application layout styles */
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Common utility classes */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.mb-xs { margin-bottom: var(--zinets-spacing-xs); }
+.mb-sm { margin-bottom: var(--zinets-spacing-sm); }
+.mb-md { margin-bottom: var(--zinets-spacing-md); }
+.mb-lg { margin-bottom: var(--zinets-spacing-lg); }
+.mb-xl { margin-bottom: var(--zinets-spacing-xl); }
+
+.mt-xs { margin-top: var(--zinets-spacing-xs); }
+.mt-sm { margin-top: var(--zinets-spacing-sm); }
+.mt-md { margin-top: var(--zinets-spacing-md); }
+.mt-lg { margin-top: var(--zinets-spacing-lg); }
+.mt-xl { margin-top: var(--zinets-spacing-xl); }
+
+.p-xs { padding: var(--zinets-spacing-xs); }
+.p-sm { padding: var(--zinets-spacing-sm); }
+.p-md { padding: var(--zinets-spacing-md); }
+.p-lg { padding: var(--zinets-spacing-lg); }
+.p-xl { padding: var(--zinets-spacing-xl); }
+
+/* Flex utilities */
+.flex { display: flex; }
+.flex-column { flex-direction: column; }
+.flex-center { justify-content: center; align-items: center; }
+.flex-between { justify-content: space-between; }
+.flex-around { justify-content: space-around; }
+.flex-wrap { flex-wrap: wrap; }
+.flex-1 { flex: 1; }
+
+/* Chinese character specific styles */
+.chinese-char {
+  font-family: 'Source Han Sans SC', 'Noto Sans SC', 'Microsoft YaHei', 
+               'PingFang SC', sans-serif;
+  font-weight: 500;
+}
+
+.chinese-large {
+  font-size: 3rem;
+  line-height: 1.2;
+}
+
+.chinese-medium {
+  font-size: 2rem;
+  line-height: 1.3;
+}
+
+.chinese-small {
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+
+/* Pinyin styling */
+.pinyin {
+  font-style: italic;
+  color: var(--zinets-text-secondary);
+  font-size: 0.9em;
+}
+
+/* Loading states */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px); /* Modern blur effect */
+}
+
+/* Card shadows and borders */
+.card-elevated {
+  box-shadow: var(--zinets-shadow-base);
+  border: 1px solid var(--zinets-border-light);
+  border-radius: var(--zinets-radius-lg);
+  transition: transform var(--zinets-animation-base), 
+              box-shadow var(--zinets-animation-base);
+}
+
+.card-elevated:hover {
+  transform: translateY(-2px);
+}
+
+.card-hover {
+  transition: box-shadow var(--zinets-animation-base);
+}
+
+.card-hover:hover {
+  box-shadow: var(--zinets-shadow-dark);
+}
+
+/* 3. Add more comprehensive Element Plus integration */
+.el-input__wrapper.is-focus {
+  border-color: var(--zinets-primary);
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+/* Status indicators */
+.status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: var(--zinets-spacing-xs);
+}
+
+.status-success { background-color: var(--zinets-success); }
+.status-warning { background-color: var(--zinets-warning); }
+.status-error { background-color: var(--zinets-error); }
+.status-info { background-color: var(--zinets-info); }
+
+/* Element Plus customizations */
+.el-button--primary {
+  background-color: var(--zinets-primary);
+  border-color: var(--zinets-primary);
+}
+
+.el-button--primary:hover {
+  background-color: var(--zinets-primary-light);
+  border-color: var(--zinets-primary-light);
+}
+
+.el-tag--primary {
+  background-color: var(--zinets-primary);
+  border-color: var(--zinets-primary);
+  color: var(--zinets-text-inverse);
+}
+
+/* Custom animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.fade-in {
+  animation: fadeIn var(--zinets-animation-base) ease-in-out;
+}
+
+.slide-in-up {
+  animation: slideInUp var(--zinets-animation-base) ease-out;
+}
+
+.pulse {
+  animation: pulse var(--zinets-animation-slow) infinite;
+}
+
+/* Responsive breakpoints */
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+  
+  .chinese-large {
+    font-size: 2.5rem;
+  }
+  
+  .chinese-medium {
+    font-size: 1.8rem;
+  }
+  
+  .chinese-small {
+    font-size: 1.2rem;
+  }
+  
+  /* Mobile-specific spacing */
+  :root {
+    --zinets-spacing-md: 12px;
+    --zinets-spacing-lg: 18px;
+    --zinets-spacing-xl: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 13px;
+  }
+  
+  .chinese-large {
+    font-size: 2rem;
+  }
+  
+  .chinese-medium {
+    font-size: 1.5rem;
+  }
+}
+
+/* Print styles */
+@media print {
+  body {
+    color: #000;
+    background: #fff;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+  
+  .chinese-char {
+    color: #000;
+  }
+}
+
+/* Dark mode support (future enhancement) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --zinets-text-primary: #f0f0f0;
+    --zinets-text-secondary: #d0d0d0;
+    --zinets-text-tertiary: #a0a0a0;
+    --zinets-bg-primary: #1a1a1a;
+    --zinets-bg-secondary: #2a2a2a;
+    --zinets-bg-tertiary: #3a3a3a;
+    --zinets-border-light: #404040;
+    --zinets-border-base: #606060;
+  }
+}
+
+/* Focus styles for accessibility */
+button:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid var(--zinets-primary);
+  outline-offset: 2px;
+}
+
+/* Screen reader only content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

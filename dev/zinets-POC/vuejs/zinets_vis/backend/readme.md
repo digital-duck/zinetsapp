@@ -1,0 +1,1 @@
+use the same backend as [zinets_crud](https://github.com/digital-duck/zinetsapp/tree/main/dev/zinets-POC/vuejs/zinets_crud/backend)
