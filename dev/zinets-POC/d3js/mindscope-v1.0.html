@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mindscope - Markdown to D3 Network Visualizer</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f8f8f8;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .header {
+      background: #2c3e50;
+      color: white;
+      padding: 15px 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .header p {
+      margin: 5px 0 0 0;
+      opacity: 0.8;
+      font-size: 14px;
+    }
+
+    .controls {
+      background: white;
+      padding: 15px 20px;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      gap: 15px;
+      align-items: flex-start;
+    }
+
+    .input-section {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .input-section label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #2c3e50;
+    }
+
+    .input-section textarea {
+      width: 100%;
+      height: 150px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      resize: vertical;
+    }
+
+    .button-section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    .btn-primary {
+      background: #3498db;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #2980b9;
+    }
+
+    .btn-secondary {
+      background: #95a5a6;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #7f8c8d;
+    }
+
+    .visualization-container {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    svg {
+      width: 100%;
+      height: 100%;
+      cursor: move;
+    }
+
+    .link {
+      stroke: #aaa;
+      stroke-width: 1.5px;
+    }
+
+    .node circle {
+      stroke: #fff;
+      stroke-width: 1.5px;
+      cursor: pointer;
+    }
+
+    .node text {
+      pointer-events: none;
+      font-size: 12px;
+      font-weight: 500;
+      fill: #000 !important;
+      stroke: #fff;
+      stroke-width: 0.5px;
+      paint-order: stroke fill;
+    }
+
+    .node:hover circle {
+      stroke-width: 3px;
+    }
+
+    .tooltip {
+      position: absolute;
+      padding: 8px 12px;
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      border-radius: 4px;
+      font-size: 12px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+      max-width: 200px;
+      z-index: 1000;
+    }
+
+    .info-panel {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 10px;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      font-size: 12px;
+      max-width: 200px;
+    }
+
+    .info-panel h4 {
+      margin: 0 0 5px 0;
+      color: #2c3e50;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🔭 Mind Telescope</h1>
+    <p>Convert markdown text to interactive semantic network visualization</p>
+  </div>
+
+  <div class="controls">
+    <div class="input-section">
+      <label for="markdownInput">Markdown Network Description:</label>
+      <textarea id="markdownInput" placeholder="Enter your network structure here..."></textarea>
+    </div>
+    <div class="button-section">
+      <button class="btn btn-primary" onclick="generateVisualization()">🚀 Generate Network</button>
+      <button class="btn btn-secondary" onclick="loadExample()">📝 Load Example</button>
+      <button class="btn btn-secondary" onclick="toggleFreeze()">❄️ Freeze/Unfreeze</button>
+    </div>
+  </div>
+
+  <div class="visualization-container">
+    <svg></svg>
+    <div class="tooltip"></div>
+    <div class="info-panel">
+      <h4>Instructions:</h4>
+      • Click nodes to explore links<br>
+      • Drag nodes to rearrange<br>
+      • Scroll to zoom<br>
+      • Drag background to pan
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+  <script>
+    let simulation;
+    let isFrozen = false;
+
+    // URL mappings for common terms
+    const urlMappings = {
+      // Root concepts
+      '子': 'https://en.wiktionary.org/wiki/子',
+      
+      // Category mappings
+      'humans': 'https://en.wikipedia.org/wiki/Chinese_kinship',
+      'human relations': 'https://en.wikipedia.org/wiki/Chinese_kinship',
+      'honorifics': 'https://en.wikipedia.org/wiki/Chinese_philosophy',
+      'philosophers': 'https://en.wikipedia.org/wiki/Chinese_philosophy',
+      'physics': 'https://en.wikipedia.org/wiki/Physics',
+      'science': 'https://en.wikipedia.org/wiki/Science',
+      'animals': 'https://en.wikipedia.org/wiki/Animal',
+      'nature': 'https://en.wikipedia.org/wiki/Nature',
+      'biology': 'https://en.wikipedia.org/wiki/Biology',
+      'mathematics': 'https://en.wikipedia.org/wiki/Mathematical_structure',
+      'mathematical structures': 'https://en.wikipedia.org/wiki/Mathematical_structure',
+      'time concepts': 'https://en.wikipedia.org/wiki/Chinese_calendar',
+      'tools': 'https://en.wikipedia.org/wiki/Tool',
+      'objects': 'https://en.wikipedia.org/wiki/Tool',
+      'tools & objects': 'https://en.wikipedia.org/wiki/Tool',
+      'derogatory': 'https://en.wikipedia.org/wiki/Pejorative',
+      'derogatory uses': 'https://en.wikipedia.org/wiki/Pejorative',
+      
+      // Specific terms
+      '孔子': 'https://en.wikipedia.org/wiki/Confucius',
+      '老子': 'https://en.wikipedia.org/wiki/Laozi',
+      '孟子': 'https://en.wikipedia.org/wiki/Mencius',
+      '君子': 'https://en.wikipedia.org/wiki/Junzi',
+      '原子': 'https://en.wikipedia.org/wiki/Atom',
+      '电子': 'https://en.wikipedia.org/wiki/Electron',
+      '光子': 'https://en.wikipedia.org/wiki/Photon',
+      '量子': 'https://en.wikipedia.org/wiki/Quantum',
+      '种子': 'https://en.wikipedia.org/wiki/Seed',
+      '精子': 'https://en.wikipedia.org/wiki/Sperm',
+      '脑子': 'https://en.wikipedia.org/wiki/Brain',
+      '子宫': 'https://en.wikipedia.org/wiki/Uterus',
+      '子集': 'https://en.wikipedia.org/wiki/Subset',
+      '子群': 'https://en.wikipedia.org/wiki/Subgroup',
+      '子空间': 'https://en.wikipedia.org/wiki/Linear_subspace',
+      '兔子': 'https://en.wikipedia.org/wiki/Rabbit',
+      '蚊子': 'https://en.wikipedia.org/wiki/Mosquito',
+      '狮子': 'https://en.wikipedia.org/wiki/Lion',
+      '桌子': 'https://en.wikipedia.org/wiki/Table_(furniture)',
+      '筷子': 'https://en.wikipedia.org/wiki/Chopsticks',
+      '房子': 'https://en.wikipedia.org/wiki/House',
+      '子弹': 'https://en.wikipedia.org/wiki/Bullet',
+      '子女': 'https://en.wiktionary.org/wiki/子女',
+      '父子': 'https://en.wikipedia.org/wiki/Father',
+      '弟子': 'https://en.wikipedia.org/wiki/Disciple',
+      '子孙': 'https://en.wikipedia.org/wiki/Kinship'
+    };
+
+    // Example markdown text
+    const exampleMarkdown = `子 - Child
+    - Humans
+        - 子女 - Children
+        - 父子 - Father/Son
+        - 弟子 - Disciple
+        - 子孙 - Descendants
+    - Honorifics
+        - 老子 - Laozi
+        - 孔子 - Confucius
+        - 君子 - Gentleman
+    - Physics
+        - 原子 - Atom
+        - 光子 - Photon
+        - 量子 - Quantum
+    - Animals
+        - 兔子 - Rabbit
+        - 蚊子 - Mosquito
+        - 狮子 - Lion`;
+
+    function getUrl(name) {
+      const cleanName = name.toLowerCase().trim();
+      
+      // Direct match
+      if (urlMappings[cleanName]) return urlMappings[cleanName];
+      
+      // Try to match Chinese characters
+      const chineseMatch = name.match(/[\u4e00-\u9fff]+/);
+      if (chineseMatch && urlMappings[chineseMatch[0]]) {
+          return urlMappings[chineseMatch[0]];
+      }
+      
+      // Try to match English keywords
+      for (const [key, url] of Object.entries(urlMappings)) {
+          if (cleanName.includes(key)) return url;
+      }
+      
+      // Default: Google search URL
+      const searchTerm = encodeURIComponent(name);
+      return `https://www.google.com/search?q=${searchTerm}`;
+    }
+
+    function markdownToD3Network(markdownText) {
+      const lines = markdownText.trim().split('\n').filter(line => line.trim());
+      const nodes = [];
+      const links = [];
+      
+      function getIndentLevel(line) {
+          const match = line.match(/^(\s*)/);
+          return match ? Math.floor(match[1].length / 4) : 0;
+      }
+      
+      function extractName(line) {
+          return line.replace(/^[\s-]*/, '').trim();
+      }
+      
+      let currentGroup = -1;
+      let groupCounters = {};
+      let parentStack = [];
+      
+      lines.forEach((line, index) => {
+          const indentLevel = getIndentLevel(line);
+          const name = extractName(line);
+          
+          if (!name) return;
+          
+          let nodeId, group, parentId;
+          
+          if (indentLevel === 0) {
+              nodeId = 'A';
+              group = 0;
+              parentId = null;
+              parentStack = [{ id: nodeId, level: 0 }];
+          } else if (indentLevel === 1) {
+              currentGroup++;
+              nodeId = String.fromCharCode(65 + currentGroup + 1);
+              group = currentGroup + 1;
+              parentId = 'A';
+              groupCounters[group] = 0;
+              
+              parentStack = parentStack.filter(p => p.level < indentLevel);
+              parentStack.push({ id: nodeId, level: indentLevel });
+          } else {
+              const parentGroup = parentStack[parentStack.length - 1];
+              if (!parentGroup) return;
+              
+              const parentGroupNum = parseInt(parentGroup.id.match(/[A-Z]/)[0].charCodeAt(0) - 64);
+              group = parentGroupNum;
+              groupCounters[group] = (groupCounters[group] || 0) + 1;
+              nodeId = `${parentGroup.id.charAt(0)}${groupCounters[group]}`;
+              parentId = parentGroup.id;
+          }
+          
+          const node = {
+              id: nodeId,
+              name: name,
+              group: group,
+              url: getUrl(name)
+          };
+          
+          nodes.push(node);
+          
+          if (parentId) {
+              links.push({
+                  source: parentId,
+                  target: nodeId
+              });
+          }
+      });
+      
+      return { nodes: nodes, links: links };
+    }
+
+    function createVisualization(data) {
+      const container = d3.select('.visualization-container');
+      const width = container.node().getBoundingClientRect().width;
+      const height = container.node().getBoundingClientRect().height;
+
+      // Clear previous visualization
+      d3.select("svg").selectAll("*").remove();
+
+      const svg = d3.select("svg");
+      const tooltip = d3.select(".tooltip");
+
+      const zoom = d3.zoom().on("zoom", (event) => {
+        g.attr("transform", event.transform);
+      });
+
+      svg.call(zoom);
+      const g = svg.append("g");
+
+      const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+      // Create links
+      const link = g.append("g")
+        .selectAll("line")
+        .data(data.links)
+        .join("line")
+        .attr("class", "link")
+        .attr("stroke", "#999")
+        .attr("stroke-opacity", 0.6)
+        .attr("stroke-width", 1.5);
+
+      // Create nodes
+      const node = g.append("g")
+        .selectAll("g")
+        .data(data.nodes)
+        .join("g")
+        .attr("class", "node");
+
+      // Append circles to nodes
+      const circles = node.append("circle")
+        .attr("r", d => d.group === 0 ? 12 : 8)
+        .attr("fill", d => color(d.group))
+        .attr("stroke", "#fff")
+        .attr("stroke-width", 1.5);
+
+      // Append text to nodes
+      const labels = node.append("text")
+        .attr("x", 12)
+        .attr("y", 4)
+        .text(d => d.name)
+        .attr("font-size", d => d.group === 0 ? "14px" : "12px")
+        .attr("font-weight", d => d.group === 0 ? "bold" : "normal")
+        .attr("fill", "#000")
+        .attr("stroke", "#fff")
+        .attr("stroke-width", "0.5px")
+        .attr("paint-order", "stroke fill")
+        .style("user-select", "none");
+
+      // Initialize simulation
+      simulation = d3.forceSimulation(data.nodes)
+        .force("link", d3.forceLink(data.links)
+          .id(d => d.id)
+          .distance(d => d.source.group === 0 ? 150 : 80)
+          .strength(0.3))
+        .force("charge", d3.forceManyBody().strength(-200))
+        .force("center", d3.forceCenter(width / 2, height / 2))
+        .force("collision", d3.forceCollide().radius(20))
+        .on("tick", ticked);
+
+      // Auto-stop after 5 seconds
+      setTimeout(() => {
+        if (simulation) {
+          simulation.stop();
+          isFrozen = true;
+        }
+      }, 5000);
+
+      // Define drag behavior
+      const drag = d3.drag()
+        .on("start", function(event, d) {
+          if (!event.active && simulation) simulation.alphaTarget(0.3).restart();
+          d.fx = d.x;
+          d.fy = d.y;
+        })
+        .on("drag", function(event, d) {
+          d.fx = event.x;
+          d.fy = event.y;
+        })
+        .on("end", function(event, d) {
+          if (!event.active && simulation) simulation.alphaTarget(0);
+          d.fx = null;
+          d.fy = null;
+        });
+
+      // Apply interactions
+      node.call(drag)
+        .style("cursor", "pointer")
+        .on("click", function(event, d) {
+          if (d.url) {
+            window.open(d.url, '_blank');
+          }
+        })
+        .on("mouseover", function(event, d) {
+          tooltip
+            .style("opacity", 1)
+            .html(`${d.name}<br><small>Click to explore</small>`)
+            .style("left", (event.pageX + 10) + "px")
+            .style("top", (event.pageY - 28) + "px");
+          
+          d3.select(this).select("circle")
+            .transition()
+            .duration(200)
+            .attr("r", d => (d.group === 0 ? 12 : 8) * 1.5)
+            .attr("stroke-width", 3);
+        })
+        .on("mouseout", function(event, d) {
+          tooltip.style("opacity", 0);
+          
+          d3.select(this).select("circle")
+            .transition()
+            .duration(200)
+            .attr("r", d => d.group === 0 ? 12 : 8)
+            .attr("stroke-width", 1.5);
+        });
+
+      function ticked() {
+        link
+          .attr("x1", d => d.source.x)
+          .attr("y1", d => d.source.y)
+          .attr("x2", d => d.target.x)
+          .attr("y2", d => d.target.y);
+
+        node.attr("transform", d => `translate(${d.x},${d.y})`);
+      }
+    }
+
+    function generateVisualization() {
+      const markdownText = document.getElementById('markdownInput').value.trim();
+      if (!markdownText) {
+        alert('Please enter some markdown text first!');
+        return;
+      }
+
+      try {
+        const data = markdownToD3Network(markdownText);
+        createVisualization(data);
+      } catch (error) {
+        alert('Error parsing markdown: ' + error.message);
+        console.error(error);
+      }
+    }
+
+    function loadExample() {
+      document.getElementById('markdownInput').value = exampleMarkdown;
+      generateVisualization();
+    }
+
+    function toggleFreeze() {
+      if (simulation) {
+        if (isFrozen) {
+          simulation.restart();
+          isFrozen = false;
+        } else {
+          simulation.stop();
+          isFrozen = true;
+        }
+      }
+    }
+
+    // Initialize with example
+    window.addEventListener('load', () => {
+      loadExample();
+    });
+
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      if (simulation) {
+        const container = d3.select('.visualization-container');
+        const width = container.node().getBoundingClientRect().width;
+        const height = container.node().getBoundingClientRect().height;
+        
+        simulation.force("center", d3.forceCenter(width / 2, height / 2));
+        simulation.alpha(0.3).restart();
+      }
+    });
+  </script>
+</body>
+</html>

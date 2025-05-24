@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mindscope - Concept Network Visualization</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f7fa;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 15px 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .header h1 {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .header p {
+      opacity: 0.9;
+      font-size: 14px;
+      font-weight: 300;
+    }
+
+    .main-container {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .left-panel {
+      width: 20%;
+      background: white;
+      border-right: 1px solid #e1e8ed;
+      display: flex;
+      flex-direction: column;
+      min-width: 300px;
+    }
+
+    .input-section {
+      height: 40%;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .input-section label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #2c3e50;
+      font-size: 14px;
+    }
+
+    .input-section textarea {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid #e1e8ed;
+      border-radius: 8px;
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      font-size: 12px;
+      resize: none;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .input-section textarea:focus {
+      border-color: #667eea;
+    }
+
+    .file-input-container {
+      margin-bottom: 15px;
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    .controls {
+      height: 35%;
+      padding: 20px;
+      border-top: 1px solid #e1e8ed;
+      background: #fafbfc;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      overflow-y: auto;
+    }
+
+    .instructions-section {
+      height: 25%;
+      padding: 20px;
+      border-top: 1px solid #e1e8ed;
+      background: #f8f9fa;
+      overflow-y: auto;
+    }
+
+    .instructions-section h4 {
+      margin: 0 0 12px 0;
+      color: #2c3e50;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .instructions-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .instructions-section li {
+      margin-bottom: 8px;
+      color: #495057;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px 16px;
+      margin-bottom: 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #6c757d;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
+
+    .btn-success {
+      background: #28a745;
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #218838;
+    }
+
+    .btn-info {
+      background: #17a2b8;
+      color: white;
+    }
+
+    .btn-info:hover {
+      background: #138496;
+    }
+
+    .btn-light {
+      background: #f8f9fa;
+      color: #495057;
+      border: 1px solid #dee2e6;
+    }
+
+    .btn-light:hover {
+      background: #e2e6ea;
+    }
+
+    .right-panel {
+      width: 80%;
+      position: relative;
+      background: white;
+    }
+
+    .visualization-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    svg {
+      width: 100%;
+      height: 100%;
+      cursor: move;
+    }
+
+    .link {
+      stroke: #aaa;
+      stroke-width: 1.5px;
+    }
+
+    .node circle {
+      stroke: #fff;
+      stroke-width: 1.5px;
+      cursor: pointer;
+    }
+
+    .node text {
+      pointer-events: none;
+      font-size: 12px;
+      font-weight: 500;
+      fill: #000 !important;
+      stroke: #fff;
+      stroke-width: 0.5px;
+      paint-order: stroke fill;
+    }
+
+    .node:hover circle {
+      stroke-width: 3px;
+    }
+
+    .tooltip {
+      position: absolute;
+      padding: 12px 16px;
+      background: rgba(233, 236, 239, 0.95);
+      color: #dc3545;
+      border: 1px solid rgba(220, 53, 69, 0.2);
+      border-radius: 8px;
+      font-size: 13px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+      max-width: 250px;
+      z-index: 1000;
+      line-height: 1.4;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      backdrop-filter: blur(5px);
+    }
+
+    .tooltip .name {
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #c82333;
+    }
+
+    .tooltip .decomposition {
+      font-size: 11px;
+      opacity: 0.8;
+      font-style: italic;
+      color: #e74c3c;
+    }
+
+    .tooltip .action {
+      font-size: 10px;
+      opacity: 0.7;
+      margin-top: 6px;
+      color: #dc3545;
+    }
+
+    .info-panel {
+      /* Removed - instructions moved to sidebar */
+    }
+
+    .status-indicator {
+      padding: 8px 12px;
+      background: #e3f2fd;
+      border-left: 4px solid #2196f3;
+      margin-bottom: 15px;
+      border-radius: 0 4px 4px 0;
+      font-size: 12px;
+      color: #1565c0;
+    }
+
+    @media (max-width: 1024px) {
+      .left-panel {
+        width: 25%;
+        min-width: 280px;
+      }
+      .right-panel {
+        width: 75%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .main-container {
+        flex-direction: column;
+      }
+      .left-panel, .right-panel {
+        width: 100%;
+      }
+      .left-panel {
+        height: 40vh;
+        min-width: auto;
+      }
+      .right-panel {
+        height: 60vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🔬 Mindscope</h1>
+    <p>Visualize and explore your concept network</p>
+  </div>
+
+  <div class="main-container">
+    <div class="left-panel">
+      <div class="input-section">
+        <label for="markdownInput">Network Description (Markdown):</label>
+        <div class="status-indicator" id="statusIndicator">
+          Ready to load network data
+        </div>
+        <textarea id="markdownInput" placeholder="Enter your network structure here..."></textarea>
+      </div>
+      
+      <div class="controls">
+        <input type="file" id="fileInput" class="file-input" accept=".txt,.md" />
+        <button class="btn btn-primary" onclick="loadNetworkFile()">
+          📁 Load Network File
+        </button>
+        
+        <button class="btn btn-success" onclick="visualizeNetwork()">
+          🚀 Visualize
+        </button>
+        
+        <button class="btn btn-info" onclick="toggleFreeze()">
+          <span id="freezeIcon">❄️</span> <span id="freezeText">Freeze</span>
+        </button>
+        
+        <button class="btn btn-light" onclick="loadExample()">
+          📝 Load Example
+        </button>
+      </div>
+
+      <div class="instructions-section">
+        <h4>🎯 Instructions</h4>
+        <ul>
+          <li>• Click nodes to explore links</li>
+          <li>• Drag nodes to rearrange</li>
+          <li>• Scroll to zoom in/out</li>
+          <li>• Drag background to pan</li>
+          <li>• Use parentheses for decomposition</li>
+          <li>• Load .txt or .md files directly</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div class="visualization-container">
+        <svg></svg>
+        <div class="tooltip"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+  <script>
+    let simulation;
+    let isFrozen = false;
+
+    // URL mappings for common terms
+    const urlMappings = {
+      // Root concepts
+      '子': 'https://en.wiktionary.org/wiki/子',
+      '心': 'https://en.wiktionary.org/wiki/心',
+      
+      // Category mappings
+      'humans': 'https://en.wikipedia.org/wiki/Chinese_kinship',
+      'human relations': 'https://en.wikipedia.org/wiki/Chinese_kinship',
+      'honorifics': 'https://en.wikipedia.org/wiki/Chinese_philosophy',
+      'philosophers': 'https://en.wikipedia.org/wiki/Chinese_philosophy',
+      'physics': 'https://en.wikipedia.org/wiki/Physics',
+      'science': 'https://en.wikipedia.org/wiki/Science',
+      'animals': 'https://en.wikipedia.org/wiki/Animal',
+      'nature': 'https://en.wikipedia.org/wiki/Nature',
+      'biology': 'https://en.wikipedia.org/wiki/Biology',
+      'mathematics': 'https://en.wikipedia.org/wiki/Mathematical_structure',
+      'mathematical structures': 'https://en.wikipedia.org/wiki/Mathematical_structure',
+      'time concepts': 'https://en.wikipedia.org/wiki/Chinese_calendar',
+      'tools': 'https://en.wikipedia.org/wiki/Tool',
+      'objects': 'https://en.wikipedia.org/wiki/Tool',
+      'tools & objects': 'https://en.wikipedia.org/wiki/Tool',
+      'derogatory': 'https://en.wikipedia.org/wiki/Pejorative',
+      'derogatory uses': 'https://en.wikipedia.org/wiki/Pejorative',
+      
+      // Specific terms
+      '孔子': 'https://en.wikipedia.org/wiki/Confucius',
+      '老子': 'https://en.wikipedia.org/wiki/Laozi',
+      '孟子': 'https://en.wikipedia.org/wiki/Mencius',
+      '君子': 'https://en.wikipedia.org/wiki/Junzi',
+      '原子': 'https://en.wikipedia.org/wiki/Atom',
+      '电子': 'https://en.wikipedia.org/wiki/Electron',
+      '光子': 'https://en.wikipedia.org/wiki/Photon',
+      '量子': 'https://en.wikipedia.org/wiki/Quantum',
+      '种子': 'https://en.wikipedia.org/wiki/Seed',
+      '精子': 'https://en.wikipedia.org/wiki/Sperm',
+      '脑子': 'https://en.wikipedia.org/wiki/Brain',
+      '子宫': 'https://en.wikipedia.org/wiki/Uterus',
+      '子集': 'https://en.wikipedia.org/wiki/Subset',
+      '子群': 'https://en.wikipedia.org/wiki/Subgroup',
+      '子空间': 'https://en.wikipedia.org/wiki/Linear_subspace',
+      '兔子': 'https://en.wikipedia.org/wiki/Rabbit',
+      '蚊子': 'https://en.wikipedia.org/wiki/Mosquito',
+      '狮子': 'https://en.wikipedia.org/wiki/Lion',
+      '桌子': 'https://en.wikipedia.org/wiki/Table_(furniture)',
+      '筷子': 'https://en.wikipedia.org/wiki/Chopsticks',
+      '房子': 'https://en.wikipedia.org/wiki/House',
+      '子弹': 'https://en.wikipedia.org/wiki/Bullet',
+      '子女': 'https://en.wiktionary.org/wiki/子女',
+      '父子': 'https://en.wikipedia.org/wiki/Father',
+      '弟子': 'https://en.wikipedia.org/wiki/Disciple',
+      '子孙': 'https://en.wikipedia.org/wiki/Kinship'
+    };
+
+    // Example markdown text
+    const exampleMarkdown = `子 - Child
+    - Humans
+        - 子女 - Children
+        - 父子 - Father/Son
+        - 弟子 - Disciple
+        - 子孙 - Descendants
+    - Honorifics
+        - 老子 - Laozi
+        - 孔子 - Confucius
+        - 君子 - Gentleman
+    - Physics
+        - 原子 - Atom
+        - 光子 - Photon
+        - 量子 - Quantum
+    - Animals
+        - 兔子 - Rabbit
+        - 蚊子 - Mosquito
+        - 狮子 - Lion`;
+
+    function updateStatus(message, type = 'info') {
+      const indicator = document.getElementById('statusIndicator');
+      indicator.textContent = message;
+      indicator.className = 'status-indicator';
+      
+      switch(type) {
+        case 'success':
+          indicator.style.background = '#e8f5e8';
+          indicator.style.borderColor = '#4caf50';
+          indicator.style.color = '#2e7d32';
+          break;
+        case 'error':
+          indicator.style.background = '#ffebee';
+          indicator.style.borderColor = '#f44336';
+          indicator.style.color = '#c62828';
+          break;
+        default:
+          indicator.style.background = '#e3f2fd';
+          indicator.style.borderColor = '#2196f3';
+          indicator.style.color = '#1565c0';
+      }
+    }
+
+    function getUrl(name) {
+      const cleanName = name.toLowerCase().trim();
+      
+      // Direct match
+      if (urlMappings[cleanName]) return urlMappings[cleanName];
+      
+      // Try to match Chinese characters
+      const chineseMatch = name.match(/[\u4e00-\u9fff]+/);
+      if (chineseMatch && urlMappings[chineseMatch[0]]) {
+          return urlMappings[chineseMatch[0]];
+      }
+      
+      // Try to match English keywords
+      for (const [key, url] of Object.entries(urlMappings)) {
+          if (cleanName.includes(key)) return url;
+      }
+      
+      // Default: Google search URL
+      const searchTerm = encodeURIComponent(name);
+      return `https://www.google.com/search?q=${searchTerm}`;
+    }
+
+    function parseNodeName(text) {
+      // Extract content within both ASCII and Chinese parentheses as decomposition
+      const asciiMatch = text.match(/^(.+?)\s*\((.+?)\)\s*$/);
+      const chineseMatch = text.match(/^(.+?)\s*（(.+?)）\s*$/);
+      
+      if (asciiMatch) {
+        return {
+          name: asciiMatch[1].trim(),
+          decomposition: asciiMatch[2].trim()
+        };
+      } else if (chineseMatch) {
+        return {
+          name: chineseMatch[1].trim(),
+          decomposition: chineseMatch[2].trim()
+        };
+      }
+      
+      // No parentheses found, return the whole text as name
+      return {
+        name: text.trim(),
+        decomposition: null
+      };
+    }
+
+    function markdownToD3Network(markdownText) {
+      const lines = markdownText.trim().split('\n').filter(line => line.trim());
+      const nodes = [];
+      const links = [];
+      
+      function getIndentLevel(line) {
+          const match = line.match(/^(\s*)/);
+          return match ? Math.floor(match[1].length / 4) : 0;
+      }
+      
+      function extractName(line) {
+          return line.replace(/^[\s-]*/, '').trim();
+      }
+      
+      let currentGroup = -1;
+      let groupCounters = {};
+      let parentStack = [];
+      
+      lines.forEach((line, index) => {
+          const indentLevel = getIndentLevel(line);
+          const rawName = extractName(line);
+          
+          if (!rawName) return;
+          
+          const parsedName = parseNodeName(rawName);
+          let nodeId, group, parentId;
+          
+          if (indentLevel === 0) {
+              nodeId = 'A';
+              group = 0;
+              parentId = null;
+              parentStack = [{ id: nodeId, level: 0 }];
+          } else if (indentLevel === 1) {
+              currentGroup++;
+              nodeId = String.fromCharCode(65 + currentGroup + 1);
+              group = currentGroup + 1;
+              parentId = 'A';
+              groupCounters[group] = 0;
+              
+              parentStack = parentStack.filter(p => p.level < indentLevel);
+              parentStack.push({ id: nodeId, level: indentLevel });
+          } else {
+              const parentGroup = parentStack[parentStack.length - 1];
+              if (!parentGroup) return;
+              
+              const parentGroupNum = parseInt(parentGroup.id.match(/[A-Z]/)[0].charCodeAt(0) - 64);
+              group = parentGroupNum;
+              groupCounters[group] = (groupCounters[group] || 0) + 1;
+              nodeId = `${parentGroup.id.charAt(0)}${groupCounters[group]}`;
+              parentId = parentGroup.id;
+          }
+          
+          const node = {
+              id: nodeId,
+              name: parsedName.name,
+              decomposition: parsedName.decomposition,
+              group: group,
+              url: getUrl(parsedName.name)
+          };
+          
+          nodes.push(node);
+          
+          if (parentId) {
+              links.push({
+                  source: parentId,
+                  target: nodeId
+              });
+          }
+      });
+      
+      return { nodes: nodes, links: links };
+    }
+
+    function createVisualization(data) {
+      const container = d3.select('.visualization-container');
+      const width = container.node().getBoundingClientRect().width;
+      const height = container.node().getBoundingClientRect().height;
+
+      // Clear previous visualization
+      d3.select("svg").selectAll("*").remove();
+
+      const svg = d3.select("svg");
+      const tooltip = d3.select(".tooltip");
+
+      const zoom = d3.zoom().on("zoom", (event) => {
+        g.attr("transform", event.transform);
+      });
+
+      svg.call(zoom);
+      const g = svg.append("g");
+
+      const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+      // Create links
+      const link = g.append("g")
+        .selectAll("line")
+        .data(data.links)
+        .join("line")
+        .attr("class", "link")
+        .attr("stroke", "#999")
+        .attr("stroke-opacity", 0.6)
+        .attr("stroke-width", 1.5);
+
+      // Create nodes
+      const node = g.append("g")
+        .selectAll("g")
+        .data(data.nodes)
+        .join("g")
+        .attr("class", "node");
+
+      // Append circles to nodes
+      const circles = node.append("circle")
+        .attr("r", d => d.group === 0 ? 12 : 8)
+        .attr("fill", d => color(d.group))
+        .attr("stroke", "#fff")
+        .attr("stroke-width", 1.5);
+
+      // Append text to nodes
+      const labels = node.append("text")
+        .attr("x", 12)
+        .attr("y", 4)
+        .text(d => d.name)
+        .attr("font-size", d => d.group === 0 ? "14px" : "12px")
+        .attr("font-weight", d => d.group === 0 ? "bold" : "normal")
+        .attr("fill", "#000")
+        .attr("stroke", "#fff")
+        .attr("stroke-width", "0.5px")
+        .attr("paint-order", "stroke fill")
+        .style("user-select", "none");
+
+      // Initialize simulation
+      simulation = d3.forceSimulation(data.nodes)
+        .force("link", d3.forceLink(data.links)
+          .id(d => d.id)
+          .distance(d => d.source.group === 0 ? 150 : 80)
+          .strength(0.3))
+        .force("charge", d3.forceManyBody().strength(-200))
+        .force("center", d3.forceCenter(width / 2, height / 2))
+        .force("collision", d3.forceCollide().radius(20))
+        .on("tick", ticked);
+
+      // Auto-stop after 5 seconds
+      setTimeout(() => {
+        if (simulation) {
+          simulation.stop();
+          isFrozen = true;
+          updateFreezeButton();
+          updateStatus('Network stabilized and frozen', 'success');
+        }
+      }, 5000);
+
+      // Define drag behavior
+      const drag = d3.drag()
+        .on("start", function(event, d) {
+          if (!event.active && simulation) simulation.alphaTarget(0.3).restart();
+          d.fx = d.x;
+          d.fy = d.y;
+        })
+        .on("drag", function(event, d) {
+          d.fx = event.x;
+          d.fy = event.y;
+        })
+        .on("end", function(event, d) {
+          if (!event.active && simulation) simulation.alphaTarget(0);
+          d.fx = null;
+          d.fy = null;
+        });
+
+      // Apply interactions
+      node.call(drag)
+        .style("cursor", "pointer")
+        .on("click", function(event, d) {
+          if (d.url) {
+            window.open(d.url, '_blank');
+          }
+        })
+        .on("mouseover", function(event, d) {
+          let tooltipContent = `<div class="name">${d.name}</div>`;
+          if (d.decomposition) {
+            tooltipContent += `<div class="decomposition">${d.decomposition}</div>`;
+          }
+          tooltipContent += `<div class="action">Click to explore</div>`;
+          
+          // Get the position of the node in screen coordinates
+          const nodeElement = d3.select(this).node();
+          const svgElement = d3.select("svg").node();
+          const svgRect = svgElement.getBoundingClientRect();
+          const nodeX = d.x;
+          const nodeY = d.y;
+          
+          // Convert node coordinates to screen coordinates
+          const transform = d3.zoomTransform(svgElement);
+          const screenX = transform.applyX(nodeX) + svgRect.left;
+          const screenY = transform.applyY(nodeY) + svgRect.top;
+          
+          tooltip
+            .style("opacity", 1)
+            .html(tooltipContent)
+            .style("left", (screenX + 15) + "px")  // Closer to node, just 15px offset
+            .style("top", (screenY - 10) + "px");  // Slightly above node center
+          
+          d3.select(this).select("circle")
+            .transition()
+            .duration(200)
+            .attr("r", d => (d.group === 0 ? 12 : 8) * 1.5)
+            .attr("stroke-width", 3);
+        })
+        .on("mouseout", function(event, d) {
+          tooltip.style("opacity", 0);
+          
+          d3.select(this).select("circle")
+            .transition()
+            .duration(200)
+            .attr("r", d => d.group === 0 ? 12 : 8)
+            .attr("stroke-width", 1.5);
+        });
+
+      function ticked() {
+        link
+          .attr("x1", d => d.source.x)
+          .attr("y1", d => d.source.y)
+          .attr("x2", d => d.target.x)
+          .attr("y2", d => d.target.y);
+
+        node.attr("transform", d => `translate(${d.x},${d.y})`);
+      }
+
+      updateStatus(`Network visualized: ${data.nodes.length} nodes, ${data.links.length} connections`, 'success');
+    }
+
+    function updateFreezeButton() {
+      const freezeIcon = document.getElementById('freezeIcon');
+      const freezeText = document.getElementById('freezeText');
+      
+      if (isFrozen) {
+        freezeIcon.textContent = '🔥';
+        freezeText.textContent = 'Unfreeze';
+      } else {
+        freezeIcon.textContent = '❄️';
+        freezeText.textContent = 'Freeze';
+      }
+    }
+
+    function loadNetworkFile() {
+      document.getElementById('fileInput').click();
+    }
+
+    document.getElementById('fileInput').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('markdownInput').value = e.target.result;
+          updateStatus(`Loaded file: ${file.name}`, 'success');
+        };
+        reader.readAsText(file);
+      }
+    });
+
+    function visualizeNetwork() {
+      const markdownText = document.getElementById('markdownInput').value.trim();
+      if (!markdownText) {
+        updateStatus('Please enter some network data first!', 'error');
+        return;
+      }
+
+      try {
+        updateStatus('Processing network data...', 'info');
+        const data = markdownToD3Network(markdownText);
+        createVisualization(data);
+      } catch (error) {
+        updateStatus('Error parsing network data: ' + error.message, 'error');
+        console.error(error);
+      }
+    }
+
+    function loadExample() {
+      document.getElementById('markdownInput').value = exampleMarkdown;
+      updateStatus('Example network loaded', 'info');
+      visualizeNetwork();
+    }
+
+    function toggleFreeze() {
+      if (simulation) {
+        if (isFrozen) {
+          simulation.restart();
+          isFrozen = false;
+          updateStatus('Network animation resumed', 'info');
+        } else {
+          simulation.stop();
+          isFrozen = true;
+          updateStatus('Network animation frozen', 'info');
+        }
+        updateFreezeButton();
+      }
+    }
+
+    // Initialize with example
+    window.addEventListener('load', () => {
+      loadExample();
+    });
+
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      if (simulation) {
+        const container = d3.select('.visualization-container');
+        const width = container.node().getBoundingClientRect().width;
+        const height = container.node().getBoundingClientRect().height;
+        
+        simulation.force("center", d3.forceCenter(width / 2, height / 2));
+        simulation.alpha(0.3).restart();
+      }
+    });
+  </script>
+</body>
+</html>

@@ -25,6 +25,7 @@ lower panel: Update character status to inactive
 Update character status in the database
 Frontend: Vue.js with Element Plus
 backend: FastAPI to access SQLite database
+
 ## Database: SQLite
 
 DB File: "zinets_cache.sqlite"

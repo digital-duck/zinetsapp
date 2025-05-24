@@ -1,0 +1,110 @@
+{
+  "nodes": [
+    {"id": "A", "name": "子 - Core Meaning: Child", "group": 0},
+    
+    {"id": "B", "name": "Human Relations", "group": 1},
+    {"id": "C", "name": "Honorifics / Philosophers", "group": 2},
+    {"id": "D", "name": "Nature & Biology", "group": 3},
+    {"id": "E", "name": "Science & Physics", "group": 4},
+    {"id": "F", "name": "Mathematical Structures", "group": 5},
+    {"id": "G", "name": "Time Concepts", "group": 6},
+    {"id": "H", "name": "Animals", "group": 7},
+    {"id": "I", "name": "Tools & Objects", "group": 8},
+    {"id": "J", "name": "Derogatory Uses", "group": 9},
+
+    {"id": "B1", "name": "子女 - Children", "group": 1},
+    {"id": "B2", "name": "父子 - Father and Son", "group": 1},
+    {"id": "B3", "name": "弟子 - Disciple", "group": 1},
+    {"id": "B4", "name": "子孙 - Descendants", "group": 1},
+
+    {"id": "C1", "name": "孔子 - Confucius", "group": 2},
+    {"id": "C2", "name": "老子 - Laozi", "group": 2},
+    {"id": "C3", "name": "孟子 - Mencius", "group": 2},
+    {"id": "C4", "name": "君子 - Gentleman", "group": 2},
+
+    {"id": "D1", "name": "种子 - Seed", "group": 3},
+    {"id": "D2", "name": "精子 - Sperm", "group": 3},
+    {"id": "D3", "name": "脑子 - Brain", "group": 3},
+    {"id": "D4", "name": "子宫 - Womb", "group": 3},
+
+    {"id": "E1", "name": "原子 - Atom", "group": 4},
+    {"id": "E2", "name": "电子 - Electron", "group": 4},
+    {"id": "E3", "name": "光子 - Photon", "group": 4},
+    {"id": "E4", "name": "量子 - Quantum", "group": 4},
+
+    {"id": "F1", "name": "子集 - Subset", "group": 5},
+    {"id": "F2", "name": "子群 - Subgroup", "group": 5},
+    {"id": "F3", "name": "子空间 - Subspace", "group": 5},
+
+    {"id": "G1", "name": "日子 - Days", "group": 6},
+    {"id": "G2", "name": "子时 - Midnight Hour", "group": 6},
+    {"id": "G3", "name": "甲子 - 60-Year Cycle", "group": 6},
+
+    {"id": "H1", "name": "兔子 - Rabbit", "group": 7},
+    {"id": "H2", "name": "蚊子 - Mosquito", "group": 7},
+    {"id": "H3", "name": "狮子 - Lion", "group": 7},
+
+    {"id": "I1", "name": "桌子 - Table", "group": 8},
+    {"id": "I2", "name": "筷子 - Chopsticks", "group": 8},
+    {"id": "I3", "name": "房子 - House", "group": 8},
+    {"id": "I4", "name": "子弹 - Bullet", "group": 8},
+
+    {"id": "J1", "name": "骗子 - Fraud", "group": 9},
+    {"id": "J2", "name": "傻子 - Fool", "group": 9},
+    {"id": "J3", "name": "日本鬼子 - Japanese Invader derogatory", "group": 9},
+    {"id": "J4", "name": "毛子 - Racial slur for Russians/Caucasians", "group": 9}
+  ],
+  "links": [
+    {"source": "A", "target": "B"},
+    {"source": "A", "target": "C"},
+    {"source": "A", "target": "D"},
+    {"source": "A", "target": "E"},
+    {"source": "A", "target": "F"},
+    {"source": "A", "target": "G"},
+    {"source": "A", "target": "H"},
+    {"source": "A", "target": "I"},
+    {"source": "A", "target": "J"},
+
+    {"source": "B", "target": "B1"},
+    {"source": "B", "target": "B2"},
+    {"source": "B", "target": "B3"},
+    {"source": "B", "target": "B4"},
+
+    {"source": "C", "target": "C1"},
+    {"source": "C", "target": "C2"},
+    {"source": "C", "target": "C3"},
+    {"source": "C", "target": "C4"},
+
+    {"source": "D", "target": "D1"},
+    {"source": "D", "target": "D2"},
+    {"source": "D", "target": "D3"},
+    {"source": "D", "target": "D4"},
+
+    {"source": "E", "target": "E1"},
+    {"source": "E", "target": "E2"},
+    {"source": "E", "target": "E3"},
+    {"source": "E", "target": "E4"},
+
+    {"source": "F", "target": "F1"},
+    {"source": "F", "target": "F2"},
+    {"source": "F", "target": "F3"},
+
+    {"source": "G", "target": "G1"},
+    {"source": "G", "target": "G2"},
+    {"source": "G", "target": "G3"},
+
+    {"source": "H", "target": "H1"},
+    {"source": "H", "target": "H2"},
+    {"source": "H", "target": "H3"},
+
+    {"source": "I", "target": "I1"},
+    {"source": "I", "target": "I2"},
+    {"source": "I", "target": "I3"},
+    {"source": "I", "target": "I4"},
+
+    {"source": "J", "target": "J1"},
+    {"source": "J", "target": "J2"},
+    {"source": "J", "target": "J3"},
+    {"source": "J", "target": "J4"}
+  ]
+}
