@@ -241,12 +241,12 @@
 
     .tooltip {
       position: absolute;
-      padding: 12px 16px;
-      background: rgba(233, 236, 239, 0.95);
+      padding: 6px 8px;
+      background: rgba(78, 101, 131, 0.24);
       color: #dc3545;
       border: 1px solid rgba(220, 53, 69, 0.2);
       border-radius: 8px;
-      font-size: 13px;
+      font-size: 20px;
       pointer-events: none;
       opacity: 0;
       transition: opacity 0.3s;
@@ -321,16 +321,13 @@
 <body>
   <div class="header">
     <h1>🔬 Mindscope</h1>
-    <p>Visualize and explore your concept network</p>
+    <p>Visualize and explore your network</p>
   </div>
 
   <div class="main-container">
     <div class="left-panel">
       <div class="input-section">
-        <label for="markdownInput">Network Description (Markdown):</label>
-        <div class="status-indicator" id="statusIndicator">
-          Ready to load network data
-        </div>
+        <label for="markdownInput">Network Definition (Markdown):</label>
         <textarea id="markdownInput" placeholder="Enter your network structure here..."></textarea>
       </div>
       
@@ -349,8 +346,12 @@
         </button>
         
         <button class="btn btn-light" onclick="loadExample()">
-          📝 Load Example
+          📝 Reset
         </button>
+        <br/>
+        <div class="status-indicator" id="statusIndicator">
+          Ready to load network data
+        </div>
       </div>
 
       <div class="instructions-section">
@@ -720,8 +721,8 @@
           tooltip
             .style("opacity", 1)
             .html(tooltipContent)
-            .style("left", (screenX + 15) + "px")  // Closer to node, just 15px offset
-            .style("top", (screenY - 10) + "px");  // Slightly above node center
+            .style("left", (0.5*screenX + 3) + "px")  // Closer to node, just 15px offset
+            .style("top", (0.5*screenY - 2) + "px");  // Slightly above node center
           
           d3.select(this).select("circle")
             .transition()
