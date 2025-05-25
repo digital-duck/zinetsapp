@@ -1,0 +1,13 @@
+水
+    - 冰 (water + ice)
+        - 凉 (ice + good)
+        - 冻 (ice + east)
+    - 江 (water + work)
+        - 河 (water + possible)
+        - 湖 (water + tiger)
+    - 海 (water + mother)
+        - 洋 (water + sheep)
+        - 浪 (water + good)
+    - 淡 (water + thin)
+        - 清 (water + blue)
+        - 漂 (water + surface)
