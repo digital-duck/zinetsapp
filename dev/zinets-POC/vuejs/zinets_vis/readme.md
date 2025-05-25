@@ -33,11 +33,15 @@ An interactive Vue.js application for visualizing Chinese character networks usi
 ### 1. Installation
 
 ```bash
-# Clone or create the project directory
-mkdir zinets-vis
-cd zinets-vis
+git clone https://github.com/digital-duck/zinets_vis.git
+cd zinets_vis
 
-# Install dependencies
+# backend
+cd backend
+pip install -r requirements.txt
+
+# frontend
+cd ../frontend
 npm install
 ```
 
@@ -58,10 +62,19 @@ VITE_DEFAULT_BATCH_SIZE=10
 
 ```bash
 # Start development server
-npm run dev
+
+# backend
+cd ~/projects/digital-duck/zinets_vis/backend
+uvicorn main:app --reload
+
+# test FastAPI at URL= http://localhost:8000/docs
+
+# frontend
+cd ~/projects/digital-duck/zinets_vis/frontend
+npm run dev --reload
 
 # Access the application
-# http://localhost:8081
+# run app at URL= http://localhost:8081
 ```
 
 ### 4. Production Build

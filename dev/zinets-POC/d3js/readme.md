@@ -97,9 +97,11 @@ const data = {
 
 
 
-## Development
+## Dev
 
-### Prompt to Claude Sonnet 4 
+### Mindscope
+
+- Prompt to Claude Sonnet 4 
 ```text 
 can you package your javascript logic in the standalone HTML app we had before?
 
@@ -109,3 +111,6 @@ can you package your javascript logic in the standalone HTML app we had before?
 
 3) when creating URL for a node, first lookup "urlMappings", if missing, use google search URL as default
 ```
+
+- HTML standalone app
+`mindscope.html`
